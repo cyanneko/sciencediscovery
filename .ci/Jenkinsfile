@@ -82,6 +82,10 @@ rm -rf "\$CI_RESULTS_DIR"; mkdir -p "\$CI_RESULTS_DIR"
 // .agents/skills/ci/references/codearts-obs.md: commit and run id both appear,
 // so reruns of a commit cannot overwrite one another. The run id is prefixed
 // here to keep this worker's objects distinguishable from a CodeArts run.
+//
+// The prefix stops at the run id because CI_RESULTS_DIR already contains the
+// layer's own directory, and each parallel branch clears and fills only its
+// own. Naming the layer twice would store st/run.log under .../st/st/run.log.
 void publishResults(String layer) {
     archiveArtifacts artifacts: '.tmp/ci-results/**', allowEmptyArchive: true
     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE',
@@ -99,7 +103,7 @@ if [ ! -d "\$CI_RESULTS_DIR" ]; then
     exit 0
 fi
 uv run --script .ci/obs-upload.py \\
-    --prefix "sciencediscovery/ci/\$(git rev-parse HEAD)/jenkins-\$BUILD_NUMBER/${layer}" \\
+    --prefix "sciencediscovery/ci/\$(git rev-parse HEAD)/jenkins-\$BUILD_NUMBER" \\
     "\$CI_RESULTS_DIR"
 """
         }
