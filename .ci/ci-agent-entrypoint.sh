@@ -60,7 +60,13 @@ JAR="$WORKDIR/agent.jar"
 # with UnsupportedClassVersionError rather than with anything readable.
 curl -sfo "$JAR" "${URL%/}/jnlpJars/agent.jar"
 
-exec java -jar "$JAR" \
+# Pin the encoding explicitly as well as through the locale: Java has not been
+# consistent about deriving sun.jnu.encoding from C.UTF-8, and getting it wrong
+# only shows up much later, as an unreadable filename in an archive step.
+exec java \
+    -Dfile.encoding=UTF-8 \
+    -Dsun.jnu.encoding=UTF-8 \
+    -jar "$JAR" \
     -url "$URL" \
     -secret "$SECRET" \
     -name "$NAME" \

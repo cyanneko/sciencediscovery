@@ -41,6 +41,13 @@ FROM ${CI_IMAGE}
 COPY --from=controller /opt/java/openjdk /opt/java/openjdk
 ENV PATH=/opt/java/openjdk/bin:$PATH
 
+# Journey report directories and screenshots carry non-ASCII names. Without a
+# UTF-8 locale the agent JVM derives sun.jnu.encoding from the C locale and
+# archiveArtifacts dies on the first such file with InvalidPathException,
+# taking the rest of the post block — including the OBS upload — with it.
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
 USER root
 COPY ci-agent-entrypoint.sh /usr/local/bin/ci-agent-entrypoint
 # 1777 because the container runs as the checkout owner's numeric identity,
