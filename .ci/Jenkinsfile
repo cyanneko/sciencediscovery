@@ -45,6 +45,15 @@ String repoUrl() {
 String checkoutScript() {
     return '''
 set -eu
+
+# pnpm does not read npm_config_registry from the environment, and the
+# repository's own .npmrc is a tracked file — editing it would trip the
+# cleanliness assertion in .ci/rebase-codearts-pr.sh. The user-level file is the
+# one place left that is both effective and out of the way.
+if [ -n "${CI_NPM_REGISTRY:-}" ]; then
+    printf 'registry=%s\\n' "$CI_NPM_REGISTRY" > "$HOME/.npmrc"
+fi
+
 git init -q .
 git remote add origin "$CI_REPO_URL" 2>/dev/null || git remote set-url origin "$CI_REPO_URL"
 git fetch -q --no-tags origin "+refs/heads/$CI_CHECKOUT_BRANCH:refs/remotes/origin/$CI_CHECKOUT_BRANCH"
@@ -270,12 +279,15 @@ E2E_COMMIT_SHA="$(git rev-parse HEAD)" pnpm ci:e2e
                         sh label: 'package x86_64', script: '''
 set -eu
 mkdir -p "$CI_RESULTS_DIR"
-CI_NPM_REGISTRY="${npm_config_registry:-}" \\
+# The packaging entry point insists its output sits below .ci-results/, so the
+# artifacts are collected from there into the directory that gets published.
 EXPECTED_COMMIT="$(git rev-parse HEAD)" \\
 ARTIFACT_COMMIT="${CI_SOURCE_SHA:-$(git rev-parse HEAD)}" \\
     bash .ci/package-binary-codearts.sh \\
         --arch x86_64 \\
-        --output .tmp/ci-results/binary/x86_64
+        --output .ci-results/binary-release-x86_64
+mkdir -p "$CI_RESULTS_DIR/binary/x86_64"
+cp -a .ci-results/binary-release-x86_64/. "$CI_RESULTS_DIR/binary/x86_64/"
 '''
                     }
                     post { always { publishResults('binary-x86_64') } }
