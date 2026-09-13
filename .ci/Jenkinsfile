@@ -1,28 +1,24 @@
-// Pipeline for a self-hosted Jenkins worker whose kernel grants unprivileged
+// Pipeline for a self-hosted Jenkins whose worker kernel grants unprivileged
 // user namespaces, so bubblewrap runs natively and the UT guest tier needs no
 // QEMU guest.
 //
-// Nothing here runs on the Jenkins controller. Every stage declares a Docker
-// agent, so each step executes inside a container:
-//   * the toolchain image is built from a Docker CLI agent that reaches the
-//     host daemon over the mounted socket
-//   * the three test layers run inside the toolchain image and never see that
-//     socket, per .ci/README.md
+// Every stage runs on an ephemeral agent container provisioned by a Docker
+// Cloud, and that container holds no Docker socket: a layer runs `pnpm ci:*`
+// in the agent itself rather than in containers it starts. Nothing in this
+// file, and nothing a layer runs, can reach the Docker API.
+//
+// The container's shape — image, the three non-privileged sandbox allowances,
+// the numeric identity, and the cache mounts — belongs to the cloud template on
+// the controller, not here. The image itself is built from .ci/agent.Dockerfile
+// outside this pipeline, so there is no build step that would need a socket.
 //
 // Rules from .agents/skills/ci/SKILL.md that this file keeps:
 //   * call the pnpm ci:* entry points; never build a second, platform-specific
 //     test definition here
 //   * never weaken a sandbox assertion to make the pipeline green
-//   * no --privileged, and no Docker socket inside the test container
 //
-// Required Jenkins global environment variables:
-//   CI_CACHE_DIR        host directory holding the pnpm/uv/Playwright caches,
-//                       the E2E service environments and the passwd shim
-//   CI_DOCKER_GID       gid of the host's docker group, for the CLI agent
-// Optional ones (all fall back to upstream defaults):
-//   CI_DOCKER_CLI_IMAGE, CI_NODE_IMAGE, CI_UV_IMAGE, CI_BUILD_PROXY,
-//   CI_RUN_PROXY, CI_APT_MIRROR, CI_NPM_REGISTRY, CI_UV_PYTHON_MIRROR,
-//   CI_E2E_STACK_TIMEOUT_SECONDS,
+// Jenkins global environment variables it reads, all optional:
+//   CI_NPM_REGISTRY, CI_RUN_PROXY, CI_E2E_STACK_TIMEOUT_SECONDS,
 //   CI_OBS_AK_CREDENTIAL_ID / CI_OBS_SK_CREDENTIAL_ID
 //
 // Publishing results to OBS needs two Jenkins secret-text credentials holding
@@ -32,48 +28,6 @@
 // No machine path, private mirror or credential value is written into the
 // repository.
 
-// These three options are what lets bubblewrap create a user namespace inside
-// the container. Drop any one of them and the Runner tests report
-// "bwrap: No permissions to create new namespace". They are the same
-// non-privileged allowances the product's checked-in Compose file uses, not a
-// stand-in for --privileged.
-String sandboxOpts() {
-    return '--security-opt seccomp=unconfined ' +
-           '--security-opt apparmor=unconfined ' +
-           '--security-opt systempaths=unconfined'
-}
-
-// Arguments shared by the three layer agents. The Docker Pipeline plugin
-// already mounts the workspace at its own path and runs as the Jenkins uid, so
-// only the caches, the passwd shim and the sandbox allowances are left.
-//
-// HOME is pinned because the plugin propagates the controller's environment
-// into the container, and the controller's home is not mounted here.
-String layerArgs() {
-    return sandboxOpts() +
-        " -e HOME=/ci-home" +
-        " -v ${env.CI_CACHE_DIR}:/ci-cache" +
-        " -v ${env.CI_CACHE_DIR}/nss/passwd:/etc/passwd:ro" +
-        " -v ${env.CI_CACHE_DIR}/nss/group:/etc/group:ro"
-}
-
-// Each layer's scratch data — and for E2E the service virtualenvs — lives under
-// CI_RUNTIME_DIR. Those virtualenvs are editable installs whose .pth files
-// record the checkout's absolute path, so the directory is keyed by that path.
-// Parallel branches take whichever of the job's workspaces is free, so a single
-// shared directory would leave the stack importable only from the workspace
-// that provisioned it, and the layer would report BLOCKED on a
-// ModuleNotFoundError. Keying it also keeps the branches' scratch state apart.
-String runtimeDir(String layer) {
-    return """
-KEY="\$(printf '%s' "\$PWD" | md5sum | cut -c1-12)"
-export CI_RUNTIME_DIR="/ci-cache/runtime/${layer}-\$KEY"
-mkdir -p "\$CI_RUNTIME_DIR"
-echo "runtime dir: \$CI_RUNTIME_DIR  (checkout \$PWD)"
-rm -rf "\$CI_RESULTS_DIR"; mkdir -p "\$CI_RESULTS_DIR"
-"""
-}
-
 // Publishing is diagnostics, never a verdict. It runs after the layer has
 // recorded its exit code, so it cannot turn a red layer green; and a broken
 // upload marks the build unstable rather than impersonating a test failure.
@@ -81,11 +35,9 @@ rm -rf "\$CI_RESULTS_DIR"; mkdir -p "\$CI_RESULTS_DIR"
 // The key layout is the one in
 // .agents/skills/ci/references/codearts-obs.md: commit and run id both appear,
 // so reruns of a commit cannot overwrite one another. The run id is prefixed
-// here to keep this worker's objects distinguishable from a CodeArts run.
-//
-// The prefix stops at the run id because CI_RESULTS_DIR already contains the
-// layer's own directory, and each parallel branch clears and fills only its
-// own. Naming the layer twice would store st/run.log under .../st/st/run.log.
+// here to keep this worker's objects distinguishable from a CodeArts run. The
+// prefix stops at the run id because CI_RESULTS_DIR already contains the
+// layer's own directory.
 void publishResults(String layer) {
     archiveArtifacts artifacts: '.tmp/ci-results/**', allowEmptyArchive: true
     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE',
@@ -111,13 +63,10 @@ uv run --script .ci/obs-upload.py \\
 }
 
 pipeline {
-    // No step may run on the controller; each stage brings its own container.
+    // Nothing runs on the controller; each branch brings its own container.
     agent none
 
     options {
-        // The implicit checkout runs on the node, outside any container, so it is
-        // disabled; every stage checks out inside its own agent instead.
-        skipDefaultCheckout()
         // The caches are shared, so two builds of this job cannot overlap. The
         // three layers inside one build still run in parallel.
         disableConcurrentBuilds()
@@ -126,8 +75,6 @@ pipeline {
     }
 
     environment {
-        CI_IMAGE = 'sciencediscovery-ci:test'
-
         // Dependency mirrors for the layers. npm resolves from the lockfile's
         // integrity hashes, so a registry mirror is safe; uv cannot use one,
         // because uv.lock pins both the index and the files.pythonhosted.org
@@ -145,146 +92,73 @@ pipeline {
     }
 
     stages {
-        stage('Toolchain image') {
-            agent {
-                docker {
-                    image "${env.CI_DOCKER_CLI_IMAGE ?: 'docker:29-cli'}"
-                    // The socket is what makes this a build agent rather than a
-                    // test agent; the layer agents below deliberately lack it.
-                    args "-v /var/run/docker.sock:/var/run/docker.sock" +
-                         " --group-add ${env.CI_DOCKER_GID ?: '999'}" +
-                         " -v ${env.CI_CACHE_DIR}:/ci-cache -e HOME=/tmp"
-                    alwaysPull false
-                }
-            }
-            steps {
-                checkout scm
-                // The build context is .ci/, so the Dockerfile cannot copy the
-                // product checkout into a layer. Fully cached, and therefore a
-                // few seconds, whenever .ci/Dockerfile has not changed.
-                sh label: 'docker build .ci', script: '''
-set -eu
-ARGS=""
-if [ -n "${CI_NODE_IMAGE:-}" ];      then ARGS="$ARGS --build-arg NODE_IMAGE=$CI_NODE_IMAGE"; fi
-if [ -n "${CI_UV_IMAGE:-}" ];        then ARGS="$ARGS --build-arg UV_IMAGE=$CI_UV_IMAGE"; fi
-if [ -n "${CI_APT_MIRROR:-}" ];      then ARGS="$ARGS --build-arg APT_MIRROR=$CI_APT_MIRROR"; fi
-if [ -n "${CI_NPM_REGISTRY:-}" ];    then ARGS="$ARGS --build-arg NPM_REGISTRY=$CI_NPM_REGISTRY"; fi
-if [ -n "${CI_UV_PYTHON_MIRROR:-}" ]; then ARGS="$ARGS --build-arg UV_PYTHON_INSTALL_MIRROR=$CI_UV_PYTHON_MIRROR"; fi
-if [ -n "${CI_BUILD_PROXY:-}" ]; then
-    # BuildKit's predefined build args: build-time only, never kept in the image.
-    # They cover whatever has no mirror of its own.
-    ARGS="$ARGS --build-arg HTTP_PROXY=$CI_BUILD_PROXY --build-arg HTTPS_PROXY=$CI_BUILD_PROXY"
-    ARGS="$ARGS --build-arg http_proxy=$CI_BUILD_PROXY --build-arg https_proxy=$CI_BUILD_PROXY"
-fi
-docker build $ARGS --file .ci/Dockerfile --tag "$CI_IMAGE" .ci
-'''
-                // The image's /etc/passwd only knows node(1000). When the
-                // checkout owner's uid is anything else, everything in the
-                // container that calls getpwuid() fails: the executor package
-                // shells out to ssh-keygen and reports "No user exists for uid
-                // <N>". Keep the image's own entries and append the caller,
-                // rather than replacing the file with the host's. The layer
-                // agents mount the result, so it has to live in the cache
-                // directory they all share.
-                sh label: 'nss shim', script: '''
-set -eu
-mkdir -p /ci-cache/nss
-docker run --rm "$CI_IMAGE" cat /etc/passwd > /ci-cache/nss/passwd
-docker run --rm "$CI_IMAGE" cat /etc/group  > /ci-cache/nss/group
-if ! grep -q ":x:$(id -u):" /ci-cache/nss/passwd; then
-    echo "ci:x:$(id -u):$(id -g):ci:/ci-home:/bin/bash" >> /ci-cache/nss/passwd
-fi
-if ! grep -q ":x:$(id -g):" /ci-cache/nss/group; then
-    echo "ci:x:$(id -g):" >> /ci-cache/nss/group
-fi
-'''
-            }
-        }
-
         // The three layers are independent and share nothing writable except
-        // the content-addressed dependency caches, so they run concurrently.
-        // Each branch gets its own agent, workspace and checkout.
+        // the dependency caches, so they run concurrently. Each branch gets its
+        // own container, workspace and checkout, and the container is discarded
+        // afterwards — which is why the runtime directories below can be fixed
+        // names rather than derived from a workspace path that used to move.
         stage('Layers') {
             parallel {
                 stage('UT') {
-                    agent {
-                        docker {
-                            image "${env.CI_IMAGE}"
-                            args layerArgs()
-                            alwaysPull false
-                        }
-                    }
+                    agent { label 'ci-docker' }
                     environment {
                         CI_RESULTS_DIR = "${WORKSPACE}/.tmp/ci-results"
+                        CI_RUNTIME_DIR = '/ci-cache/runtime/ut'
                     }
                     steps {
-                        checkout scm
-                        // The aggregate entry point: the host tier followed by the guest
-                        // tier, the latter running bubblewrap natively rather than under
-                        // QEMU. run-layer.mjs stops at the first failing command, so a red
-                        // host tier leaves the guest tier unrun.
-                        sh label: 'pnpm ci:ut', script: 'set -eu' + runtimeDir('ut') + 'pnpm ci:ut'
+                        // The aggregate entry point: the host tier followed by the
+                        // guest tier, the latter running bubblewrap natively rather
+                        // than under QEMU. run-layer.mjs stops at the first failing
+                        // command, so a red host tier leaves the guest tier unrun.
+                        sh 'mkdir -p "$CI_RUNTIME_DIR" && pnpm ci:ut'
                     }
-                    post {
-                        always { publishResults('ut') }
-                    }
+                    post { always { publishResults('ut') } }
                 }
 
                 stage('ST') {
-                    agent {
-                        docker {
-                            image "${env.CI_IMAGE}"
-                            args layerArgs()
-                            alwaysPull false
-                        }
-                    }
+                    agent { label 'ci-docker' }
                     environment {
                         CI_RESULTS_DIR = "${WORKSPACE}/.tmp/ci-results"
+                        CI_RUNTIME_DIR = '/ci-cache/runtime/st'
                     }
                     steps {
-                        checkout scm
-                        sh label: 'pnpm ci:st', script: 'set -eu' + runtimeDir('st') + 'pnpm ci:st'
+                        sh 'mkdir -p "$CI_RUNTIME_DIR" && pnpm ci:st'
                     }
-                    post {
-                        always { publishResults('st') }
-                    }
+                    post { always { publishResults('st') } }
                 }
 
                 stage('E2E (mocked)') {
-                    agent {
-                        docker {
-                            image "${env.CI_IMAGE}"
-                            args layerArgs()
-                            alwaysPull false
-                        }
-                    }
+                    agent { label 'ci-docker' }
                     environment {
                         CI_RESULTS_DIR = "${WORKSPACE}/.tmp/ci-results"
+                        CI_RUNTIME_DIR = '/ci-cache/runtime/e2e'
                         CI_E2E_STACK_TIMEOUT_SECONDS = "${env.CI_E2E_STACK_TIMEOUT_SECONDS ?: '900'}"
                     }
                     steps {
-                        checkout scm
-                        // The stack's data directory sits in the runtime directory and
-                        // survives builds. Without a reset, state leaks: journeys that
-                        // assert an empty state find the previous build's providers and
-                        // Skill library, and report a missing "no providers yet" panel or
-                        // "Run this journey with fresh isolated Skill library data".
-                        // envs/ holds the service virtualenvs and must survive.
+                        // The workspace is fresh every build, but the runtime
+                        // directory lives in the shared cache and is not. Without a
+                        // reset, state leaks: journeys that assert an empty state
+                        // find the previous build's providers and Skill library, and
+                        // report a missing "no providers yet" panel or "Run this
+                        // journey with fresh isolated Skill library data". envs/
+                        // holds the service virtualenvs, whose editable installs
+                        // record this checkout's path, and must survive.
                         //
-                        // E2E_COMMIT_SHA gives journey reports an immutable revision. The
-                        // first run provisions those virtualenvs and Chromium, which the
-                        // default 180-second health wait does not cover; that shows up as
-                        // "BLOCKED: isolated E2E stack did not become healthy".
-                        sh label: 'pnpm ci:e2e', script: 'set -eu' + runtimeDir('e2e') + '''
+                        // E2E_COMMIT_SHA gives journey reports an immutable revision.
+                        // The first run provisions those virtualenvs and Chromium,
+                        // which the default 180-second health wait does not cover;
+                        // that shows up as "BLOCKED: isolated E2E stack did not
+                        // become healthy".
+                        sh label: 'pnpm ci:e2e', script: '''
+set -eu
+mkdir -p "$CI_RUNTIME_DIR"
 if [ -d "$CI_RUNTIME_DIR/data" ]; then
     find "$CI_RUNTIME_DIR/data" -mindepth 1 -maxdepth 1 ! -name envs -exec rm -rf {} +
 fi
 E2E_COMMIT_SHA="$(git rev-parse HEAD)" pnpm ci:e2e
 '''
                     }
-                    post {
-                        always { publishResults('e2e') }
-                    }
+                    post { always { publishResults('e2e') } }
                 }
             }
         }
