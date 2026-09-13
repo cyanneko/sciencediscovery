@@ -94,6 +94,13 @@ if [ ! -d "\$CI_RESULTS_DIR" ]; then
     echo "obs-upload: \$CI_RESULTS_DIR does not exist, nothing to publish"
     exit 0
 fi
+# The uploader travels with the revision under test. A revision that predates it
+# — any merge request branched before this landed on the target — simply has no
+# uploader, which is worth saying plainly rather than failing on a missing file.
+if [ ! -f .ci/obs-upload.py ]; then
+    echo "obs-upload: this revision has no .ci/obs-upload.py; results stay in the build archive only"
+    exit 0
+fi
 TESTED="\$(git rev-parse HEAD 2>/dev/null || echo unknown)"
 uv run --script .ci/obs-upload.py \\
     --prefix "sciencediscovery/ci/\$TESTED/jenkins-\$BUILD_NUMBER" \\
