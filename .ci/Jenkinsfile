@@ -145,13 +145,28 @@ pipeline {
         CI_REPO_URL = "${repoUrl()}"
 
         // Dependency mirrors for the test layers. npm resolves from the
-        // lockfile's integrity hashes, so a registry mirror is safe; uv cannot
-        // use one here, because uv.lock pins both the index and the
-        // files.pythonhosted.org URL of every wheel and uv sync --locked
-        // refuses anything else. What has no mirror goes through the proxy,
-        // which leaves the URLs and therefore the lock intact. NO_PROXY has to
+        // lockfile's integrity hashes, so a registry mirror is safe.
+        //
+        // uv is the awkward one. Every uv.lock in this repository already pins
+        // its packages to one mirror, so the locked wheels never touch PyPI
+        // proper. What does is the PEP 517 build backend: `hatchling` sits in
+        // build-system.requires, is not part of the lock, and is resolved
+        // fresh against uv's *default* index every time a local package is
+        // built. That single request was the whole of the network exposure,
+        // and it is why an upstream hiccup could take out UT and E2E while the
+        // binary layer sailed through.
+        //
+        // Pointing the default index at the mirror the locks already use fixes
+        // it without touching the lock: uv resolves hatchling from there and
+        // every locked URL still matches, so nothing is re-resolved. Pointing
+        // it at a *different* mirror would instead rewrite all three lock
+        // files, so CI_UV_DEFAULT_INDEX must stay in step with what the locks
+        // pin — check with `grep -o 'registry = "[^"]*"' services/*/uv.lock`.
+        //
+        // The proxy stays for everything that has no mirror. NO_PROXY has to
         // cover loopback or the E2E stack's own health checks get proxied away.
         npm_config_registry = "${env.CI_NPM_REGISTRY ?: 'https://registry.npmjs.org/'}"
+        UV_DEFAULT_INDEX = "${env.CI_UV_DEFAULT_INDEX ?: ''}"
         HTTP_PROXY  = "${env.CI_RUN_PROXY ?: ''}"
         HTTPS_PROXY = "${env.CI_RUN_PROXY ?: ''}"
         http_proxy  = "${env.CI_RUN_PROXY ?: ''}"
@@ -272,9 +287,11 @@ E2E_COMMIT_SHA="$(git rev-parse HEAD)" pnpm ci:e2e
                     agent { label 'ci-docker' }
                     environment {
                         CI_RESULTS_DIR = "${WORKSPACE}/.tmp/ci-results"
-                        // The binary layer embeds a Python runtime rather than
-                        // resolving a lockfile, so unlike the test layers it can
-                        // take a PyPI mirror.
+                        // This layer embeds a Python runtime instead of
+                        // installing from a lock, so it is free to use whichever
+                        // index is fastest and need not match what the locks
+                        // pin. That is why it overrides the pipeline-level
+                        // UV_DEFAULT_INDEX rather than sharing it.
                         CI_PYPI_INDEX            = "${env.CI_PYPI_INDEX ?: ''}"
                         UV_DEFAULT_INDEX         = "${env.CI_PYPI_INDEX ?: ''}"
                         UV_PYTHON_INSTALL_MIRROR = "${env.CI_UV_PYTHON_MIRROR ?: ''}"
