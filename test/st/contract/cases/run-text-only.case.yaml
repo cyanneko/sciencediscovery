@@ -33,3 +33,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: run-text-only
 resultPath: contract-run-text-only
+assertions:
+  mode: deterministic

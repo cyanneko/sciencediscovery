@@ -9,6 +9,11 @@ capabilities:
   - real
 llm:
   mode: real
+  model:
+    protocol: chat-completions
+    baseUrlEnv: E2E_LLM_BASE_URL
+    modelEnv: E2E_LLM_MODEL
+    apiKeyEnv: E2E_LLM_TOKEN
 supportedExecutors:
   - native
   - jiuwenswarm
@@ -34,3 +39,5 @@ tags:
   - network:external
   - npu:none
   - sandbox:bubblewrap
+assertions:
+  mode: deterministic

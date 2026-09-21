@@ -1,4 +1,5 @@
 // Copyright (C) 2026 Huawei Technologies Co., Ltd. Licensed under Apache-2.0.
+import { evaluationProblems, subjectEnvironment } from './evaluation.mjs';
 export function parseOptions(args) {
   const options = { cases: [], tags: [], excludes: [], capabilities: [] };
   const values = { '--case': 'cases', '--tag': 'tags', '--exclude': 'excludes', '--capability': 'capabilities', '--layer': 'layer', '--surface': 'surface', '--profile': 'profile', '--executor': 'executor' };
@@ -49,10 +50,12 @@ export function selectCases(catalog, options, action = 'run') {
   });
 }
 export function gateProblems(c, env = process.env) {
-  const errors = [];
+  const errors = evaluationProblems(c, env);
+  let resolvedEnv = env;
+  try { resolvedEnv = {...env,...subjectEnvironment(c,env)}; } catch {}
   if (c.requestedExecutor !== 'independent' && !c.executors.includes(c.requestedExecutor)) errors.push(`Unsupported executor ${c.requestedExecutor}; supported: ${c.executors.join(', ')}`);
   if (c.gates?.allowEnv && env[c.gates.allowEnv] !== '1') errors.push(`Opt-in required: ${c.gates.allowEnv}=1`);
-  for (const name of c.gates?.requiredEnv ?? []) if (!env[name]?.trim()) errors.push(`Missing environment: ${name}`);
+  for (const name of c.gates?.requiredEnv ?? []) if (!resolvedEnv[name]?.trim()) errors.push(`Missing environment: ${name}`);
   if (c.runner === 'playwright' && c.requestedExecutor === 'jiuwenswarm') {
     for (const name of ['JIUWENSWARM_GATEWAY_URL', 'JIUWENSWARM_MGMT_URL']) if (!env[name]?.trim()) errors.push(`Missing environment: ${name}`);
   }

@@ -33,3 +33,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: run-cancel
 resultPath: contract-run-cancel
+assertions:
+  mode: deterministic

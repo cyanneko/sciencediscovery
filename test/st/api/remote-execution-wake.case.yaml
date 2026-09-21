@@ -24,3 +24,5 @@ ci:
       - native
     required: true
 resultPath: remote-execution-wake
+assertions:
+  mode: deterministic

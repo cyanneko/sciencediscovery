@@ -34,3 +34,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: run-resume-after-disconnect
 resultPath: contract-run-resume-after-disconnect
+assertions:
+  mode: deterministic

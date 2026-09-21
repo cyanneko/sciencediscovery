@@ -5,6 +5,7 @@ import { join, resolve, basename } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { root, walk } from './discovery.mjs';
 import { requireAssertions } from './contract/validation.mjs';
+import { subjectEnvironment, modelFacts } from './evaluation.mjs';
 import { gateProblems } from './selection.mjs';
 export function preflight(c, env = process.env, directory = root) {
   const errors = gateProblems(c, env);
@@ -24,6 +25,24 @@ export function preflight(c, env = process.env, directory = root) {
     } catch (error) { errors.push(`Invalid contract baseline: ${error.message}`); }
   }
   return errors;
+}
+export function assessmentReports(evidence) {
+  const file = walk(evidence).find(p => p.endsWith('/results.json'));
+  if (!file) return [];
+  const raw = JSON.parse(readFileSync(join(evidence,file),'utf8'));
+  const reports = [];
+  function visit(suite) {
+    for (const spec of suite.specs ?? []) for (const test of spec.tests ?? []) {
+      for (const [attempt,result] of (test.results ?? []).entries()) {
+        for (const attachment of result.attachments ?? []) if (attachment.name === 'assessment' && attachment.body) {
+          reports.push({title:spec.title,attempt,resultStatus:result.status,...JSON.parse(Buffer.from(attachment.body,'base64').toString('utf8'))});
+        }
+      }
+    }
+    for (const child of suite.suites ?? []) visit(child);
+  }
+  visit(raw);
+  return reports;
 }
 export function outputVerdict(c, code, output, evidence) {
   if (c.runner === 'layer') {
@@ -45,6 +64,16 @@ export function outputVerdict(c, code, output, evidence) {
     const stats = raw.stats ?? {};
     if (stats.unexpected || raw.errors?.length) return { status: 'FAIL', framework: stats };
     if (!stats.expected && !stats.flaky) return { status: stats.skipped ? 'SKIPPED' : 'FAIL', reason: 'No browser cases passed', framework: stats };
+    if (c.assertions?.judge) {
+      try {
+        const reports = assessmentReports(evidence).filter(r => r.resultStatus === 'passed');
+        if (reports.length !== (stats.expected ?? 0) + (stats.flaky ?? 0) || reports.some(r => r.mode !== c.assertions.mode || r.status !== 'PASS' || !r.judge?.criteria?.length)) return {status:'FAIL',reason:'Missing successful configured scoring evidence'};
+        for (const report of reports) for (const criterion of c.assertions.judge.rubric) {
+          const rows = report.judge.criteria.filter(row => row.id === criterion.id);
+          if (rows.length !== 1 || !Number.isFinite(rows[0].score) || rows[0].score < criterion.threshold || rows[0].score > 1) return {status:'FAIL',reason:'Judge evidence fails configured threshold'};
+        }
+      } catch { return {status:'FAIL',reason:'Invalid configured scoring evidence'}; }
+    }
     return { status: stats.skipped ? 'SKIPPED' : 'PASS', framework: stats, flaky: (stats.flaky ?? 0) > 0, rawReport: join(evidence, file) };
   }
   if (c.runner === 'node') {
@@ -65,7 +94,7 @@ export async function runSelected(selected, { directory = root, env = process.en
   const dirty = spawnSync('git', ['status', '--porcelain'], { cwd: directory, encoding: 'utf8' }).stdout?.trim() !== '';
   const preparation = env.CI_E2E_PREPARE_ONLY === '1';
   if (preparation && selected.some(c => c.runner !== 'playwright')) throw new Error('CI_E2E_PREPARE_ONLY only applies to browser setup');
-  const summary = { executionCountKind: 'started entry processes; framework case counts are reported separately', phase: preparation ? 'prepare' : 'test', revision, dirty, selected: selected.map(c => ({ id: c.id, executor: c.requestedExecutor, source: c.source, configPath: c.configPath, llm: c.llm, profile: c.profile, required: c.required !== false, command: c.command })), outcomes: [] };
+  const summary = { executionCountKind: 'started entry processes; framework case counts are reported separately', phase: preparation ? 'prepare' : 'test', revision, dirty, selected: selected.map(c => ({ id: c.id, executor: c.requestedExecutor, source: c.source, configPath: c.configPath, llm: c.llm, assertions: c.assertions, profile: c.profile, required: c.required !== false, command: c.command })), outcomes: [] };
   const persist = () => writeFileSync(join(runRoot, 'summary.json'), JSON.stringify(summary, null, 2) + '\n');
   let stopped = false, interrupted = false, current, interruptionTimer;
   const signal = () => { interrupted = stopped = true; if (current?.pid) { const pid = current.pid; try { process.kill(-pid, 'SIGTERM'); } catch {}
@@ -75,7 +104,7 @@ export async function runSelected(selected, { directory = root, env = process.en
     for (const c of selected) {
       const evidence = join(runRoot, `${c.id}-${c.requestedExecutor}`);
       mkdirSync(evidence, { recursive: true });
-      const item = { id: c.id, configPath: c.configPath, profile: c.profile, required: c.required !== false, policyReason: c.policyReason, requestedExecutor: c.requestedExecutor, actualExecutor: null, runner: c.runner, evidence, status: 'NOT_RUN', executed: false };
+      const item = { id: c.id, configPath: c.configPath, profile: c.profile, required: c.required !== false, policyReason: c.policyReason, models: modelFacts(c,env), requestedExecutor: c.requestedExecutor, actualExecutor: null, runner: c.runner, evidence, status: 'NOT_RUN', executed: false };
       summary.outcomes.push(item); persist();
       if (stopped) { item.reason = interrupted ? 'Interrupted' : 'Fail-fast'; continue; }
       const problems = preflight(c, env, directory);
@@ -86,9 +115,9 @@ export async function runSelected(selected, { directory = root, env = process.en
         let output = '', timedOut = false;
         const started = Date.now();
         const runtime = resolve(directory, env.CI_RUNTIME_DIR || '.test-runs/.runtime', basename(runRoot), `${c.id}-${c.requestedExecutor}`);
-        const childEnv = { ...env, ...c.env, CI: '1', TEST_FAIL_FAST: failFast ? '1' : '0', CI_RESULTS_DIR: evidence, CI_RUNTIME_DIR: runtime };
+        const childEnv = { ...env, ...subjectEnvironment(c,env), ...c.env, CI: '1', TEST_FAIL_FAST: failFast ? '1' : '0', CI_RESULTS_DIR: evidence, CI_RUNTIME_DIR: runtime };
         if (c.runner === 'playwright') Object.assign(childEnv, { CI_E2E_BACKEND: c.requestedExecutor === 'jiuwenswarm' ? 'jiuwenswarm' : 'legacy', SCIENCE_AGENT_EXECUTOR: c.requestedExecutor, SCIENCE_AGENT_ADAPTER: c.requestedExecutor === 'jiuwenswarm' ? '1' : '0' });
-        const secrets = Object.entries(env).filter(([key, value]) => /TOKEN|SECRET|PASSWORD|API_KEY|LLM_KEY/.test(key) && value?.length >= 8).map(([,v]) => v);
+        const secrets = Object.entries(env).filter(([key, value]) => (/TOKEN|SECRET|PASSWORD|API_KEY|LLM_KEY/.test(key) || [c.llm?.model?.apiKeyEnv,c.assertions?.judge?.model?.apiKeyEnv].includes(key)) && value?.length > 0).map(([,v]) => v);
         const redact = data => secrets.reduce((s, secret) => s.replaceAll(secret, '[redacted]'), String(data));
         let spawnError;
         const code = await new Promise(resolve => {
@@ -109,6 +138,7 @@ export async function runSelected(selected, { directory = root, env = process.en
         rmSync(runtime, { recursive: true, force: true });
         Object.assign(item, { executed: !spawnError, exitCode: code, durationMs: Date.now() - started,
           actualExecutor: spawnError ? null : c.requestedExecutor, ...(preparation && code === 0 ? { status: 'NOT_RUN', prepared: true, reason: 'Dependency preparation only; no tests executed' } : outputVerdict(c, code, output, evidence)) });
+        if (c.runner === 'playwright') { try { item.assessments = assessmentReports(evidence); } catch { item.assessmentError = 'Invalid assessment report'; } }
         if (preparation) { item.executed = false; item.actualExecutor = null; }
         if (c.runner === 'contract') { item.actualExecutor = null; item.declaredExecutor = env.E2E_TARGET_EXECUTOR; item.executorEvidence = 'operator-declared external target (E2E_TARGET_EXECUTOR); not independently verified'; }
         if (timedOut || interrupted || spawnError) Object.assign(item, { status: spawnError ? 'BLOCKED' : 'FAIL', reason: spawnError ?? (timedOut ? 'Timeout' : 'Interrupted') });

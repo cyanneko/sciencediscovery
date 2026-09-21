@@ -33,3 +33,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: unknown-ids
 resultPath: contract-unknown-ids
+assertions:
+  mode: deterministic

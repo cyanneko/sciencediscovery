@@ -28,3 +28,5 @@ tags:
   - network:local
   - npu:none
   - sandbox:bubblewrap
+assertions:
+  mode: deterministic

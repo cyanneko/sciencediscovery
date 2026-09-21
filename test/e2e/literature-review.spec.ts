@@ -14,6 +14,7 @@
 
 import { expect, type Page, type TestInfo } from "@playwright/test";
 
+import { apiBaseUrl, authorizationHeader } from "./access-token-auth.js";
 import { requireRealEnv, requireRealStack, test } from "./helpers/browser-fixture.ts";
 
 // Screenshots land under the local e2e environment (cwd when run from .e2e/).
@@ -117,20 +118,20 @@ test.describe("Wave0+1 Linux Web literature review E2E", () => {
    *   loads, models are registered, a PubMed-backed evidence brief run
    *   completes with a canonical clickable citation.
    * Steps:
-   *   1. Verify the workspace and the seeded model registry.
+   *   1. Register the case-configured real model and verify it in the workspace registry.
    *   2. Create a project and a session with the evidence-brief skill.
-   *   3. Enable the PubMed connector, set plan to auto, pick the Flash model.
+   *   3. Enable the PubMed connector, set plan to auto, pick the configured model.
    *   4. Run a TP53 research prompt and wait for completion.
    *   5. Assert a canonical PubMed citation in the summary or artifact.
-   * Environment: Running stack at E2E_BASE_URL whose model registry is seeded with
- *   working DeepSeek V4 Pro/Flash entries ("Key saved"); PubMed connector
+   * Environment: Running stack at E2E_BASE_URL with a case-configured real model and
+   *   PubMed connector
    *   and life-science-evidence-brief skill available.
    * LLM: Real turns through E2E_LLM_BASE_URL using E2E_LLM_MODEL.
    * WebSearch: None.
    * PaperSources: Live PubMed queries; results and rate limits vary.
    * MCP: PubMed connector exposed through the product's MCP flow.
    * OtherExternal: Local ScienceDiscovery API, gateway, browser UI, and runner.
-   * Credentials: E2E_LLM_BASE_URL, E2E_LLM_MODEL, E2E_LLM_TOKEN; seeded model key.
+   * Credentials: E2E_LLM_BASE_URL, E2E_LLM_MODEL, E2E_LLM_TOKEN, E2E_API_TOKEN.
    * CostSideEffects: Billable tokens, PubMed traffic, local projects/sessions, screenshots.
  */
   test("Linux Web工作台、模型配置与简单文献调研主路径", { tag: "@real" }, async ({ page }, testInfo) => {
@@ -138,8 +139,14 @@ test.describe("Wave0+1 Linux Web literature review E2E", () => {
     // Keep the browser alive long enough to assert success or its explicit
     // product error instead of racing the application timeout.
     test.setTimeout(660000);
-    requireRealEnv(testInfo, "E2E_LLM_BASE_URL", "E2E_LLM_MODEL", "E2E_LLM_TOKEN");
+    const real = requireRealEnv(testInfo, "E2E_LLM_BASE_URL", "E2E_LLM_MODEL", "E2E_LLM_TOKEN");
     await requireRealStack(testInfo);
+    const modelName = `Literature model ${Date.now()}`;
+    const registered = await page.request.post(`${apiBaseUrl()}/api/models`, {
+      headers: authorizationHeader(),
+      data: {name:modelName,baseUrl:real.E2E_LLM_BASE_URL,model:real.E2E_LLM_MODEL,apiToken:real.E2E_LLM_TOKEN},
+    });
+    expect(registered.ok(), "configured real model should register").toBe(true);
     await openWorkspace(page);
 
     // 1. 确认 Linux Web 工作台可访问与模型已配置（已有历史项目时不假设空白落地页）
@@ -151,14 +158,9 @@ test.describe("Wave0+1 Linux Web literature review E2E", () => {
     const config = page.getByRole("dialog", { name: "System configuration" });
     await expect(config).toBeVisible();
     await config.getByRole("button", { name: "Model registry" }).click();
-    const modelPro = config.getByText("DeepSeek V4 Pro");
-    const modelFlash = config.getByText("DeepSeek V4 Flash");
+    const configuredModel = config.getByText(modelName, {exact:true});
     const savedKey = config.getByText("Key saved").first();
-    if (await modelPro.count() === 0 || await modelFlash.count() === 0 || await savedKey.count() === 0) {
-      testInfo.skip(true, "BLOCKED: model registry lacks seeded DeepSeek V4 Pro/Flash credentials");
-    }
-    await expect(modelPro).toBeVisible();
-    await expect(modelFlash).toBeVisible();
+    await expect(configuredModel).toBeVisible();
     await expect(savedKey).toBeVisible();
     await screenshot(page, "02-model-registry");
     await config.getByRole("button", { name: "Done" }).click();
@@ -186,10 +188,7 @@ test.describe("Wave0+1 Linux Web literature review E2E", () => {
 
     // 为端到端自动跑通，将 plan 设置为自动接受，避免人工审批阻塞
     await page.getByLabel("Plan").selectOption("auto");
-    // Use the configured low-latency profile for the live E2E. The Pro profile
-    // remains covered by the registry assertion above, but is too slow for a
-    // deterministic browser gate in this environment.
-    await page.getByLabel("Model for this task").selectOption({ label: "DeepSeek V4 Flash · deepseek-v4-flash" });
+    await page.getByLabel("Model for this task").selectOption({ label: `${modelName} · ${real.E2E_LLM_MODEL}` });
     await screenshot(page, "05b-plan-auto");
 
     // 5. 发起文献调研主题提问

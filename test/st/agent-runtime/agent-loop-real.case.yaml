@@ -10,6 +10,11 @@ capabilities:
   - agent-loop-real
 llm:
   mode: real
+  model:
+    protocol: chat-completions
+    baseUrlEnv: SCIENCE_AGENT_LLM_BASE_URL
+    modelEnv: SCIENCE_AGENT_LLM_MODEL
+    apiKeyEnv: SCIENCE_AGENT_LLM_API_TOKEN
 supportedExecutors:
   - native
 timeoutSeconds: 3600
@@ -37,3 +42,5 @@ tags:
   - network:external
   - npu:none
   - sandbox:none
+assertions:
+  mode: deterministic

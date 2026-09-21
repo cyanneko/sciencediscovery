@@ -43,7 +43,7 @@ import {
  * Credentials: E2E_API_TOKEN, E2E_LLM_BASE_URL, E2E_LLM_MODEL, and E2E_LLM_TOKEN.
  * CostSideEffects: billable provider tokens/rate limits; temporary local model and Project records are deleted in finally.
  */
-test("J5 真实请求生成统计结果并交付 Markdown", { tag: "@real" }, async ({ journey, page }, testInfo) => {
+test("J5 真实请求生成统计结果并交付 Markdown", { tag: "@real" }, async ({ journey, page, assessment }, testInfo) => {
   journey.scenario({
     goal: "一位不关心内部机制的研究员，只想像跟同事说话一样提一个需求，然后拿到能打开的结果文件。"
       + "这条旅程回答的是「用户那样说，产品自己走得通吗」。",
@@ -99,7 +99,7 @@ test("J5 真实请求生成统计结果并交付 Markdown", { tag: "@real" }, as
         );
         await expect(page.getByRole("button", { name: "Stop the current run" })).toBeVisible({ timeout: 30_000 });
         const terminal = await waitForRunTerminal(page, fixture.session.id, run.id, 540_000);
-        expect(terminal.status).toBe("completed");
+        await assessment.check("run completed", () => { expect(terminal.status).toBe("completed"); });
       },
     );
 
@@ -158,6 +158,11 @@ test("J5 真实请求生成统计结果并交付 Markdown", { tag: "@real" }, as
         const modal = page.getByRole("dialog", { name: `Artifact: ${markdownArtifacts[0]}` });
         await expect(modal).toBeVisible();
         await expect(modal.locator(".artifact-version-preview")).not.toHaveText("");
+        assessment.submit({
+          task: "Generate a small set of measurement data, calculate its mean and standard deviation with code, and save a concise Markdown report. Tell me the report filename when you finish.",
+          answer: await page.locator(".message.assistant").last().innerText(),
+          artifacts: [{name: markdownArtifacts[0], text: await modal.locator(".artifact-version-preview").innerText()}],
+        });
       },
     );
   } finally {

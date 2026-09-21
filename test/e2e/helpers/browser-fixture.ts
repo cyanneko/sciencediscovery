@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { relative } from "node:path";
+import { readManifest, normalizeCase } from "../../support/manifests.mjs";
+import { root } from "../../support/discovery.mjs";
+import { evaluationProblems, subjectEnvironment, evaluateEvidence } from "../../support/evaluation.mjs";
 import { test as base, type BrowserContext, type TestInfo } from "@playwright/test";
 
 import { createJourneyReporter, type JourneyReporter } from "./scenario-report.ts";
@@ -52,7 +56,45 @@ export async function blockNonLocalRequests(context: BrowserContext): Promise<vo
   });
 }
 
-export const test = base.extend<{ journey: JourneyReporter; mockedNetworkGuard: void }>({
+type Evidence = { task: string; answer: string; artifacts?: unknown; context?: unknown };
+type Assessment = {
+  check: (name: string, assertion: () => Promise<void> | void) => Promise<void>;
+  submit: (evidence: Evidence) => void;
+};
+export const test = base.extend<{ journey: JourneyReporter; mockedNetworkGuard: void; assessment: Assessment }>({
+  assessment: [async ({}, use, testInfo) => {
+    const file = relative(root, testInfo.file).replace(/\\/g, "/").replace(/\.spec\.ts$/, ".case.yaml");
+    const c = normalizeCase(readManifest(file), file);
+    const problems = evaluationProblems(c);
+    if (c.llm.mode === "real" && process.env.CI_ALLOW_REAL !== "1") problems.push("CI_ALLOW_REAL=1 is required");
+    testInfo.skip(problems.length > 0, `BLOCKED: ${problems.join("; ")}`);
+    const assigned = subjectEnvironment(c);
+    const previous = Object.fromEntries(Object.keys(assigned).map(k => [k, process.env[k]]));
+    Object.assign(process.env, assigned);
+    let input: Evidence | undefined;
+    const checks: string[] = [];
+    try {
+      await use({
+        check: async (name, assertion) => {
+          if (c.assertions.mode === "llm") return;
+          await assertion(); checks.push(name);
+        },
+        submit: evidence => { if (input) throw new Error("Submit evaluation evidence once per test"); input = evidence; },
+      });
+      if (testInfo.status !== "passed") return;
+      let result;
+      try {
+        if (c.assertions.mode === "hybrid" && !checks.length) throw new Error("Hybrid assertions require at least one assessment.check");
+        result = await evaluateEvidence(c.assertions, input);
+      } catch (error) {
+        result = { mode: c.assertions.mode, status: "FAIL", error: (error as Error).message };
+      }
+      await testInfo.attach("assessment", {body: JSON.stringify({...result, deterministicChecks: checks}), contentType: "application/json"});
+      if (result.status !== "PASS") throw new Error(`Configured assertions failed: ${result.error ?? "judge score below threshold"}`);
+    } finally {
+      for (const [key, value] of Object.entries(previous)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; }
+    }
+  }, {auto: true}],
   /**
    * Step-by-step evidence for user journeys. The reporter is torn down by the
    * fixture rather than by a per-spec `afterEach`, so `report.md` and

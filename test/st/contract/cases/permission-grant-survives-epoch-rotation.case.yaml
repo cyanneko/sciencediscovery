@@ -36,3 +36,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: permission-grant-survives-epoch-rotation
 resultPath: contract-permission-grant-survives-epoch-rotation
+assertions:
+  mode: deterministic

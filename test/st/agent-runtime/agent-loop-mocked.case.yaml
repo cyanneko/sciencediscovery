@@ -39,3 +39,5 @@ tags:
   - network:local
   - npu:none
   - sandbox:none
+assertions:
+  mode: deterministic

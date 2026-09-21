@@ -50,3 +50,12 @@ test('product E2E selects browser journeys; backend API and contracts select ST'
   assert.ok(st.filter(c => c.runner === 'node').every(c => c.id.startsWith('st.api.')));
   assert.ok(st.filter(c => c.runner === 'contract').every(c => c.id.startsWith('st.contract.')));
 });
+
+test('daily live subject/judge work is required, disjoint from deterministic work, and absent from PR', () => {
+  const choose=(profile,tag)=>selectCases(catalog,parseOptions(['--profile',profile,...(tag?['--tag',tag]:[])]));
+  const real=choose('daily','external:real'),local=choose('daily','external:none');
+  assert.equal(real.length,6);
+  assert.ok(real.every(c=>c.required && c.llm.mode==='real' && gateProblems(c,{}).length));
+  assert.equal(real.length+local.length,choose('daily').length);
+  assert.ok(choose('pr').every(c=>!c.assertions.judge && c.llm.mode!=='real'));
+});

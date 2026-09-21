@@ -34,3 +34,5 @@ tags:
   - npu:none
   - sandbox:bubblewrap
 reporting: steps
+assertions:
+  mode: deterministic

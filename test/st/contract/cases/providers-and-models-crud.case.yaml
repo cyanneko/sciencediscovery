@@ -35,3 +35,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: providers-and-models-crud
 resultPath: contract-providers-and-models-crud
+assertions:
+  mode: deterministic

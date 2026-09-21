@@ -34,3 +34,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: run-responses-tool-call
 resultPath: contract-run-responses-tool-call
+assertions:
+  mode: deterministic

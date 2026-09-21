@@ -13,3 +13,15 @@ jobs:
     uses: ./.github/workflows/test-policy.yml
     with:
       profile: daily
+  real-models:
+    uses: ./.github/workflows/test-policy.yml
+    with:
+      profile: daily
+      external: real
+    secrets:
+      E2E_LLM_BASE_URL: ${{ secrets.E2E_LLM_BASE_URL }}
+      E2E_LLM_MODEL: ${{ secrets.E2E_LLM_MODEL }}
+      E2E_LLM_TOKEN: ${{ secrets.E2E_LLM_TOKEN }}
+      E2E_JUDGE_BASE_URL: ${{ secrets.E2E_JUDGE_BASE_URL }}
+      E2E_JUDGE_MODEL: ${{ secrets.E2E_JUDGE_MODEL }}
+      E2E_JUDGE_TOKEN: ${{ secrets.E2E_JUDGE_TOKEN }}

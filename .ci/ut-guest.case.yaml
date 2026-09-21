@@ -39,3 +39,5 @@ tags:
   - npu:none
   - sandbox:bubblewrap
   - ut:guest
+assertions:
+  mode: deterministic

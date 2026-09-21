@@ -34,3 +34,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: global-settings-round-trips
 resultPath: contract-global-settings-round-trips
+assertions:
+  mode: deterministic

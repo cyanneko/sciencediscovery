@@ -81,3 +81,14 @@ test('browser children receive the selected backend consistently despite inherit
     assert.deepEqual(JSON.parse(readFileSync(output)),[executor==='native'?'legacy':executor,executor,executor==='native'?'0':'1']);
   }
 });
+
+test('a framework pass cannot conceal missing or below-threshold judge evidence', t => {
+  const dir=mkdtempSync(join(tmpdir(),'test-judge-verdict-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));
+  mkdirSync(join(dir,'test-results'));
+  const c={runner:'playwright',assertions:{mode:'hybrid',judge:{rubric:[{id:'correctness',threshold:0.8}]}}};
+  const write=assessment=>writeFileSync(join(dir,'test-results/results.json'),JSON.stringify({stats:{expected:1},suites:[{specs:[{title:'case',tests:[{results:[{status:'passed',attachments:assessment?[{name:'assessment',body:Buffer.from(JSON.stringify(assessment)).toString('base64')}]:[]}]}]}]}]}));
+  write();assert.equal(outputVerdict(c,0,'',dir).status,'FAIL');
+  write({mode:'hybrid',status:'PASS',judge:{criteria:[{id:'correctness',score:0.2}]}});assert.equal(outputVerdict(c,0,'',dir).status,'FAIL');
+  write({mode:'hybrid',status:'PASS',judge:{criteria:[{id:'correctness',score:0.9}]}});assert.equal(outputVerdict(c,0,'',dir).status,'PASS');
+  assert.equal(outputVerdict(c,1,'',dir).status,'FAIL');
+});

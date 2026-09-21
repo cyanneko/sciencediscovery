@@ -34,3 +34,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: runners-environments-reads
 resultPath: contract-runners-environments-reads
+assertions:
+  mode: deterministic

@@ -25,6 +25,8 @@ runner: playwright
 capabilities: [session]
 llm:
   mode: stub
+assertions:
+  mode: deterministic
 supportedExecutors: [native, jiuwenswarm]
 timeoutSeconds: 600
 requirements: [build, clean-worktree]
@@ -58,7 +60,7 @@ Outside PR/daily profiles every selected entry is required, including contracts.
 Unknown fields, duplicate YAML keys/IDs/source ownership, invalid policy backends,
 missing sources and missing scenario configurations fail validation.
 
-The PR policy has 7 required execution entries; daily has 76 required and 54
+The PR policy has 7 required execution entries; daily has 82 required and 54
 observational entries after backend expansion. These are execution entries, not
 framework test counts.
 
@@ -68,8 +70,8 @@ management and result delivery. Daily policy adds reviewed deterministic browser
 scenarios on both executors and the seven native API journeys. Its 54 contract
 entries (27 scenarios × two executor labels) are observational until isolated
 targets and platform-appropriate reviewed baselines are provisioned. They remain BLOCKED without
-those prerequisites; this is not contract coverage. Real-model, hardware and
-legacy cases remain explicit opt-ins. Existing product failures remain failures.
+those prerequisites; this is not contract coverage. The three real-model browser files run daily on both executors as required work.
+Other live ST, hardware and legacy cases remain explicit opt-ins. Existing product failures remain failures.
 
 GitHub `ci.yml` uses the PR policy; `test-daily.yml` calls the same reusable
 `test-policy.yml` daily at 00:17 UTC and supports manual dispatch. Scheduled runs
@@ -280,3 +282,124 @@ and assertion payloads are unchanged. Existing external baseline files using old
 scenario IDs must migrate those keys before comparison. Old draft IDs are not
 silently redirected. Shared browser helpers are `scenario-fixtures.ts`,
 `scenario-report.ts` and `browser-fixture.ts`.
+
+## Subject models and assertion strategies
+
+Every case declares `assertions.mode`: `deterministic` (framework/programmatic
+checks), `llm` (judge scoring), or `hybrid` (both must pass). Model choice is
+independent of assertion choice: a stub subject may use a live judge, and a real
+subject may use only deterministic assertions. Native UT/ST/contract runners
+currently support deterministic assertions; scoring is wired to browser cases
+through their `assessment` fixture. Unsupported runner/scoring combinations fail
+configuration validation instead of silently ignoring the policy.
+
+For example, a browser case can declare:
+
+```yaml
+llm:
+  mode: real
+  model:
+    protocol: chat-completions
+    baseUrlEnv: E2E_LLM_BASE_URL
+    modelEnv: E2E_LLM_MODEL
+    apiKeyEnv: E2E_LLM_TOKEN
+assertions:
+  mode: hybrid
+  judge:
+    model:
+      protocol: chat-completions
+      baseUrlEnv: E2E_JUDGE_BASE_URL
+      modelEnv: E2E_JUDGE_MODEL
+      apiKeyEnv: E2E_JUDGE_TOKEN
+    timeoutSeconds: 60
+    maxTokens: 1200
+    maxInputCharacters: 24000
+    rubric:
+      - id: task-completion
+        description: The supplied answer and artifact meet the user's requested task.
+        threshold: 0.8
+```
+
+Each model accepts either a literal `model: <model-id>` or `modelEnv`, never both.
+Use a versioned model ID where the provider offers one. Each case may reference
+different environment variable names. Secrets belong in CI, never case files.
+Subject and judge are separate configurations; no subject credential is silently
+reused for the judge. The initial transport supports OpenAI-compatible Chat
+Completions endpoints; the judge uses bounded `max_tokens` and temperature zero.
+The caller must provide a model that supports this protocol and these parameters.
+
+Browser code uses the same fixture as other browser tests:
+
+```ts
+test('delivers a result', async ({ assessment }) => {
+  // Perform the product workflow and obtain its actual answer/artifact first.
+  await assessment.check('computed result', () => {
+    expect(computedValue).toBe(expectedValue);
+  });
+  assessment.submit({ task, answer, artifacts: [{ name, text }] });
+});
+```
+
+`assessment.check` executes in deterministic/hybrid mode and is skipped in
+LLM-only mode; put assertions, not workflow setup/actions, in that callback.
+Ordinary Playwright `expect` calls remain mandatory in every mode: use them for
+service health and structural invariants. Hybrid cases must execute at least
+one named deterministic check. Scored cases must submit bounded evidence exactly
+once per framework test. Fixture teardown grades only after the test body has
+passed; native failures are never rescued by a high judge score. Deterministic
+cases need no evidence submission and make no judge request.
+
+The judge returns JSON scores in [0,1] with an explanation for every configured
+criterion. Every threshold must pass. Missing/duplicate/invalid scores, missing
+input, oversized input, HTTP failures and timeouts fail closed. There is no
+automatic retry or fallback to mock; Playwright retries remain zero. Evidence is
+sent as untrusted data with a rubric instruction, which reduces but does not
+eliminate judge susceptibility to instructions in model output. Keep objective
+correctness checks programmatic and use scoring for qualitative requirements.
+
+Reports retain per-attempt `assessment` attachments with scores, thresholds,
+reasons, model, bounded/redacted evidence, rubric, token usage when supplied, and latency. Harness summaries include
+these assessments and resolved subject/judge model identities; a passing browser
+exit without the configured judge evidence is rejected. Scoring is not a proof
+of numerical correctness: the initial `model-request` hybrid case checks runtime
+completion and delivery mechanically, then grades report completeness/clarity.
+
+### Daily real-model execution
+
+Daily runs split into `external:none` and `external:real` jobs, where external
+means a declared real subject **or judge**. This prevents a stub-subject/live-judge
+case from leaking into the deterministic job. PR remains deterministic. Three
+real browser files (`model-request`, `run-inline-card-anchoring`,
+`literature-review`) run on both backends, adding six required daily entries.
+`model-request` demonstrates hybrid assertions; the other two retain their
+existing deterministic assertions. All 92 cases explicitly declare an assertion
+mode. Daily currently expands to 136 entries: 82 required and 54 observational.
+
+Configure these repository Actions secrets for the initial real job:
+
+- `E2E_LLM_BASE_URL`, `E2E_LLM_MODEL`, `E2E_LLM_TOKEN` for the subject.
+- `E2E_JUDGE_BASE_URL`, `E2E_JUDGE_MODEL`, `E2E_JUDGE_TOKEN` for scoring.
+
+The scheduled real job explicitly sets `CI_ALLOW_REAL=1`. Missing model/judge
+configuration is BLOCKED and fails required daily work, never a green skip.
+Workflow secrets are passed explicitly only by the real daily caller. To add a
+case-specific profile with different environment names, wire those names into
+the workflow as well as its case YAML. The workflows do not create credentials
+or select a provider on behalf of the operator.
+
+For a prepared isolated local stack/check-out:
+
+```bash
+pnpm test:list --profile daily --tag external:real --json
+# Export the six values above from your credential store, then:
+CI_ALLOW_REAL=1 pnpm test:daily --tag external:real
+CI_ALLOW_REAL=1 pnpm test --case e2e.browser.model-request --executor jiuwenswarm
+```
+
+The literature scenario now registers/selects its configured model instead of
+hardcoding DeepSeek profiles, but still requires its Skill/connector fixtures
+and external PubMed service. Those prerequisites can block its daily result and
+are not supplied by a model key alone. Real-project Playwright tracing is disabled
+to avoid retaining model-registration request bodies containing credentials;
+step screenshots and sanitized scoring results remain available. No real-provider
+success is implied by the local scoring/tooling tests.

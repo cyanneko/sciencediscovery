@@ -31,3 +31,5 @@ tags:
   - network:unreviewed
   - npu:unreviewed
   - sandbox:unreviewed
+assertions:
+  mode: deterministic

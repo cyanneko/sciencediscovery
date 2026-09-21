@@ -23,3 +23,5 @@ ci:
       - native
     required: true
 resultPath: plugin-settings
+assertions:
+  mode: deterministic

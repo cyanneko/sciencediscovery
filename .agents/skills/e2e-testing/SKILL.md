@@ -630,3 +630,16 @@ behavior, without `journey-`, `l1-` or `l2-` prefixes. Declare `reporting: steps
 in the case YAML for step-report scenarios. The metadata checker uses this field
 to enforce the existing `journey` fixture, scenario header and per-step evidence
 contract; renaming a file must not weaken that validation. See `test/README.md`.
+
+### Model and assertion policy
+
+Every case declares `assertions.mode` (`deterministic`, `llm`, or `hybrid`). A real
+subject selects its model through `llm.model`; scoring independently selects its
+model and rubric through `assertions.judge`. Browser tests use `assessment.check`
+for configurable programmatic assertions and `assessment.submit` for bounded
+actual output evidence. Hybrid mode requires both. Do not put workflow setup in
+`assessment.check`, because LLM-only mode skips that callback. Ordinary framework
+assertions remain mandatory guards. Never replace a missing judge, invalid score
+or missing evidence with PASS. Read `test/README.md` for the full schema and the
+explicit CI credential requirements. Real-model daily work is required; absent
+prerequisites remain visible and fail that job.

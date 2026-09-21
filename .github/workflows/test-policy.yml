@@ -5,9 +5,25 @@ on:
       profile:
         type: string
         required: true
+      external:
+        type: string
+        default: none
       surface:
         type: string
         default: ''
+    secrets:
+      E2E_LLM_BASE_URL:
+        required: false
+      E2E_LLM_MODEL:
+        required: false
+      E2E_LLM_TOKEN:
+        required: false
+      E2E_JUDGE_BASE_URL:
+        required: false
+      E2E_JUDGE_MODEL:
+        required: false
+      E2E_JUDGE_TOKEN:
+        required: false
 permissions:
   contents: read
 jobs:
@@ -16,6 +32,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     env:
+      CI_ALLOW_REAL: ${{ inputs.external == 'real' && '1' || '0' }}
+      E2E_LLM_BASE_URL: ${{ secrets.E2E_LLM_BASE_URL }}
+      E2E_LLM_MODEL: ${{ secrets.E2E_LLM_MODEL }}
+      E2E_LLM_TOKEN: ${{ secrets.E2E_LLM_TOKEN }}
+      E2E_JUDGE_BASE_URL: ${{ secrets.E2E_JUDGE_BASE_URL }}
+      E2E_JUDGE_MODEL: ${{ secrets.E2E_JUDGE_MODEL }}
+      E2E_JUDGE_TOKEN: ${{ secrets.E2E_JUDGE_TOKEN }}
       CI_RESULTS_DIR: ${{ github.workspace }}/.ci-results
       CI_RUNTIME_DIR: ${{ runner.temp }}/test-runtime
       CI_E2E_PREPARED: '1'
@@ -36,10 +59,11 @@ jobs:
           pnpm test:check
       - name: Record selected scope
         env:
+          TEST_EXTERNAL: ${{ inputs.external }}
           TEST_PROFILE: ${{ inputs.profile }}
           TEST_SURFACE: ${{ inputs.surface }}
         run: |
-          args=(--profile "$TEST_PROFILE")
+          args=(--profile "$TEST_PROFILE" --tag "external:$TEST_EXTERNAL")
           if [[ -n "$TEST_SURFACE" ]]; then args+=(--surface "$TEST_SURFACE"); fi
           mkdir -p .ci-results
           node test/support/cli.mjs list "${args[@]}" --json > .ci-results/selection.json
@@ -62,10 +86,11 @@ jobs:
           echo "JIUWENSWARM_MGMT_URL=$JIUWENSWARM_MGMT_URL" >> "$GITHUB_ENV"
       - name: Run the declared policy
         env:
+          TEST_EXTERNAL: ${{ inputs.external }}
           TEST_PROFILE: ${{ inputs.profile }}
           TEST_SURFACE: ${{ inputs.surface }}
         run: |
-          args=(--profile "$TEST_PROFILE")
+          args=(--profile "$TEST_PROFILE" --tag "external:$TEST_EXTERNAL")
           if [[ -n "$TEST_SURFACE" ]]; then args+=(--surface "$TEST_SURFACE"); fi
           node test/support/cli.mjs run "${args[@]}"
       - name: Stop the owned JiuwenSwarm instance
@@ -75,6 +100,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-policy-${{ inputs.profile }}
+          name: test-policy-${{ inputs.profile }}-${{ inputs.external }}
           path: .ci-results
           if-no-files-found: warn

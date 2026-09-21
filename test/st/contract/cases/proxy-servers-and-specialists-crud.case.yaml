@@ -33,3 +33,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: proxy-servers-and-specialists-crud
 resultPath: contract-proxy-servers-and-specialists-crud
+assertions:
+  mode: deterministic

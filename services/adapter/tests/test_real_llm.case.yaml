@@ -10,6 +10,11 @@ capabilities:
   - permission
 llm:
   mode: real
+  model:
+    protocol: chat-completions
+    baseUrlEnv: REAL_LLM_BASE_URL
+    modelEnv: REAL_LLM_MODEL
+    apiKeyEnv: REAL_LLM_KEY
 supportedExecutors:
   - jiuwenswarm
 timeoutSeconds: 180
@@ -24,3 +29,5 @@ gates:
     - JIUWENSWARM_MGMT_URL
 ci: {}
 resultPath: adapter-real
+assertions:
+  mode: deterministic

@@ -16,3 +16,5 @@ command:
   - pnpm
   - test:legacy
 resultPath: default
+assertions:
+  mode: deterministic

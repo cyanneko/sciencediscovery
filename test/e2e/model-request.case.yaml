@@ -16,6 +16,11 @@ capabilities:
   - sandbox
 llm:
   mode: real
+  model:
+    protocol: chat-completions
+    baseUrlEnv: E2E_LLM_BASE_URL
+    modelEnv: E2E_LLM_MODEL
+    apiKeyEnv: E2E_LLM_TOKEN
 supportedExecutors:
   - native
   - jiuwenswarm
@@ -28,7 +33,12 @@ gates:
     - E2E_LLM_BASE_URL
     - E2E_LLM_MODEL
     - E2E_LLM_TOKEN
-ci: {}
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: true
 resultPath: browser-model-request-real
 tags:
   - arch:amd64
@@ -38,3 +48,24 @@ tags:
   - npu:none
   - sandbox:bubblewrap
 reporting: steps
+assertions:
+  mode: hybrid
+  judge:
+    model:
+      protocol: chat-completions
+      baseUrlEnv: E2E_JUDGE_BASE_URL
+      modelEnv: E2E_JUDGE_MODEL
+      apiKeyEnv: E2E_JUDGE_TOKEN
+    timeoutSeconds: 60
+    maxTokens: 1200
+    maxInputCharacters: 24000
+    rubric:
+      - id: task-completion
+        description: The report presents measurement data and its mean and standard
+          deviation, with an intelligible explanation of the calculation. Judge
+          only the supplied answer and report.
+        threshold: 0.8
+      - id: delivery-clarity
+        description: The final answer identifies the delivered Markdown report and the
+          report communicates the analysis clearly without unsupported claims.
+        threshold: 0.8

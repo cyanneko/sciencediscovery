@@ -34,3 +34,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: idea-evolve-memory-reads
 resultPath: contract-idea-evolve-memory-reads
+assertions:
+  mode: deterministic

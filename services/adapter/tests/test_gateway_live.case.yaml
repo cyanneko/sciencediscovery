@@ -21,3 +21,5 @@ gates:
     - JIUWENSWARM_LIVE_SCENARIO
 ci: {}
 resultPath: adapter-live
+assertions:
+  mode: deterministic

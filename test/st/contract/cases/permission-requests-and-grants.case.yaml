@@ -34,3 +34,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: permission-requests-and-grants
 resultPath: contract-permission-requests-and-grants
+assertions:
+  mode: deterministic

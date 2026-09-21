@@ -34,3 +34,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: projects-and-sessions-lifecycle
 resultPath: contract-projects-and-sessions-lifecycle
+assertions:
+  mode: deterministic

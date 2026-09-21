@@ -33,3 +33,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: models-and-providers-reads
 resultPath: contract-models-and-providers-reads
+assertions:
+  mode: deterministic

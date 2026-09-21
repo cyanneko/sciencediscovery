@@ -35,3 +35,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: session-multi-turn
 resultPath: contract-session-multi-turn
+assertions:
+  mode: deterministic

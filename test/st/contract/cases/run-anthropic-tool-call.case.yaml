@@ -35,3 +35,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: run-anthropic-tool-call
 resultPath: contract-run-anthropic-tool-call
+assertions:
+  mode: deterministic

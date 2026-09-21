@@ -23,6 +23,14 @@
  * UT case, workload, or workspace package escapes that partition.
  */
 export const tagDimensions = {
+  assertions: {
+    description: "Configured assertion strategy",
+    values: {deterministic:"Programmatic assertions",llm:"Model scoring",hybrid:"Programmatic assertions and model scoring"},
+  },
+  external: {
+    description: "Declared live subject or judge model dependency",
+    values: {none:"No declared live model",real:"Live subject or judge model"},
+  },
   arch: {
     description: "Native CPU architecture supported by the case",
     multiple: true,

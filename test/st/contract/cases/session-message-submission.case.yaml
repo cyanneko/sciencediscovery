@@ -34,3 +34,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: session-message-submission
 resultPath: contract-session-message-submission
+assertions:
+  mode: deterministic

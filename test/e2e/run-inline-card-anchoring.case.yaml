@@ -16,6 +16,11 @@ capabilities:
   - artifact
 llm:
   mode: real
+  model:
+    protocol: chat-completions
+    baseUrlEnv: E2E_LLM_BASE_URL
+    modelEnv: E2E_LLM_MODEL
+    apiKeyEnv: E2E_LLM_TOKEN
 supportedExecutors:
   - native
   - jiuwenswarm
@@ -28,7 +33,12 @@ gates:
     - E2E_LLM_BASE_URL
     - E2E_LLM_MODEL
     - E2E_LLM_TOKEN
-ci: {}
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: true
 resultPath: browser-run-inline-card-anchoring-real
 tags:
   - arch:amd64
@@ -37,3 +47,5 @@ tags:
   - network:external
   - npu:none
   - sandbox:bubblewrap
+assertions:
+  mode: deterministic

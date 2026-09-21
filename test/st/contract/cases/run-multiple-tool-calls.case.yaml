@@ -35,3 +35,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: run-multiple-tool-calls
 resultPath: contract-run-multiple-tool-calls
+assertions:
+  mode: deterministic

@@ -39,3 +39,5 @@ tags:
   - npu:none
   - sandbox:none
   - ut:host
+assertions:
+  mode: deterministic

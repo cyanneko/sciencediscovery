@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { stringify } from 'yaml';
 import { loadManifests, manifestCoverageProblems } from './manifests.mjs';
-const fixture = () => ({version:1,id:'fixture',owner:'test',layer:'st',surface:'process',runner:'node',source:'scenario.mjs',capabilities:[],llm:{mode:'stub'},supportedExecutors:['native'],timeoutSeconds:1,requirements:[],ci:{pr:{executors:['native'],required:true}},resultPath:'fixture'});
+const fixture = () => ({version:1,id:'fixture',owner:'test',layer:'st',surface:'process',runner:'node',source:'scenario.mjs',capabilities:[],llm:{mode:'stub'},assertions:{mode:'deterministic'},supportedExecutors:['native'],timeoutSeconds:1,requirements:[],ci:{pr:{executors:['native'],required:true}},resultPath:'fixture'});
 function setup(t) {
   const dir=mkdtempSync(join(tmpdir(),'test-manifests-'));
   t.after(()=>rmSync(dir,{recursive:true,force:true}));

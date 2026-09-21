@@ -35,3 +35,5 @@ ci:
       platform-specific baselines; keep missing coverage visible.
 scenarioId: files-trajectory-usage-reads
 resultPath: contract-files-trajectory-usage-reads
+assertions:
+  mode: deterministic

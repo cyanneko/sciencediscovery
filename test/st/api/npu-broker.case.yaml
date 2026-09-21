@@ -23,3 +23,5 @@ ci:
       - native
     required: true
 resultPath: npu-broker
+assertions:
+  mode: deterministic

@@ -34,3 +34,5 @@ tags:
   - network:none
   - npu:required
   - sandbox:host
+assertions:
+  mode: deterministic

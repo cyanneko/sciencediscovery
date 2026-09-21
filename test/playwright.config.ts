@@ -89,7 +89,7 @@ export default defineConfig({
           {
             name: "real",
             grep: /@real/,
-            use: { ...devices["Desktop Chrome"] },
+            use: { ...devices["Desktop Chrome"], trace: "off" },
           },
         ]
       : []),
