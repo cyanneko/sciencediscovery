@@ -14,7 +14,7 @@
 
 import { test, expect, type Page } from "@playwright/test";
 
-import { apiBaseUrl, authorizationHeader } from "./e2e-auth.js";
+import { apiBaseUrl, authorizationHeader } from "./access-token-auth.js";
 
 // 用户场景 E2E：Session Stop 按钮 + 跨会话 Run 隔离。
 //

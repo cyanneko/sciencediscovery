@@ -18,7 +18,7 @@ import * as fs from "node:fs";
 
 import { test, expect, type Page } from "@playwright/test";
 
-import { apiBaseUrl, authorizationHeader } from "./e2e-auth.js";
+import { apiBaseUrl, authorizationHeader } from "./access-token-auth.js";
 
 /**
  * 会话 Composer 高度回归测试。

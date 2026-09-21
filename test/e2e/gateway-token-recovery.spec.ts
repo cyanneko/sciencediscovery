@@ -14,7 +14,7 @@
 
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-import { BROWSER_TOKEN_STORAGE_KEY, requireApiToken } from "./e2e-auth.js";
+import { BROWSER_TOKEN_STORAGE_KEY, requireApiToken } from "./access-token-auth.js";
 
 /**
  * Recovering from a rejected access token.

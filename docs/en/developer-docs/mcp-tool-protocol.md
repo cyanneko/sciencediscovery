@@ -244,7 +244,7 @@ Custom access additionally requires coverage of:
 - OAuth callback replay, expiry, cancellation, refresh, and configuration changes.
 - Both env and header secret editing: unchanged preservation, blocked rename, successful re-entry, restoring the original name, and explicit clearing.
 
-Existing custom MCP test entry points are `services/api/src/mcp/custom-servers.test.ts`, `oauth.test.ts`, `node-client.test.ts`, `apps/web/tests/McpSecretFields.test.tsx`, and `test/e2e/journey-custom-mcp.spec.ts`, `journey-mcp-oauth.spec.ts`, `journey-mcp-secret-edit.spec.ts`.
+Existing custom MCP test entry points are `services/api/src/mcp/custom-servers.test.ts`, `oauth.test.ts`, `node-client.test.ts`, `apps/web/tests/McpSecretFields.test.tsx`, and `test/e2e/mcp-server-management.spec.ts`, `mcp-oauth.spec.ts`, `mcp-secret-edit.spec.ts`.
 
 Local fixtures validate protocol and product behavior, not interoperability with every real third-party service. Real-provider smoke tests remain outside default offline unit tests.
 

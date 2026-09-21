@@ -102,7 +102,7 @@ Public API, CLI and local-stack journeys start the product with
 `start-stack.sh` or a documented equivalent and verify user-facing Run,
 artifact, permission or other outcomes. Reusable non-browser drivers belong
 in `test/st/api/` with exact invocation instructions; they are not automatically
-part of browser CI. The existing `run_m1_smoke.sh` and `run_real_smoke.sh`
+part of browser CI. The existing `run-agent-loop-mocked.sh` and `run-agent-loop-real.sh`
 instantiate the adapter in-process and remain integration smokes, not E2E.
 Use `pnpm test:list` and `pnpm test --case <id>` for shared discovery and
 execution. Browser specs live in `test/e2e/`, in-process ST in

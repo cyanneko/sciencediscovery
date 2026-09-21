@@ -144,11 +144,11 @@ const workloadSteps = (tier) =>
  * only.
  */
 export const layers = {
-  st: [installStep, buildStep, ["bash", ["test/st/agent-runtime/run_m1_smoke.sh"]]],
+  st: [installStep, buildStep, ["bash", ["test/st/agent-runtime/run-agent-loop-mocked.sh"]]],
   "st-npu": [
     [process.env.SCIENCE_AGENT_NPU_PYTHON?.trim() || "python3", ["services/runner/workloads/npu-smoke-test.py"]],
   ],
-  "st-real": [installStep, buildStep, ["bash", ["test/st/agent-runtime/run_real_smoke.sh"]]],
+  "st-real": [installStep, buildStep, ["bash", ["test/st/agent-runtime/run-agent-loop-real.sh"]]],
   ut: [installStep, gatewaySyncStep, paperSyncStep, buildStep, ...workloadSteps("host"), ...workloadSteps("guest")],
   "ut-guest": [...workloadSteps("guest")],
   "ut-host": [installStep, gatewaySyncStep, paperSyncStep, buildStep, ...workloadSteps("host")],

@@ -2,10 +2,10 @@
 version: 1
 id: suite.smoke
 files:
-  - agent_loop_smoke.ts
-  - agent_loop_real_smoke.ts
-  - run_m1_smoke.sh
-  - run_real_smoke.sh
+  - agent-loop-mocked.ts
+  - agent-loop-real.ts
+  - run-agent-loop-mocked.sh
+  - run-agent-loop-real.sh
 owner: agent-runtime
 runner: tsx
 layer: st

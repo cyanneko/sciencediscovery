@@ -1,6 +1,6 @@
 version: 1
 id: st.api.plugin-settings
-source: plugin-settings-journey.mjs
+source: plugin-settings.mjs
 owner: api-runner
 layer: st
 surface: api

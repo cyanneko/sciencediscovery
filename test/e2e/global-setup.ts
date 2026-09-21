@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { apiBaseUrl, requireApiToken } from "./e2e-auth.js";
+import { apiBaseUrl, requireApiToken } from "./access-token-auth.js";
 
 /**
  * Stop a misconfigured run before it starts.

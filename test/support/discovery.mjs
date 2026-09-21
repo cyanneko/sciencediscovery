@@ -45,6 +45,7 @@ export function inventoryProblems(suites, directory = root, exclusions = []) {
     if (!files.length) errors.push(`Empty suite: ${suite.id}`);
     for (const file of files) {
       if (/(?:^|[^a-z])issue[-_ ]*\d/i.test(file.split('/').at(-1))) errors.push(`Issue-based test filename: ${file}; name the scenario and object instead`);
+      if (/^(?:journey-|l[12]-)|-journey\./.test(file.split('/').at(-1))) errors.push(`Redundant test filename prefix/suffix: ${file}; name the object and behavior`);
       if (!existsSync(resolve(directory, file))) errors.push(`Missing asset: ${file}`);
       if (owners.has(file)) errors.push(`Duplicate ownership: ${file}: ${owners.get(file)}, ${suite.id}`);
       owners.set(file, suite.id);
@@ -55,6 +56,6 @@ export function inventoryProblems(suites, directory = root, exclusions = []) {
     if (!exclusion.reason || !existsSync(join(directory, exclusion.file))) errors.push(`Stale/undocumented exclusion: ${exclusion.file}`);
     if (owners.has(exclusion.file)) errors.push(`Owned asset is also excluded: ${exclusion.file}`);
   }
-  for (const file of walk(directory).filter(file => isTest(file) || /^test\/(?:st\/api\/.*-journey\.mjs|st\/.*(?:smoke.*\.(?:ts|sh)|.*-test\.py)|st\/contract\/cases\/.*\.json)$/.test(file))) if (!owners.has(file) && !exclusions.some(e => e.file === file)) errors.push(`Unowned test: ${file}`);
+  for (const file of walk(directory).filter(file => isTest(file) || /^test\/(?:st\/api\/.*\.mjs|st\/.*(?:.*\.(?:ts|sh)|.*-test\.py)|st\/contract\/cases\/.*\.json)$/.test(file))) if (!owners.has(file) && !exclusions.some(e => e.file === file)) errors.push(`Unowned test: ${file}`);
   return errors;
 }

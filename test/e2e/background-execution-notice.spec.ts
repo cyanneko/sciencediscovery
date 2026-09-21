@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { expect, type Page } from "@playwright/test";
-import { apiBaseUrl, authorizationHeader } from "./e2e-auth.js";
-import { test } from "./helpers/e2e.ts";
+import { apiBaseUrl, authorizationHeader } from "./access-token-auth.js";
+import { test } from "./helpers/browser-fixture.ts";
 import {
   cleanupJourney,
   createProjectAndSession,
@@ -23,7 +23,7 @@ import {
   sendUserMessage,
   waitForRunTerminal,
   type JourneyFixture,
-} from "./helpers/journeys.ts";
+} from "./helpers/scenario-fixtures.ts";
 
 test.use({ locale: "zh-CN" });
 

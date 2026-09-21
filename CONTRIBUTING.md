@@ -35,8 +35,8 @@ repository root. These scripts instantiate `createNativeAgent` in-process and
 do not test the product startup and public client path, so they are not E2E:
 
 ```bash
-./test/st/agent-runtime/run_m1_smoke.sh       # Node adapter (hermetic)
-./test/st/agent-runtime/run_real_smoke.sh     # native adapter → live model → tool callbacks
+./test/st/agent-runtime/run-agent-loop-mocked.sh       # Node adapter (hermetic)
+./test/st/agent-runtime/run-agent-loop-real.sh     # native adapter → live model → tool callbacks
 ```
 
 ## User-perspective E2E
@@ -103,7 +103,7 @@ Every migrated test carries an `E2E-META` comment (purpose, steps, environment,
 mocked/real type, each external capability, credentials, cost/side effects)
 checked by `test/check-e2e-meta.mjs`. New browser E2E files are organized by complete
 user journey, not shell/Python/environment/internal modules, and reuse
-`test/e2e/helpers/journeys.ts` for common user actions.
+`test/e2e/helpers/scenario-fixtures.ts` for common user actions.
 
 Journey specs (`test/e2e/journey-*.spec.ts`) are additionally written as numbered
 **user steps** through the `journey` fixture:

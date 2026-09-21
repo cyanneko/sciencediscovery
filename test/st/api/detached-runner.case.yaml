@@ -1,6 +1,6 @@
 version: 1
 id: st.api.detached-runner
-source: detached-runner-journey.mjs
+source: detached-runner.mjs
 owner: api-runner
 layer: st
 surface: api

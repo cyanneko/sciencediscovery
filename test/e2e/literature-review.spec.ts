@@ -14,7 +14,7 @@
 
 import { expect, type Page, type TestInfo } from "@playwright/test";
 
-import { requireRealEnv, requireRealStack, test } from "./helpers/e2e.ts";
+import { requireRealEnv, requireRealStack, test } from "./helpers/browser-fixture.ts";
 
 // Screenshots land under the local e2e environment (cwd when run from .e2e/).
 const SCREENSHOTS = "screenshots";

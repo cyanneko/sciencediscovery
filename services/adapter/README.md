@@ -140,8 +140,8 @@ TypeScript side: `cd services/api && pnpm build && node --test dist/agent-run/ji
 ## Status against the milestone-0 journeys
 
 Verified on Linux (bubblewrap) with `SCIENCE_AGENT_ADAPTER=1 SCIENCE_AGENT_EXECUTOR=jiuwenswarm`:
-`journey-first-run`, `journey-compact-process` (2), `journey-plan-workspace`,
-`journey-delegate-subtask`, `journey-deliver-result`: all pass. `journey-real-request`
+`first-run-onboarding`, `process-timeline-presentation` (2), `plan-workspace`,
+`subtask-delegation`, `result-delivery`: all pass. `model-request`
 passes against a live OpenAI-compatible endpoint.
 
 Not done yet:

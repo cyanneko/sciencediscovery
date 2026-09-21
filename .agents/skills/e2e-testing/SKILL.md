@@ -413,9 +413,9 @@ screenshots, or `.e2e/`.
 ```ts
 import { expect } from "@playwright/test";
 
-import { test } from "./helpers/e2e.ts";
+import { test } from "./helpers/browser-fixture.ts";
 import { createProjectAndSession, openProjectSession, scriptedModel,
-  sendUserMessage, waitForRunTerminal, expandToolStep, cleanupJourney } from "./helpers/journeys.ts";
+  sendUserMessage, waitForRunTerminal, expandToolStep, cleanupJourney } from "./helpers/scenario-fixtures.ts";
 
 /**
  * E2E-META
@@ -482,13 +482,13 @@ an untracked exception.
   `127.0.0.1`, registered through `/api/models`) or a seeded fake such as the
   hang/slow models. Never read `E2E_LLM_*` in a mocked spec, and never rely on
   a real model configured in the stack's `.env`.
-- Import `test` from `test/e2e/helpers/e2e.ts`, never directly from
+- Import `test` from `test/e2e/helpers/browser-fixture.ts`, never directly from
   `@playwright/test`. Its automatic fixture aborts non-local HTTP(S),
   policy-closes non-local WebSockets, and forwards localhost/loopback traffic
   before any `beforeEach`, navigation, or request. `check-e2e-meta.mjs`
   enforces this import for every deterministic browser case configured with `llm.mode: stub` or `none`, including fixme tests
   when later enabled.
-- Keep `test/e2e/e2e-network-guard.spec.ts` passing as the request-level proof for
+- Keep `test/e2e/browser-network-isolation.spec.ts` passing as the request-level proof for
   blocked HTTPS/WebSocket and allowed local HTTP/WebSocket behavior.
 - Backend egress cannot be intercepted from the browser; it stays local
   because the only model the spec registers is its own stub. When a mocked
@@ -525,9 +525,9 @@ an untracked exception.
   module. A journey may use shell, Python, an environment, a subagent, and
   artifact versioning in one coherent flow. Small negative/cancel/recovery
   cases may sit beside the journey they qualify. Name main-flow files after
-  the goal (`journey-first-run.spec.ts`, `journey-deliver-result.spec.ts`),
+  the goal (`first-run-onboarding.spec.ts`, `result-delivery.spec.ts`),
   never after an internal tool (`shell.spec.ts`, `python.spec.ts`).
-- Use `test/e2e/helpers/journeys.ts` for common user actions: model registration
+- Use `test/e2e/helpers/scenario-fixtures.ts` for common user actions: model registration
   and selection, Project/Session setup, natural-language submission, Run
   terminal-state waiting, permission handling, timeline/tool-process reading,
   environment revision lookup, and opening the environment or artifact
@@ -539,8 +539,8 @@ an untracked exception.
   `@` candidates, and the opt-in physical workspace tree as separate views.
   The helpers return records, locators, and visible text; the spec still owns
   goal-specific assertions.
-- Use the `journey` fixture from `test/e2e/helpers/e2e.ts` (implemented in
-  `test/e2e/helpers/journey-report.ts`) to structure the test as user steps and
+- Use the `journey` fixture from `test/e2e/helpers/browser-fixture.ts` (implemented in
+  `test/e2e/helpers/scenario-report.ts`) to structure the test as user steps and
   produce its report. See [Journey steps and automatic
   reports](#journey-steps-and-automatic-reports-mandatory) for the full
   contract and a copyable skeleton.
@@ -622,3 +622,11 @@ data and `.e2e/` from the assigned worktree. Do not remove the task worktree;
 its lifecycle belongs to the task owner. Remove a separate detached E2E
 worktree only when this run created it for one of the justified isolation
 reasons above. The main worktree must remain untouched.
+
+### Scenario naming and report validation
+
+Name browser specs and their adjacent case configuration after the object and
+behavior, without `journey-`, `l1-` or `l2-` prefixes. Declare `reporting: steps`
+in the case YAML for step-report scenarios. The metadata checker uses this field
+to enforce the existing `journey` fixture, scenario header and per-step evidence
+contract; renaming a file must not weaken that validation. See `test/README.md`.

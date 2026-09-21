@@ -1,0 +1,33 @@
+version: 1
+id: e2e.browser.skill-folder-import
+source: skill-folder-import.spec.ts
+owner: product-journeys
+description: Deterministic Playwright journeys against an isolated local stack
+layer: e2e
+surface: browser
+runner: playwright
+capabilities:
+  - skill-folder-import
+llm:
+  mode: none
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 3600
+requirements:
+  - clean-worktree
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: true
+resultPath: browser-skill-folder-import-mocked
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:conditional
+  - network:local
+  - npu:none
+  - sandbox:bubblewrap
+reporting: steps

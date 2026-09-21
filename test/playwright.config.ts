@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 import { defineConfig, devices } from "@playwright/test";
 
-import { apiBaseUrl, browserStorageState } from "../test/e2e/e2e-auth.js";
+import { apiBaseUrl, browserStorageState } from "../test/e2e/access-token-auth.js";
 
 /** Local e2e environment root (this directory). Specs live in ../test. */
 const envRoot = dirname(fileURLToPath(import.meta.url));

@@ -3,7 +3,7 @@ id: suite.contract.scenarios
 files:
   - files-usage.json
   - idea-evolve-memory.json
-  - l2-runs.json
+  - run-events.json
   - mcp.json
   - permissions.json
   - runners.json

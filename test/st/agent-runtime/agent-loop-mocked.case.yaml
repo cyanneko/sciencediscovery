@@ -1,6 +1,6 @@
 version: 1
 id: st.agent-loop-mocked
-source: agent_loop_smoke.ts
+source: agent-loop-mocked.ts
 owner: product-journeys
 description: Node-native agent loop through a deterministic local model stub
 layer: st

@@ -15,7 +15,7 @@
 import { expect, test } from "@playwright/test";
 import type { SessionRunEvent } from "@sciencediscovery/schema";
 
-import { apiBaseUrl, authorizationHeader } from "./e2e-auth.js";
+import { apiBaseUrl, authorizationHeader } from "./access-token-auth.js";
 
 const API_BASE = apiBaseUrl();
 const AUTH = authorizationHeader();

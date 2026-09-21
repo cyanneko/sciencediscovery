@@ -17,7 +17,7 @@ import type { AddressInfo } from "node:net";
 
 import { test, expect, type Page } from "@playwright/test";
 
-import { apiBaseUrl, authorizationHeader } from "./e2e-auth.js";
+import { apiBaseUrl, authorizationHeader } from "./access-token-auth.js";
 
 /**
  * AgentRun / RequestExecution 组件化(commit 63db651)用户场景 E2E。

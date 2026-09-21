@@ -1,6 +1,6 @@
 version: 1
 id: st.api.sandbox-disconnect
-source: sandbox-disconnect-journey.mjs
+source: sandbox-disconnect.mjs
 owner: api-runner
 layer: st
 surface: api

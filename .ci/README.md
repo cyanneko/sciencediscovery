@@ -18,7 +18,7 @@ test dependencies are supplied only by the checkout mounted at `/src`.
 | CI layer | Repository commands used | Scope |
 |---|---|---|
 | UT | `pnpm check`, then `pnpm memory-graph:test` | TypeScript type checks/builds and package tests, binary script tests, paper/gateway Python tests, and memory-graph pytest |
-| ST | `test/st/agent-runtime/run_m1_smoke.sh` after `pnpm build` | Hermetic Node-native agent loop through a local scripted OpenAI-compatible endpoint and a real workspace tool round trip |
+| ST | `test/st/agent-runtime/run-agent-loop-mocked.sh` after `pnpm build` | Hermetic Node-native agent loop through a local scripted OpenAI-compatible endpoint and a real workspace tool round trip |
 | E2E | `.e2e` `npm run test:mocked` | Tagged `@mocked` Playwright journeys against an isolated API/Runner/Gateway stack |
 
 The repository has no test layer literally named `ST`. This mapping uses the
@@ -362,8 +362,8 @@ container cannot safely or reliably provide.
 
 | Test or capability | Missing generic-container capability | Recommended execution |
 |---|---|---|
-| `test/st/agent-runtime/run_real_smoke.sh` | Live model endpoint, credential, outbound network, billable/rate-limited calls | Separate secret-bearing job with `CI_ALLOW_REAL=1` and `SCIENCE_AGENT_LLM_BASE_URL`, `SCIENCE_AGENT_LLM_MODEL`, `SCIENCE_AGENT_LLM_API_TOKEN`; select `st.agent-loop-real` |
-| `npm --prefix .e2e run test:real` and `journey-real-request.spec.ts` | Live OpenAI-compatible endpoint and `E2E_LLM_*`; the real project is deliberately absent by default | Dedicated job with `CI_ALLOW_REAL=1` and the three `E2E_LLM_*` variables; select `e2e.real`, never add it to `pnpm ci:e2e` |
+| `test/st/agent-runtime/run-agent-loop-real.sh` | Live model endpoint, credential, outbound network, billable/rate-limited calls | Separate secret-bearing job with `CI_ALLOW_REAL=1` and `SCIENCE_AGENT_LLM_BASE_URL`, `SCIENCE_AGENT_LLM_MODEL`, `SCIENCE_AGENT_LLM_API_TOKEN`; select `st.agent-loop-real` |
+| `npm --prefix .e2e run test:real` and `model-request.spec.ts` | Live OpenAI-compatible endpoint and `E2E_LLM_*`; the real project is deliberately absent by default | Dedicated job with `CI_ALLOW_REAL=1` and the three `E2E_LLM_*` variables; select `e2e.real`, never add it to `pnpm ci:e2e` |
 | Real NPU workloads such as `services/runner/workloads/npu-smoke-test.py` | Vendor device nodes, drivers, runtime libraries, model/data assets, and usually a native aarch64/NPU host | Hardware-specific runner with explicit device mounts and its own acceptance record |
 | Full bubblewrap execution when the host denies unprivileged user namespaces | Docker flags cannot override a host kernel/AppArmor policy that rejects user namespace creation | Run on a Linux worker with user namespaces enabled; record UT/E2E as BLOCKED if the bwrap preflight fails |
 | Host-only sandbox fallback/full-profile validation | A container cannot reproduce every host `/proc/sys`, AppArmor, LXC, and distribution-specific bwrap combination | Keep the existing stubbed capability/unit tests in UT; run real preflight/fallback checks on representative native hosts |
@@ -378,7 +378,7 @@ On a dedicated amd64 or arm64 NPU environment, set `CI_ALLOW_NPU=1` and point
 `SCIENCE_AGENT_NPU_PYTHON` at the MindSpore-enabled interpreter before running
 that selection. The generic image has neither dependency and remains blocked.
 
-The hermetic `test/st/agent-runtime/run_m1_smoke.sh` is supported and is the ST entry. A
+The hermetic `test/st/agent-runtime/run-agent-loop-mocked.sh` is supported and is the ST entry. A
 missing historical/example command such as `test/gateway/run_m0_smoke.sh` is
 not classified as unsupported; it simply is not part of this revision.
 

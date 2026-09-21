@@ -1,6 +1,6 @@
 version: 1
 id: st.agent-loop-real
-source: agent_loop_real_smoke.ts
+source: agent-loop-real.ts
 owner: product-journeys
 description: Node-native agent loop against an explicitly authorized live model
 layer: st

@@ -37,7 +37,7 @@ accepted-difference policy.
 
 ## L2: run event streams
 
-`cases/l2-runs.json` records what a client sees while an agent runs: the event stream of
+`cases/run-events.json` records what a client sees while an agent runs: the event stream of
 `GET /api/sessions/:id/runs/:runId/events`, for a text turn, a tool call, approval allowed and
 denied, cancel, a provider that rejects the key, a subagent, and resuming with `?after=N`. A case
 with a `stub` starts its own scripted model (`stub-model.mjs`: text, a tool call, an HTTP failure,

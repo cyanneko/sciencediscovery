@@ -17,7 +17,7 @@ import type { AddressInfo } from "node:net";
 
 import { test, expect, type Page } from "@playwright/test";
 
-import { apiBaseUrl, authorizationHeader } from "./e2e-auth.js";
+import { apiBaseUrl, authorizationHeader } from "./access-token-auth.js";
 
 const SCREENSHOTS = "screenshots";
 const { authorization: AUTH } = authorizationHeader();

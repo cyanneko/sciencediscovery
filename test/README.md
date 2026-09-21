@@ -143,7 +143,7 @@ This reclassification does not alter PR/daily membership or backend matrices.
 | Python | `services/<service>/tests/`, using that service's unittest/pytest discovery and configuration. |
 | In-process cross-module ST | `test/st/agent-runtime/`. Importing the native agent directly is ST. |
 | Browser journeys | `test/e2e/**/*.spec.ts`; helpers stay in its `helpers/` subdirectory. Only this directory and spec pattern are visible to Playwright. |
-| Public API/Runner journeys | `test/st/api/*-journey.mjs`, one stable catalog ID per existing driver. These drivers also own any local stack restart/fault lifecycle. They test backend service integration, not browser user journeys. |
+| Public API/Runner journeys | `test/st/api/*.mjs`, one stable catalog ID per existing driver. These drivers also own any local stack restart/fault lifecycle. They test backend service integration, not browser user journeys. |
 | HTTP contract scenarios | `test/st/contract/cases/*.json`; Both L1 HTTP scenarios and L2 run-event scenarios are ST. Shared replay code and its colocated unit tests live in `test/support/contract/`. |
 | Test infrastructure | `test/support/` contains implementation code and adjacent `*.test.mjs` UT, separately collected by Node. |
 | Shared fixtures | `test/fixtures/`; fixture servers are not independent tests. |
@@ -259,3 +259,24 @@ initially changed from 87 to 85 tests. Integration with target revision `9670568
 also preserves its three new browser files: the current comparison is 90 upstream
 tests versus 88 retained tests in 47 files. The same two approved retirements
 account for the entire difference; `migration.json` records both snapshots.
+
+## Scenario names
+
+Use lowercase kebab-case object/behavior names: `first-run-onboarding.spec.ts`,
+`child-workspace.mjs`, `run-approval-denied.case.yaml`. Do not prepend a test
+layer (`l1-`, `l2-`), issue number or `journey-`, or append `-journey`.
+Directories and YAML express the layer, runner and scheduling policy.
+`reporting: steps` explicitly requires browser step reports; this validation no
+longer depends on a `journey-` filename prefix. A scenario's
+implementation and adjacent case YAML share the same stem; its catalog ID uses
+that stem after the namespace (`e2e.browser.first-run-onboarding`,
+`st.api.child-workspace`, `st.contract.run-approval-denied`). Module UT follows
+its owning module; conventional Python `test_*.py` discovery is unchanged.
+
+`namingMigration` in `test/support/migration.json` records previous file names,
+catalog IDs and contract scenario IDs. Contract baseline keys and accepted-rule
+case references follow renamed scenario IDs; expected responses, rule predicates
+and assertion payloads are unchanged. Existing external baseline files using old
+scenario IDs must migrate those keys before comparison. Old draft IDs are not
+silently redirected. Shared browser helpers are `scenario-fixtures.ts`,
+`scenario-report.ts` and `browser-fixture.ts`.

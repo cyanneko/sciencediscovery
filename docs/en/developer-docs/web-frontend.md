@@ -76,7 +76,7 @@ The standalone Paper reader panel, Provenance statistics card and persistent iso
 
 - `pnpm --filter @sciencediscovery/web dev` starts Vite at `127.0.0.1:5173` and proxies `/api` and `/health` to `127.0.0.1:4310`.
 - `tsx --test tests/*.test.tsx` covers reducers, stop flow, composer state, and multi-Session stream isolation.
-- Display regressions: `ProcessLifecycle.test.tsx`, `Permissions.test.tsx`, `Orchestration.test.tsx`; browser journeys `journey-compact-process.spec.ts`, `journey-delegate-subtask.spec.ts` and `journey-plan-workspace.spec.ts` cover live/terminal states, independent subtasks, Skill lifecycle, file access, Plan status and narrow layouts.
+- Display regressions: `ProcessLifecycle.test.tsx`, `Permissions.test.tsx`, `Orchestration.test.tsx`; browser journeys `process-timeline-presentation.spec.ts`, `subtask-delegation.spec.ts` and `plan-workspace.spec.ts` cover live/terminal states, independent subtasks, Skill lifecycle, file access, Plan status and narrow layouts.
 - User-perspective E2E verifies a user's goal through actual product use, not just the browser. Root `test/` contains pinned Playwright journeys; `pnpm ci:e2e` runs the mocked browser subset. API/CLI/local-stack journeys use the public product entry points and have separate driver commands. Changed UI interactions and layout still need browser coverage, not only API assertions. See [CONTRIBUTING](../../../CONTRIBUTING.md#user-perspective-e2e) for coverage requirements and setup.
 
 ## Related documentation

@@ -1,6 +1,6 @@
 version: 1
 id: st.api.child-workspace
-source: child-workspace-journey.mjs
+source: child-workspace.mjs
 owner: api-runner
 layer: st
 surface: api

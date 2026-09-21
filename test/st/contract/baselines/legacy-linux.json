@@ -1,5 +1,5 @@
 {
- "l2-text-only": [
+ "run-text-only": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -393,7 +393,7 @@
    }
   }
  ],
- "l2-tool-call": [
+ "run-tool-call": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -1212,7 +1212,7 @@
    }
   }
  ],
- "l2-approval-allowed": [
+ "run-approval-allowed": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -1823,7 +1823,7 @@
    }
   }
  ],
- "l2-approval-denied": [
+ "run-approval-denied": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -2379,7 +2379,7 @@
    }
   }
  ],
- "l2-cancel": [
+ "run-cancel": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -2739,7 +2739,7 @@
    }
   }
  ],
- "l2-provider-unauthorized": [
+ "run-provider-unauthorized": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -3114,7 +3114,7 @@
    }
   }
  ],
- "l2-subagent": [
+ "run-subagent-delegation": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -3950,7 +3950,7 @@
    }
   }
  ],
- "l2-resume-after-disconnect": [
+ "run-resume-after-disconnect": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -4290,7 +4290,7 @@
    }
   }
  ],
- "l2-post-messages": [
+ "session-message-submission": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -14845,7 +14845,7 @@
    }
   }
  ],
- "l2-two-turns": [
+ "session-multi-turn": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -15699,7 +15699,7 @@
    }
   }
  ],
- "l2-parallel-tools": [
+ "run-multiple-tool-calls": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -16322,7 +16322,7 @@
    }
   }
  ],
- "l2-slow-tool": [
+ "run-slow-tool": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -16790,7 +16790,7 @@
    }
   }
  ],
- "l2-anthropic-tool-call": [
+ "run-anthropic-tool-call": [
   {
    "name": "remember the global settings",
    "status": 200,
@@ -17363,7 +17363,7 @@
    }
   }
  ],
- "l2-responses-tool-call": [
+ "run-responses-tool-call": [
   {
    "name": "remember the global settings",
    "status": 200,

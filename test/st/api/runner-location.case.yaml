@@ -1,6 +1,6 @@
 version: 1
 id: st.api.runner-location
-source: runner-location-journey.mjs
+source: runner-location.mjs
 owner: api-runner
 layer: st
 surface: api

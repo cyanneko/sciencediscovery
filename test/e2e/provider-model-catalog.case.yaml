@@ -1,0 +1,36 @@
+version: 1
+id: e2e.browser.provider-model-catalog
+source: provider-model-catalog.spec.ts
+owner: product-journeys
+description: Deterministic Playwright journeys against an isolated local stack
+layer: e2e
+surface: browser
+runner: playwright
+capabilities:
+  - provider-model-catalog
+  - session
+  - model
+  - mcp
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 3600
+requirements:
+  - clean-worktree
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: true
+resultPath: browser-provider-model-catalog-mocked
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:conditional
+  - network:local
+  - npu:none
+  - sandbox:bubblewrap
+reporting: steps

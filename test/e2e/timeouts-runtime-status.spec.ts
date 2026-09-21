@@ -17,9 +17,9 @@ import type { AddressInfo } from "node:net";
 
 import { expect } from "@playwright/test";
 
-import { test } from "./helpers/e2e.ts";
+import { test } from "./helpers/browser-fixture.ts";
 
-import { authorizationHeader } from "./e2e-auth.js";
+import { authorizationHeader } from "./access-token-auth.js";
 
 const authorization = authorizationHeader();
 

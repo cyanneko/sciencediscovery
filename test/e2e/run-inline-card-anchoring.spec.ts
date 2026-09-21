@@ -14,9 +14,9 @@
 
 import { expect, type Page } from "@playwright/test";
 
-import { requireRealEnv, requireRealStack, test } from "./helpers/e2e.ts";
+import { requireRealEnv, requireRealStack, test } from "./helpers/browser-fixture.ts";
 
-import { apiBaseUrl, authorizationHeader } from "./e2e-auth.js";
+import { apiBaseUrl, authorizationHeader } from "./access-token-auth.js";
 
 /**
  * Verification for inline run activity cards on the modularized layout:

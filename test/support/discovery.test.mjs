@@ -5,6 +5,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { nodeFiles, inventoryProblems, root } from './discovery.mjs';
+import { readManifest } from './manifests.mjs';
 function fixture(t, files) {
   const dir = mkdtempSync(join(tmpdir(), 'test-discovery-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
@@ -35,6 +36,9 @@ test('ownership catches orphans, duplicate ownership, stale explicit entries and
 test('migration accounts for retained and explicitly retired browser declarations', () => {
   const migration = JSON.parse(readFileSync(join(root, 'test/support/migration.json')));
   for (const [source, declarations] of Object.entries({...migration.browserDeclarations, ...migration.upstreamIntegration?.browserDeclarations})) {
+    if (source.split('/').at(-1).startsWith('journey-')) {
+      assert.equal(readManifest(migration.files[source].replace('.spec.ts', '.case.yaml')).reporting, 'steps', 'Renaming must preserve step-report enforcement');
+    }
     const content = readFileSync(join(root, migration.files[source]), 'utf8');
     const current = [...content.matchAll(/\btest(?:\.(?:skip|fixme|only))?\(\s*(["'`])(.+?)\1/g)].map(m => [m[1], m[2]]);
     for (const declaration of declarations) {
@@ -50,7 +54,15 @@ test('migration accounts for retained and explicitly retired browser declaration
     if (retired.replacement) assert.ok(readFileSync(join(root, retired.replacement)).length);
   }
   for (const [source, ids] of Object.entries({...migration.contractCases, ...migration.upstreamIntegration?.contractCases})) {
-    const current = JSON.parse(readFileSync(join(root, migration.layoutMigration?.files[source] ?? source))).cases.map(c => c.id);
-    for (const id of ids) assert.ok(current.includes(id), `Lost scenario: ${id}`);
+    const moved = migration.layoutMigration?.files[source] ?? source;
+    const current = JSON.parse(readFileSync(join(root, migration.namingMigration?.files[moved] ?? moved))).cases.map(c => c.id);
+    for (const id of ids) assert.ok(current.includes(migration.namingMigration?.contractScenarioIds[id] ?? id), `Lost scenario: ${id}`);
   }
+});
+
+test('test filenames name objects and scenarios rather than historical layer or journey labels', t => {
+  const files = ['test/e2e/journey-login.spec.ts', 'test/st/contract/l2-run.test.mjs', 'test/st/api/workspace-journey.mjs'];
+  const dir = fixture(t, files);
+  const errors = inventoryProblems([{id:'fixture',files}],dir);
+  assert.equal(errors.filter(e => e.includes('Redundant test filename')).length,3);
 });

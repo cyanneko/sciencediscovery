@@ -66,14 +66,14 @@ function lineOf(text, index) {
  */
 function importsFixture(name, text) {
   const imports = [...text.matchAll(/import\s*\{[^}]*\btest\b[^}]*\}\s*from\s*["']([^"']+)["']/g)];
-  return imports.some(([, source]) => resolve(specDir, dirname(name), source) === join(specDir, "helpers/e2e.ts"));
+  return imports.some(([, source]) => resolve(specDir, dirname(name), source) === join(specDir, "helpers/browser-fixture.ts"));
 }
 
 function checkJourneyFile(name, text, tests) {
-  if (!/^journey-.*\.spec\.ts$/.test(basename(name))) return;
+  if (casesByFile.get(name)?.reporting !== 'steps') return;
 
   if (!importsFixture(name, text)) {
-    errors.push(`${name}: journey specs must import test from ./helpers/e2e.ts to get the journey fixture`);
+    errors.push(`${name}: journey specs must import test from ./helpers/browser-fixture.ts to get the journey fixture`);
   }
   if (!text.includes("journey.step(")) {
     errors.push(`${name}: journey specs must record each user step with journey.step(title, description, body)`);
@@ -122,7 +122,7 @@ function checkFile(name) {
   }
 
   if (hasMocked && !usesE2EFixture) {
-    errors.push(`${name}: mocked tests must import test from ./helpers/e2e.ts for the automatic network guard`);
+    errors.push(`${name}: mocked tests must import test from ./helpers/browser-fixture.ts for the automatic network guard`);
   }
 
   checkJourneyFile(name, text, tests);
@@ -169,7 +169,7 @@ function checkFile(name) {
       const externalAction = body.search(/\b(?:(?:setupSession|openWorkspace|api|fetch)\s*\(|(?:page|request)\.(?:goto|reload|get|post|put|patch|delete|fetch)\s*\()/);
 
       if (!usesE2EFixture) {
-        errors.push(`${name}:${line}: real tests must import test from ./helpers/e2e.ts`);
+        errors.push(`${name}:${line}: real tests must import test from ./helpers/browser-fixture.ts`);
       }
       if (envGate < 0) {
         errors.push(`${name}:${line}: real test body needs requireRealEnv(...) or allowRealEnvException(...)`);

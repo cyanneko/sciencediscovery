@@ -1,0 +1,37 @@
+version: 1
+id: st.contract.run-multiple-tool-calls
+source: run-events.json
+owner: api-adapter
+description: One model response that calls the shell twice, then the answer.
+  Both executors must run the two calls one after the other, in the order the
+  model made them (the shell is not declared concurrency-safe).
+layer: st
+surface: api
+runner: contract
+capabilities:
+  - contract
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 180
+requirements:
+  - contract-target
+gates:
+  allowEnv: CI_ALLOW_CONTRACT
+  requiredEnv:
+    - E2E_BASE_URL
+    - E2E_API_TOKEN
+    - E2E_CONTRACT_BASELINE
+    - E2E_TARGET_EXECUTOR
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: false
+    reason: CI does not yet provision isolated contract targets and select reviewed
+      platform-specific baselines; keep missing coverage visible.
+scenarioId: run-multiple-tool-calls
+resultPath: contract-run-multiple-tool-calls

@@ -1,6 +1,6 @@
 version: 1
 id: st.api.npu-broker
-source: npu-broker-journey.mjs
+source: npu-broker.mjs
 owner: api-runner
 layer: st
 surface: api

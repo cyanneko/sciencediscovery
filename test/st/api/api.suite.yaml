@@ -1,14 +1,14 @@
 version: 1
 id: suite.api
 files:
-  - child-workspace-journey.mjs
-  - detached-runner-journey.mjs
-  - npu-broker-journey.mjs
-  - plugin-settings-journey.mjs
-  - remote-execution-wake-journey.mjs
-  - runner-location-journey.mjs
-  - sandbox-disconnect-journey.mjs
+  - child-workspace.mjs
+  - detached-runner.mjs
+  - npu-broker.mjs
+  - plugin-settings.mjs
+  - remote-execution-wake.mjs
+  - runner-location.mjs
+  - sandbox-disconnect.mjs
 owner: api-runner
 runner: node
 layer: st
-entryPoint: st.api.<journey-name>
+entryPoint: st.api.<scenario>

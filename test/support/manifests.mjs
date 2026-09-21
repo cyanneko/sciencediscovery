@@ -4,7 +4,7 @@ import { dirname, join, relative, resolve, isAbsolute } from 'node:path';
 import { parseDocument } from 'yaml';
 import { root, walk, discover } from './discovery.mjs';
 const EXECUTORS = ['native', 'jiuwenswarm'];
-const CASE_KEYS = ['version','id','source','owner','description','layer','surface','runner','capabilities','llm','supportedExecutors','timeoutSeconds','requirements','gates','ci','tags','quarantine','scenarioId','command','resultPath','compatibility'];
+const CASE_KEYS = ['version','id','source','owner','description','layer','surface','runner','capabilities','llm','supportedExecutors','timeoutSeconds','requirements','gates','ci','tags','quarantine','scenarioId','command','resultPath','compatibility','reporting'];
 const SUITE_KEYS = ['version','id','directory','files','owner','runner','layer','entryPoint','discovery','exclude','excludeDirectories'];
 function object(value, keys, label) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw Error(`${label}: expected an object`);
@@ -42,6 +42,7 @@ export function normalizeCase(value, file, directory = root) {
   choice(value.layer, ['ut','st','e2e'], `${file}: layer`);
   choice(value.surface, ['browser','api','process'], `${file}: surface`);
   choice(value.runner, ['layer','pnpm','playwright','node','pytest','contract'], `${file}: runner`);
+  if (value.reporting !== undefined) choice(value.reporting, ['steps'], `${file}: reporting`);
   strings(value.capabilities, `${file}: capabilities`);
   strings(value.supportedExecutors, `${file}: supportedExecutors`, EXECUTORS);
   strings(value.requirements, `${file}: requirements`, ['build','clean-worktree','contract-target']);
