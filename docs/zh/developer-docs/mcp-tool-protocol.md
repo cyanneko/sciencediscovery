@@ -454,7 +454,7 @@ Node 集成测试必须验证：
 - OAuth 回调重放、过期、取消、刷新及配置变化；
 - env 与 header 秘密编辑的未改保留、改名拦截、重填成功、恢复原名和明确清空。
 
-现有自定义 MCP 测试入口：`services/api/src/mcp/custom-servers.test.ts`、`oauth.test.ts`、`node-client.test.ts`，`apps/web/tests/McpSecretFields.test.tsx`，以及 `test/e2e/browser/journey-custom-mcp.spec.ts`、`journey-mcp-oauth.spec.ts`、`journey-mcp-secret-edit.spec.ts`。
+现有自定义 MCP 测试入口：`services/api/src/mcp/custom-servers.test.ts`、`oauth.test.ts`、`node-client.test.ts`，`apps/web/tests/McpSecretFields.test.tsx`，以及 `test/e2e/journey-custom-mcp.spec.ts`、`journey-mcp-oauth.spec.ts`、`journey-mcp-secret-edit.spec.ts`。
 
 本地 Fixture 验证协议和产品行为，不替代真实第三方服务的联调验证。真实供应商 Smoke Test 单独运行，不进入默认离线单元测试。
 

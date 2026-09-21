@@ -162,4 +162,4 @@ Bridge 在锁内重新校验 `expectedRevision` 与取消状态；ApplyPort 在�
 5. **接入构建与发布。** workspace 统一包含 `packages/*`；补齐 `./plugin`、`./manifest`、按需 `./web` exports、宿主依赖、TypeScript 配置和 lockfile，保证 API 发布产物与 Web bundle 都实际包含入口。插件入口导入本包领域实现，不通过自引用形成根入口循环。
 6. **验证维护合同。** 测试依赖缺失、启停、取消/失败清理、固定状态投影、配置继承/CAS、主子 reviewer 组合；用户旅程验证关闭后没有新执行通路、历史仍可读。运行 `pnpm typecheck`、`pnpm architecture:check` 和受影响构建/测试。
 
-可从 [Plan 插件入口](../../../packages/plan/src/plugin.ts)、[领域实现](../../../packages/plan/src/index.ts) 与 [manifest](../../../packages/plan/src/manifest.ts) 开始阅读；协议类型见 [SDK](../../../packages/plugin-sdk/src/index.ts)，设置事务见 [SessionStore](../../../services/api/src/store.ts)，完整 HTTP 设置回归旅程见 [plugin-settings-journey](../../../test/e2e/api/plugin-settings-journey.mjs)。
+可从 [Plan 插件入口](../../../packages/plan/src/plugin.ts)、[领域实现](../../../packages/plan/src/index.ts) 与 [manifest](../../../packages/plan/src/manifest.ts) 开始阅读；协议类型见 [SDK](../../../packages/plugin-sdk/src/index.ts)，设置事务见 [SessionStore](../../../services/api/src/store.ts)，完整 HTTP 设置回归旅程见 [plugin-settings-journey](../../../test/st/api/plugin-settings-journey.mjs)。

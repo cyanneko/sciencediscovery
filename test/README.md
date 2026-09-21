@@ -2,7 +2,7 @@
 
 Test metadata lives beside the tests in versioned `*.case.yaml` and
 `*.suite.yaml` files. [`.ci/test-catalog.mjs`](../.ci/test-catalog.mjs) loads these
-through `test/harness/manifests.mjs` and retains the existing UT tier definitions.
+through `test/support/manifests.mjs` and retains the existing UT tier definitions.
 The CLI selects and reports work; Node, Playwright, pytest and unittest execute
 it. Run `pnpm install --frozen-lockfile` before using the CLI.
 
@@ -89,11 +89,11 @@ pr --json` or `--profile daily`.
 | `pnpm test --profile local` | Host UT tier (including Python adapter and tooling tests), then deterministic in-process ST smoke. Host UT installs/builds prerequisites. |
 | `pnpm test --profile full --executor both` | Both UT tiers, ST, individual browser/API journeys, contract scenarios and explicit live/hardware/quarantine gates. Independent UT runs once. |
 | `pnpm test:list --json` | Static asset inventory, selected entries, commands and preflight blockers. No test imports, framework execution, live requests, or dependency installation. |
-| `pnpm test:doctor --case e2e.child-workspace` | Read-only preflight; exit 2 for missing prerequisites. READY means declared prerequisites are present, not that services or tests were verified. |
+| `pnpm test:doctor --case st.api.child-workspace` | Read-only preflight; exit 2 for missing prerequisites. READY means declared prerequisites are present, not that services or tests were verified. |
 | `pnpm test:check` | Catalog/tier, ownership, missing/duplicate/empty/stale asset and browser metadata validation. |
 | `pnpm test --layer st --capability permission` | Intersection of layer and capability. |
 | `pnpm test --layer e2e --surface browser --executor jiuwenswarm` | Browser leaves using the JiuwenSwarm stack configuration; requires its gateway/management URLs. |
-| `pnpm test --case e2e.child-workspace --executor native` | One standalone API journey; requires built, committed source. |
+| `pnpm test --case st.api.child-workspace --executor native` | One standalone API journey; requires built, committed source. |
 | `pnpm test:tooling` | Discovery, selection, reporting and HTTP contract tool regression tests. |
 | `pnpm adapter:test` | Adapter pytest suite without the two explicitly gated live modules. |
 
@@ -113,16 +113,39 @@ The UT tier passes `--no-bail` to recursive workspace tests so other packages ca
 
 ## Where tests belong
 
+UT stays with the code it tests, including the test tooling's own code. ST verifies
+module/service collaboration through direct calls, HTTP or event streams. E2E is
+reserved for browser user journeys. Starting real backend services does not make
+an API driver a user E2E test; model mode and backend remain separate dimensions.
+
+```text
+test/
+  support/             # shared test tooling and colocated UT
+    contract/          # one replay/normalization/comparison implementation
+  fixtures/            # shared data and stubs
+  st/
+    agent-runtime/     # cross-module agent collaboration
+    api/               # backend service-chain scenarios
+    contract/          # HTTP/event-stream scenarios, baselines and policies
+  e2e/                 # browser user journeys and their helpers
+```
+
+API case IDs are `st.api.<scenario>`; all contract case IDs are
+`st.contract.<scenario>`. Previous PR-draft IDs and file moves are recorded in
+`test/support/migration.json` under `layoutMigration`. Browser IDs stay unchanged.
+This reclassification does not alter PR/daily membership or backend matrices.
+
+
 | Asset | Location / discovery |
 |---|---|
 | Node module UT | Colocated `src/**/*.test.ts`; mapped exactly to `dist/**/*.test.js` before execution. Runner script self-tests are included recursively. |
 | Web UT | `apps/web/tests/**/*.test.ts` and `**/*.test.tsx`, executed by tsx. |
 | Python | `services/<service>/tests/`, using that service's unittest/pytest discovery and configuration. |
 | In-process cross-module ST | `test/st/agent-runtime/`. Importing the native agent directly is ST. |
-| Browser journeys | `test/e2e/browser/**/*.spec.ts`; helpers stay in its `helpers/` subdirectory. Only this directory and spec pattern are visible to Playwright. |
-| Public API/Runner journeys | `test/e2e/api/*-journey.mjs`, one stable catalog ID per existing driver. These drivers also own any local stack restart/fault lifecycle. Split out `test/e2e/local-stack/` if a future driver warrants it. |
-| HTTP contract scenarios | `test/contract/cases/*.json`; L1 scenarios are ST, L2 Run journeys are E2E. Shared replay code and its unit tests remain in `test/contract/`. |
-| Test infrastructure | `test/harness/*.test.mjs`, separately collected by Node. |
+| Browser journeys | `test/e2e/**/*.spec.ts`; helpers stay in its `helpers/` subdirectory. Only this directory and spec pattern are visible to Playwright. |
+| Public API/Runner journeys | `test/st/api/*-journey.mjs`, one stable catalog ID per existing driver. These drivers also own any local stack restart/fault lifecycle. They test backend service integration, not browser user journeys. |
+| HTTP contract scenarios | `test/st/contract/cases/*.json`; Both L1 HTTP scenarios and L2 run-event scenarios are ST. Shared replay code and its colocated unit tests live in `test/support/contract/`. |
+| Test infrastructure | `test/support/` contains implementation code and adjacent `*.test.mjs` UT, separately collected by Node. |
 | Shared fixtures | `test/fixtures/`; fixture servers are not independent tests. |
 
 Add a suite discovery rule for a new module or framework, not individual unit
@@ -160,12 +183,12 @@ and returns nonzero if it remains blocked.
   executor label is operator-declared; reports explicitly identify this
   limitation rather than claiming independent executor verification.
 
-The target branch now supplies `test/contract/baselines/legacy-linux.json`,
+The target branch now supplies `test/st/contract/baselines/legacy-linux.json`,
 including L2 coverage. Each selected scenario still requires a complete, reviewed
 comparison baseline appropriate to the target platform; the daily workflow does
 not yet provision contract targets or choose that baseline. Recording is an
 explicit baseline-authoring operation, **not a passing comparison**:
-`node test/contract/run.mjs --case <scenario-id> --record <path>`.
+`node test/support/contract/run.mjs --case <scenario-id> --record <path>`.
 An empty selection, absent baseline case/step or error-bearing baseline fails
 before network access. Keep existing product failures visible; do not record
 failing responses as expected behavior to obtain a green result.
@@ -213,7 +236,7 @@ npm --prefix .e2e run test:legacy:list
 These list commands load spec declarations but do not execute journey bodies.
 They differ from the entirely static `pnpm test:list` inventory.
 
-`test/harness/migration.json` records source revision, old/new paths, browser
+`test/support/migration.json` records source revision, old/new paths, browser
 declarations and contract scenario IDs. The migration regression test checks
 identity preservation, rather than merely matching an aggregate count.
 Historical `node test/api/...` and shell smoke paths moved as recorded there;

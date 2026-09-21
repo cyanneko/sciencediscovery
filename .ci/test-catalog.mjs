@@ -156,7 +156,7 @@ export const layers = {
 
 // Runtime metadata and ownership are loaded from adjacent YAML files.
 // This module retains CI tier composition and compatibility exports only.
-import { loadManifests } from '../test/harness/manifests.mjs';
+import { loadManifests } from '../test/support/manifests.mjs';
 const configuration = loadManifests();
 export const assetSuites = configuration.suites;
 export function executionCases() { return structuredClone(configuration.cases); }

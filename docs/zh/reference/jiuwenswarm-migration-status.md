@@ -43,9 +43,9 @@ issue 84（复用 JiuwenSwarm 后端）做到哪一步、现在能跑什么、�
 
 - 里程碑 0 的五条旅程（首次运行、精简过程 ×2、计划工作区、委派子任务、交付结果）通过。
 - 一条使用真实 OpenAI 兼容模型的旅程通过（`journey-real-request`）。
-- L2：10 个运行事件场景（文本、工具调用、审批允许/拒绝、取消、401、子代理、断线续传、post-messages、两轮对话、并行工具调用）的事件类型序列与内置循环一致。被接受的差异记在 `test/contract/accepted-differences.json`（供应商 401 的措辞、evidence 缺口）。
+- L2：10 个运行事件场景（文本、工具调用、审批允许/拒绝、取消、401、子代理、断线续传、post-messages、两轮对话、并行工具调用）的事件类型序列与内置循环一致。被接受的差异记在 `test/st/contract/accepted-differences.json`（供应商 401 的措辞、evidence 缺口）。
 - L1：内置循环与“适配器 + JiuwenSwarm”栈上录制的用例一致（构建版本号已归一化）。
-- 单测：适配器（`pytest`，135 个）、TypeScript 的 agent 工厂与模型网关（51 个）。`test/contract/jw-only/live.mjs` 在运行中的 JiuwenSwarm 栈上检查只有这个后端才有的行为（对话连续性、todo 规划）。
+- 单测：适配器（`pytest`，135 个）、TypeScript 的 agent 工厂与模型网关（51 个）。`test/st/contract/jw-only/live.mjs` 在运行中的 JiuwenSwarm 栈上检查只有这个后端才有的行为（对话连续性、todo 规划）。
 
 ## 上下文管理
 
@@ -76,9 +76,9 @@ JiuwenSwarm 自己有一套上下文引擎（占用到模型窗口的 80% 时压
 ## 开始做某个子 issue
 
 1. 选择后端并启动整套栈：先执行一次 `scripts/jiuwenswarm.sh setup`，再 `./scripts/start-stack.sh --mode local --jiuwenswarm`（用 `GET /agent/info` 确认）；见[操作指南](../how-to/run-with-jiuwenswarm.md)。
-2. 在 `test/contract/routes.json` 里找到你的路由（`node test/contract/run.mjs --coverage` 会列出没有用例的行）。
-3. 在 `test/contract/cases/` 下加用例，在**全新数据目录**上对内置循环录制，再对“适配器 + JiuwenSwarm”栈比对。规则、SSE 步骤写法和归一化见 [`test/contract/README.md`](../../../test/contract/README.md)。基线对智能体只读，改动需要人工评审。
-4. 行为类用 run 事件用例（`l2-runs.json`）；脚本化模型是 `test/contract/stub-model.mjs`。
+2. 在 `test/st/contract/routes.json` 里找到你的路由（`node test/support/contract/run.mjs --coverage` 会列出没有用例的行）。
+3. 在 `test/st/contract/cases/` 下加用例，在**全新数据目录**上对内置循环录制，再对“适配器 + JiuwenSwarm”栈比对。规则、SSE 步骤写法和归一化见 [`test/st/contract/README.md`](../../../test/st/contract/README.md)。基线对智能体只读，改动需要人工评审。
+4. 行为类用 run 事件用例（`l2-runs.json`）；脚本化模型是 `test/support/contract/stub-model.mjs`。
 5. 浏览器旅程：`CI_E2E_BACKEND=jiuwenswarm .ci/run-e2e.sh mocked`（网关必须已在运行）。
 
 ## 测试
@@ -87,6 +87,6 @@ JiuwenSwarm 自己有一套上下文引擎（占用到模型窗口的 80% 时压
 UV_PROJECT_ENVIRONMENT=/tmp/adapter-venv uv sync --extra test --project services/adapter
 /tmp/adapter-venv/bin/python -m pytest services/adapter          # 适配器单测
 cd services/api && pnpm build && node --test dist/agent-run/jiuwenswarm-agent.test.js
-node --test test/contract/*.test.mjs                              # 契约测试工具自身
-E2E_BASE_URL=... E2E_API_TOKEN=... node test/contract/run.mjs --compare test/contract/baselines/legacy-linux.json
+node --test test/st/contract/*.test.mjs                              # 契约测试工具自身
+E2E_BASE_URL=... E2E_API_TOKEN=... node test/support/contract/run.mjs --compare test/st/contract/baselines/legacy-linux.json
 ```

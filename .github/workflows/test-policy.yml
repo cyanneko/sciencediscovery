@@ -42,7 +42,7 @@ jobs:
           args=(--profile "$TEST_PROFILE")
           if [[ -n "$TEST_SURFACE" ]]; then args+=(--surface "$TEST_SURFACE"); fi
           mkdir -p .ci-results
-          node test/harness/cli.mjs list "${args[@]}" --json > .ci-results/selection.json
+          node test/support/cli.mjs list "${args[@]}" --json > .ci-results/selection.json
       - name: Provision the sandbox
         run: |
           sudo apt-get update
@@ -67,7 +67,7 @@ jobs:
         run: |
           args=(--profile "$TEST_PROFILE")
           if [[ -n "$TEST_SURFACE" ]]; then args+=(--surface "$TEST_SURFACE"); fi
-          node test/harness/cli.mjs run "${args[@]}"
+          node test/support/cli.mjs run "${args[@]}"
       - name: Stop the owned JiuwenSwarm instance
         if: always()
         run: bash scripts/jiuwenswarm.sh stop || true

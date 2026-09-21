@@ -21,7 +21,7 @@
   "types": "./src/plugin.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "node ../../test/harness/node-tests.mjs compiled",
+    "test": "node ../../test/support/node-tests.mjs compiled",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

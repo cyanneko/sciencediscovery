@@ -25,15 +25,15 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadManifests } from "./harness/manifests.mjs";
+import { loadManifests } from "./support/manifests.mjs";
 
-const specDir = join(dirname(fileURLToPath(import.meta.url)), "e2e/browser");
+const specDir = join(dirname(fileURLToPath(import.meta.url)), "e2e");
 
 // Pending migration to the E2E-META contract. Remove entries as they migrate;
 // never add new spec files here.
 const browserCases = loadManifests().cases.filter(c => c.runner === 'playwright' && c.source);
-const casesByFile = new Map(browserCases.map(c => [c.source.slice('test/e2e/browser/'.length), c]));
-const LEGACY = new Set(browserCases.filter(c => c.quarantine).map(c => c.source.slice('test/e2e/browser/'.length)));
+const casesByFile = new Map(browserCases.map(c => [c.source.slice('test/e2e/'.length), c]));
+const LEGACY = new Set(browserCases.filter(c => c.quarantine).map(c => c.source.slice('test/e2e/'.length)));
 
 const REQUIRED_FIELDS = [
   "Purpose",

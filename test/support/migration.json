@@ -1,0 +1,2719 @@
+{
+  "revision": "57ff5f48802d4c495d10f01a2b211fccfdeb62ae",
+  "files": {
+    "test/agent-run-componentization.spec.ts": "test/e2e/agent-run-componentization.spec.ts",
+    "test/api/agent_loop_real_smoke.ts": "test/st/agent-runtime/agent_loop_real_smoke.ts",
+    "test/api/agent_loop_smoke.ts": "test/st/agent-runtime/agent_loop_smoke.ts",
+    "test/api/child-workspace-journey.mjs": "test/st/api/child-workspace-journey.mjs",
+    "test/api/detached-runner-journey.mjs": "test/st/api/detached-runner-journey.mjs",
+    "test/api/npu-broker-journey.mjs": "test/st/api/npu-broker-journey.mjs",
+    "test/api/plugin-settings-journey.mjs": "test/st/api/plugin-settings-journey.mjs",
+    "test/api/remote-execution-wake-journey.mjs": "test/st/api/remote-execution-wake-journey.mjs",
+    "test/api/run_m1_smoke.sh": "test/st/agent-runtime/run_m1_smoke.sh",
+    "test/api/run_real_smoke.sh": "test/st/agent-runtime/run_real_smoke.sh",
+    "test/api/runner-location-journey.mjs": "test/st/api/runner-location-journey.mjs",
+    "test/api/sandbox-disconnect-journey.mjs": "test/st/api/sandbox-disconnect-journey.mjs",
+    "test/e2e-auth.spec.ts": "test/e2e/e2e-auth.spec.ts",
+    "test/e2e-auth.ts": "test/e2e/e2e-auth.ts",
+    "test/e2e-network-guard.spec.ts": "test/e2e/e2e-network-guard.spec.ts",
+    "test/gateway-token-recovery.spec.ts": "test/e2e/gateway-token-recovery.spec.ts",
+    "test/global-setup.ts": "test/e2e/global-setup.ts",
+    "test/helpers/e2e.ts": "test/e2e/helpers/e2e.ts",
+    "test/helpers/idea-research-model.ts": "test/e2e/helpers/idea-research-model.ts",
+    "test/helpers/idea-tree-model.ts": "test/e2e/helpers/idea-tree-model.ts",
+    "test/helpers/journey-report.ts": "test/e2e/helpers/journey-report.ts",
+    "test/helpers/journeys.ts": "test/e2e/helpers/journeys.ts",
+    "test/issue-143-proxy-settings.spec.ts": "test/e2e/proxy-settings-persistence.spec.ts",
+    "test/issue-37-composer-height.spec.ts": "test/e2e/session-composer-layout.spec.ts",
+    "test/issue-44-background-timeline.spec.ts": "test/e2e/background-session-timeline.spec.ts",
+    "test/issue-44-session-stop.spec.ts": "test/e2e/session-stop-isolation.spec.ts",
+    "test/issue-67-34-inline-cards.spec.ts": "test/e2e/run-inline-card-anchoring.spec.ts",
+    "test/issue-77-wake-notice.spec.ts": "test/e2e/background-execution-notice.spec.ts",
+    "test/issue-85-foreground-exec-inbox.spec.ts": "test/e2e/execution-result-delivery.spec.ts",
+    "test/journey-compact-process.spec.ts": "test/e2e/journey-compact-process.spec.ts",
+    "test/journey-custom-mcp.spec.ts": "test/e2e/journey-custom-mcp.spec.ts",
+    "test/journey-delegate-subtask.spec.ts": "test/e2e/journey-delegate-subtask.spec.ts",
+    "test/journey-deliver-result.spec.ts": "test/e2e/journey-deliver-result.spec.ts",
+    "test/journey-execution-management.spec.ts": "test/e2e/journey-execution-management.spec.ts",
+    "test/journey-first-run.spec.ts": "test/e2e/journey-first-run.spec.ts",
+    "test/journey-idea-tree-fixture.spec.ts": "test/e2e/journey-idea-tree-fixture.spec.ts",
+    "test/journey-json-artifact-preview.spec.ts": "test/e2e/journey-json-artifact-preview.spec.ts",
+    "test/journey-local-token-onboarding.spec.ts": "test/e2e/journey-local-token-onboarding.spec.ts",
+    "test/journey-mcp-oauth.spec.ts": "test/e2e/journey-mcp-oauth.spec.ts",
+    "test/journey-mcp-secret-edit.spec.ts": "test/e2e/journey-mcp-secret-edit.spec.ts",
+    "test/journey-model-draft-safety.spec.ts": "test/e2e/journey-model-draft-safety.spec.ts",
+    "test/journey-model-settings.spec.ts": "test/e2e/journey-model-settings.spec.ts",
+    "test/journey-npu-cards.spec.ts": "test/e2e/journey-npu-cards.spec.ts",
+    "test/journey-plan-workspace.spec.ts": "test/e2e/journey-plan-workspace.spec.ts",
+    "test/journey-plugin-composition.spec.ts": "test/e2e/journey-plugin-composition.spec.ts",
+    "test/journey-prepare-environment.spec.ts": "test/e2e/journey-prepare-environment.spec.ts",
+    "test/journey-provider-model-catalog.spec.ts": "test/e2e/journey-provider-model-catalog.spec.ts",
+    "test/journey-real-request.spec.ts": "test/e2e/journey-real-request.spec.ts",
+    "test/journey-response-identity.spec.ts": "test/e2e/journey-response-identity.spec.ts",
+    "test/journey-reviewer-auto-audit.spec.ts": "test/e2e/journey-reviewer-auto-audit.spec.ts",
+    "test/journey-reviewer-localization.spec.ts": "test/e2e/journey-reviewer-localization.spec.ts",
+    "test/journey-reviewer-result-matrix.spec.ts": "test/e2e/journey-reviewer-result-matrix.spec.ts",
+    "test/journey-runner-locations.spec.ts": "test/e2e/journey-runner-locations.spec.ts",
+    "test/journey-sandbox-network-settings.spec.ts": "test/e2e/journey-sandbox-network-settings.spec.ts",
+    "test/journey-session-trajectory.spec.ts": "test/e2e/journey-session-trajectory.spec.ts",
+    "test/journey-ssh-remote-runner.spec.ts": "test/e2e/journey-ssh-remote-runner.spec.ts",
+    "test/literature-review.spec.ts": "test/e2e/literature-review.spec.ts",
+    "test/session-run-api-queue-stop.spec.ts": "test/e2e/session-run-api-queue-stop.spec.ts",
+    "test/session-run-queue-stop.spec.ts": "test/e2e/session-run-queue-stop.spec.ts",
+    "test/subagent-rename-and-align.spec.ts": "test/e2e/subagent-rename-and-align.spec.ts",
+    "test/timeouts-runtime-status-user.spec.ts": "test/e2e/timeouts-runtime-status-user.spec.ts",
+    "test/timeouts-runtime-status.spec.ts": "test/e2e/timeouts-runtime-status.spec.ts",
+    "test/journey-artifact-archive.spec.ts": "test/e2e/journey-artifact-archive.spec.ts",
+    "test/journey-model-connect-wizard.spec.ts": "test/e2e/journey-model-connect-wizard.spec.ts",
+    "test/journey-skill-folder-import.spec.ts": "test/e2e/journey-skill-folder-import.spec.ts"
+  },
+  "browserDeclarations": {
+    "test/agent-run-componentization.spec.ts": [
+      [
+        "\"",
+        "S1 主对话正常一轮:发送→进行中反馈→流式完成→可复用"
+      ],
+      [
+        "\"",
+        "S2 权限卡出现在主对话最外层,批准 Once 后运行继续完成"
+      ],
+      [
+        "\"",
+        "S2b subagent 首个受控工具的权限卡也出现在主对话最外层"
+      ],
+      [
+        "\"",
+        "S3 检视缺口①:同轮并发两个 run_shell,同键 once 权限的用户可见行为"
+      ],
+      [
+        "\"",
+        "S4 检视缺口②:中断主对话连接后 subagent 级联取消,重进会话状态可读"
+      ],
+      [
+        "\"",
+        "S5 检视缺口④:subagent 超过 maxTurns 被截断,卡片终态与原因可读"
+      ]
+    ],
+    "test/e2e-auth.spec.ts": [
+      [
+        "\"",
+        "a configured token resolves for both the API fixtures and the browser"
+      ],
+      [
+        "\"",
+        "surrounding whitespace in the configured token is ignored"
+      ],
+      [
+        "\"",
+        "a missing token is reported as configuration, naming the variable and where to find the value"
+      ],
+      [
+        "\"",
+        "no retired product default is ever used as a credential"
+      ],
+      [
+        "\"",
+        "the seeded token gets the suite through the front door of both surfaces"
+      ],
+      [
+        "\"",
+        "E2E_BASE_URL alone points every surface at the same service"
+      ],
+      [
+        "\"",
+        "the legacy variable alone moves the browser too, instead of splitting the run"
+      ],
+      [
+        "\"",
+        "a conflict resolves to the authoritative variable rather than to two targets"
+      ],
+      [
+        "\"",
+        "padding, trailing slashes and blanks resolve to one normalized address"
+      ]
+    ],
+    "test/e2e-network-guard.spec.ts": [
+      [
+        "\"",
+        "mocked browser traffic cannot leave localhost"
+      ]
+    ],
+    "test/gateway-token-recovery.spec.ts": [
+      [
+        "\"",
+        "a cold start with no token opens Connection settings without burying its footer"
+      ],
+      [
+        "\"",
+        "a wrong token then the right one recovers without clearing notifications"
+      ],
+      [
+        "\"",
+        "the recovery dialog stays operable on a narrow viewport"
+      ]
+    ],
+    "test/issue-143-proxy-settings.spec.ts": [
+      [
+        "\"",
+        "proxy settings put defaults and registry first and expose one WebSearch policy"
+      ],
+      [
+        "\"",
+        "proxy settings remain usable at a narrow viewport"
+      ],
+      [
+        "\"",
+        "custom URL remains complete after refresh and is prefilled for editing"
+      ]
+    ],
+    "test/issue-37-composer-height.spec.ts": [
+      [
+        "\"",
+        "S1 桌面空闲会话:消息区明显大于输入区"
+      ],
+      [
+        "\"",
+        "S2 长草稿触顶:textarea 受上限,消息区仍可读"
+      ],
+      [
+        "\"",
+        "S3 引用 chip 机制不变量:占比不随 chip 数量明显下降"
+      ],
+      [
+        "\"",
+        "S4 发送可达:多 chip 触顶时发送按钮在 composer 框内可点"
+      ],
+      [
+        "\"",
+        "S5 真实 isRunning:composer-compact 紧凑且可继续输入"
+      ],
+      [
+        "\"",
+        "S6 三档视口量测:空态 / 触顶 / 触顶+2chip / 触顶+6chip 均 ≥55%"
+      ],
+      [
+        "\"",
+        "S8 现场条件:工作区打开 + 矮视口,发送在卡片内且不叠专家/审批"
+      ],
+      [
+        "\"",
+        "S7 窄屏 sanity:500/600 宽发送与模型选择可达"
+      ]
+    ],
+    "test/issue-44-background-timeline.spec.ts": [
+      [
+        "\"",
+        "S0 前置：创建项目与两个会话"
+      ],
+      [
+        "\"",
+        "S5 A 运行中切到 B 并发起新任务，切回 A 仍能看到 A 的执行流"
+      ]
+    ],
+    "test/issue-44-session-stop.spec.ts": [
+      [
+        "\"",
+        "S0 前置：用户创建项目与两个会话并选择模型"
+      ],
+      [
+        "\"",
+        "S1 运行中可见可点 Stop，停止后无需刷新可再 Run"
+      ],
+      [
+        "\"",
+        "S2 会话 A 卡住时，会话 B（含新建会话）可 Run"
+      ],
+      [
+        "\"",
+        "S3 重复 Stop / 无 active run 时不炸"
+      ],
+      [
+        "\"",
+        "S4 观感与可理解性（桌面 + 移动视口）"
+      ]
+    ],
+    "test/issue-67-34-inline-cards.spec.ts": [
+      [
+        "\"",
+        "plan and subagent cards anchor to their run, collapse by default, and survive reload"
+      ],
+      [
+        "\"",
+        "markdown previews anchor to the run that wrote them instead of pinning to the bottom"
+      ]
+    ],
+    "test/issue-77-wake-notice.spec.ts": [
+      [
+        "\"",
+        "后台执行完成后显示运行时提示，而不是伪装成用户消息"
+      ]
+    ],
+    "test/issue-85-foreground-exec-inbox.spec.ts": [
+      [
+        "\"",
+        "全部前台执行的会话空闲后不会被已交付的结果再次唤醒"
+      ],
+      [
+        "\"",
+        "后台执行仍会唤醒一次，运行时提示是可读摘要并能跳到执行记录"
+      ],
+      [
+        "\"",
+        "已完成的助手仍会被它没看过的后台结果唤醒，且不改道给主 Agent"
+      ]
+    ],
+    "test/journey-compact-process.spec.ts": [
+      [
+        "\"",
+        "完成的过程去框，运行卡片和文件操作保留"
+      ],
+      [
+        "\"",
+        "Skill 入口按自己的任务与草稿状态去框"
+      ]
+    ],
+    "test/journey-custom-mcp.spec.ts": [
+      [
+        "\"",
+        "Custom MCP and Inspector user journey"
+      ],
+      [
+        "\"",
+        "Agent uses a selected custom MCP server"
+      ]
+    ],
+    "test/journey-delegate-subtask.spec.ts": [
+      [
+        "\"",
+        "J4 委派子任务后可核对过程与两份交付物"
+      ]
+    ],
+    "test/journey-deliver-result.spec.ts": [
+      [
+        "\"",
+        "J2 交付的报告可预览下载并保留版本"
+      ]
+    ],
+    "test/journey-execution-management.spec.ts": [
+      [
+        "\"",
+        "执行日志、取消与一次性提醒可管理"
+      ]
+    ],
+    "test/journey-first-run.spec.ts": [
+      [
+        "\"",
+        "J1 首次进入即可完成并恢复两轮分析"
+      ]
+    ],
+    "test/journey-idea-tree-fixture.spec.ts": [
+      [
+        "\"",
+        "Idea Tree autonomous research can pause, resume and iterate"
+      ]
+    ],
+    "test/journey-json-artifact-preview.spec.ts": [
+      [
+        "\"",
+        "J8 打开超长字段 JSON 产物时预览完整可读且契约不变"
+      ]
+    ],
+    "test/journey-local-token-onboarding.spec.ts": [
+      [
+        "`",
+        "首次连接可理解且错误令牌可恢复 ${locale}"
+      ],
+      [
+        "`",
+        "启动链接自动登录并持久保存 ${locale}"
+      ],
+      [
+        "`",
+        "会话内令牌失效后只显示连接引导 ${locale}"
+      ]
+    ],
+    "test/journey-mcp-oauth.spec.ts": [
+      [
+        "\"",
+        "Authorize MCP, inspect tools and recover from denied consent"
+      ]
+    ],
+    "test/journey-mcp-secret-edit.spec.ts": [
+      [
+        "`",
+        "Preserve MCP ${field} secrets while editing keys"
+      ]
+    ],
+    "test/journey-model-draft-safety.spec.ts": [
+      [
+        "\"",
+        "T1 服务商草稿不会静默丢失"
+      ]
+    ],
+    "test/journey-model-settings.spec.ts": [
+      [
+        "\"",
+        "J6 模型设置分组紧凑、可扫读且窄屏可用"
+      ]
+    ],
+    "test/journey-npu-cards.spec.ts": [
+      [
+        "\"",
+        "J7 Runner NPU 卡片：可选/不可用/本地与远端一致且窄屏可用"
+      ]
+    ],
+    "test/journey-plan-workspace.spec.ts": [
+      [
+        "\"",
+        "Workspace projects main and Subagent Plans independently"
+      ]
+    ],
+    "test/journey-plugin-composition.spec.ts": [
+      [
+        "\"",
+        "项目组合、会话覆盖与审批后的候选应用"
+      ]
+    ],
+    "test/journey-prepare-environment.spec.ts": [
+      [
+        "\"",
+        "J3 准备命名环境后让 Agent 使用并留下溯源"
+      ]
+    ],
+    "test/journey-provider-model-catalog.spec.ts": [
+      [
+        "\"",
+        "J7 Provider 模型目录、失败降级与对话思考选择"
+      ]
+    ],
+    "test/journey-real-request.spec.ts": [
+      [
+        "\"",
+        "J5 真实请求生成统计结果并交付 Markdown"
+      ],
+      [
+        "`",
+        "${tool.summary}\\n${tool.details}"
+      ]
+    ],
+    "test/journey-response-identity.spec.ts": [
+      [
+        "\"",
+        "调整审批后继续阅读完整响应，刷新和工具间隔保持一致"
+      ]
+    ],
+    "test/journey-reviewer-auto-audit.spec.ts": [
+      [
+        "\"",
+        "研究员交付报告后可看到独立完成的自动审核"
+      ]
+    ],
+    "test/journey-reviewer-localization.spec.ts": [
+      [
+        "\"",
+        "中文界面保留 Reviewer Specialist 名称并本地化审核控制项"
+      ]
+    ],
+    "test/journey-reviewer-result-matrix.spec.ts": [
+      [
+        "\"",
+        "研究员可区分 Quick 与 Deep 审核结果矩阵"
+      ]
+    ],
+    "test/journey-runner-locations.spec.ts": [
+      [
+        "\"",
+        "R1 设置树按 Runner 集中管理机器、工作区和科学环境"
+      ]
+    ],
+    "test/journey-sandbox-network-settings.spec.ts": [
+      [
+        "\"",
+        "沙箱网络设置只推荐当前 Shell 工具"
+      ]
+    ],
+    "test/journey-session-trajectory.spec.ts": [
+      [
+        "\"",
+        "查看多 Agent 轨迹、精确上下文并导出"
+      ]
+    ],
+    "test/journey-ssh-remote-runner.spec.ts": [
+      [
+        "\"",
+        "F1 远程 Runner 机器目录与 Project/Session 允许名单"
+      ]
+    ],
+    "test/literature-review.spec.ts": [
+      [
+        "\"",
+        "Linux Web工作台、模型配置与简单文献调研主路径"
+      ],
+      [
+        "\"",
+        "Connector 未启用时的失败反馈"
+      ]
+    ],
+    "test/session-run-api-queue-stop.spec.ts": [
+      [
+        "\"",
+        "runs API queues a follow-up while preserving current cancel and replay sequence"
+      ]
+    ],
+    "test/session-run-queue-stop.spec.ts": [
+      [
+        "\"",
+        "running Session keeps Stop visible while the next prompt can be queued"
+      ]
+    ],
+    "test/subagent-rename-and-align.spec.ts": [
+      [
+        "\"",
+        "用户可见 subagent 卡片：术语、观测、折叠展开与布局"
+      ],
+      [
+        "\"",
+        "subagent 超时路径：失败状态与可读提示"
+      ]
+    ],
+    "test/timeouts-runtime-status-user.spec.ts": [
+      [
+        "\"",
+        "用户视角：默认超时策略与 Runtime Status 可读性"
+      ],
+      [
+        "\"",
+        "Kernel Teardown 场景 — BLOCKED"
+      ]
+    ],
+    "test/timeouts-runtime-status.spec.ts": [
+      [
+        "\"",
+        "用户可配置无限超时、查看运行状态并在会话中追溯超时原因"
+      ]
+    ]
+  },
+  "contractCases": {
+    "test/contract/cases/l2-runs.json": [
+      "l2-text-only",
+      "l2-tool-call",
+      "l2-approval-allowed",
+      "l2-approval-denied",
+      "l2-cancel",
+      "l2-provider-unauthorized",
+      "l2-subagent",
+      "l2-resume-after-disconnect"
+    ],
+    "test/contract/cases/sessions-projects.json": [
+      "projects-and-sessions-lifecycle",
+      "unknown-ids",
+      "models-and-providers-reads"
+    ]
+  },
+  "browserFrameworkIdentities": [
+    {
+      "file": "e2e-network-guard.spec.ts",
+      "project": "mocked",
+      "title": [
+        "e2e-network-guard.spec.ts",
+        "mocked browser traffic cannot leave localhost"
+      ]
+    },
+    {
+      "file": "issue-77-wake-notice.spec.ts",
+      "project": "mocked",
+      "title": [
+        "issue-77-wake-notice.spec.ts",
+        "后台执行完成后显示运行时提示，而不是伪装成用户消息"
+      ]
+    },
+    {
+      "file": "issue-85-foreground-exec-inbox.spec.ts",
+      "project": "mocked",
+      "title": [
+        "issue-85-foreground-exec-inbox.spec.ts",
+        "全部前台执行的会话空闲后不会被已交付的结果再次唤醒"
+      ]
+    },
+    {
+      "file": "issue-85-foreground-exec-inbox.spec.ts",
+      "project": "mocked",
+      "title": [
+        "issue-85-foreground-exec-inbox.spec.ts",
+        "后台执行仍会唤醒一次，运行时提示是可读摘要并能跳到执行记录"
+      ]
+    },
+    {
+      "file": "issue-85-foreground-exec-inbox.spec.ts",
+      "project": "mocked",
+      "title": [
+        "issue-85-foreground-exec-inbox.spec.ts",
+        "已完成的助手仍会被它没看过的后台结果唤醒，且不改道给主 Agent"
+      ]
+    },
+    {
+      "file": "journey-compact-process.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-compact-process.spec.ts",
+        "完成的过程去框，运行卡片和文件操作保留"
+      ]
+    },
+    {
+      "file": "journey-compact-process.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-compact-process.spec.ts",
+        "Skill 入口按自己的任务与草稿状态去框"
+      ]
+    },
+    {
+      "file": "journey-custom-mcp.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-custom-mcp.spec.ts",
+        "Custom MCP and Inspector user journey"
+      ]
+    },
+    {
+      "file": "journey-custom-mcp.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-custom-mcp.spec.ts",
+        "Agent uses a selected custom MCP server"
+      ]
+    },
+    {
+      "file": "journey-delegate-subtask.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-delegate-subtask.spec.ts",
+        "J4 委派子任务后可核对过程与两份交付物"
+      ]
+    },
+    {
+      "file": "journey-deliver-result.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-deliver-result.spec.ts",
+        "J2 交付的报告可预览下载并保留版本"
+      ]
+    },
+    {
+      "file": "journey-execution-management.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-execution-management.spec.ts",
+        "执行日志、取消与一次性提醒可管理"
+      ]
+    },
+    {
+      "file": "journey-first-run.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-first-run.spec.ts",
+        "J1 首次进入即可完成并恢复两轮分析"
+      ]
+    },
+    {
+      "file": "journey-idea-tree-fixture.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-idea-tree-fixture.spec.ts",
+        "Idea Tree autonomous research can pause, resume and iterate"
+      ]
+    },
+    {
+      "file": "journey-json-artifact-preview.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-json-artifact-preview.spec.ts",
+        "J8 打开超长字段 JSON 产物时预览完整可读且契约不变"
+      ]
+    },
+    {
+      "file": "journey-local-token-onboarding.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-local-token-onboarding.spec.ts",
+        "en",
+        "首次连接可理解且错误令牌可恢复 en"
+      ]
+    },
+    {
+      "file": "journey-local-token-onboarding.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-local-token-onboarding.spec.ts",
+        "en",
+        "启动链接自动登录并持久保存 en"
+      ]
+    },
+    {
+      "file": "journey-local-token-onboarding.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-local-token-onboarding.spec.ts",
+        "en",
+        "会话内令牌失效后只显示连接引导 en"
+      ]
+    },
+    {
+      "file": "journey-local-token-onboarding.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-local-token-onboarding.spec.ts",
+        "zh-CN",
+        "首次连接可理解且错误令牌可恢复 zh-CN"
+      ]
+    },
+    {
+      "file": "journey-local-token-onboarding.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-local-token-onboarding.spec.ts",
+        "zh-CN",
+        "启动链接自动登录并持久保存 zh-CN"
+      ]
+    },
+    {
+      "file": "journey-local-token-onboarding.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-local-token-onboarding.spec.ts",
+        "zh-CN",
+        "会话内令牌失效后只显示连接引导 zh-CN"
+      ]
+    },
+    {
+      "file": "journey-mcp-oauth.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-mcp-oauth.spec.ts",
+        "Authorize MCP, inspect tools and recover from denied consent"
+      ]
+    },
+    {
+      "file": "journey-mcp-secret-edit.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-mcp-secret-edit.spec.ts",
+        "Preserve MCP env secrets while editing keys"
+      ]
+    },
+    {
+      "file": "journey-mcp-secret-edit.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-mcp-secret-edit.spec.ts",
+        "Preserve MCP headers secrets while editing keys"
+      ]
+    },
+    {
+      "file": "journey-model-draft-safety.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-model-draft-safety.spec.ts",
+        "T1 服务商草稿不会静默丢失"
+      ]
+    },
+    {
+      "file": "journey-model-settings.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-model-settings.spec.ts",
+        "J6 模型设置分组紧凑、可扫读且窄屏可用"
+      ]
+    },
+    {
+      "file": "journey-npu-cards.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-npu-cards.spec.ts",
+        "J7 Runner NPU 卡片：可选/不可用/本地与远端一致且窄屏可用"
+      ]
+    },
+    {
+      "file": "journey-plan-workspace.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-plan-workspace.spec.ts",
+        "Workspace projects main and Subagent Plans independently"
+      ]
+    },
+    {
+      "file": "journey-plugin-composition.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-plugin-composition.spec.ts",
+        "项目组合、会话覆盖与审批后的候选应用"
+      ]
+    },
+    {
+      "file": "journey-prepare-environment.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-prepare-environment.spec.ts",
+        "J3 准备命名环境后让 Agent 使用并留下溯源"
+      ]
+    },
+    {
+      "file": "journey-provider-model-catalog.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-provider-model-catalog.spec.ts",
+        "J7 Provider 模型目录、失败降级与对话思考选择"
+      ]
+    },
+    {
+      "file": "journey-response-identity.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-response-identity.spec.ts",
+        "调整审批后继续阅读完整响应，刷新和工具间隔保持一致"
+      ]
+    },
+    {
+      "file": "journey-reviewer-auto-audit.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-reviewer-auto-audit.spec.ts",
+        "研究员交付报告后可看到独立完成的自动审核"
+      ]
+    },
+    {
+      "file": "journey-reviewer-localization.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-reviewer-localization.spec.ts",
+        "中文界面保留 Reviewer Specialist 名称并本地化审核控制项"
+      ]
+    },
+    {
+      "file": "journey-reviewer-result-matrix.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-reviewer-result-matrix.spec.ts",
+        "研究员可区分 Quick 与 Deep 审核结果矩阵"
+      ]
+    },
+    {
+      "file": "journey-runner-locations.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-runner-locations.spec.ts",
+        "R1 设置树按 Runner 集中管理机器、工作区和科学环境"
+      ]
+    },
+    {
+      "file": "journey-sandbox-network-settings.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-sandbox-network-settings.spec.ts",
+        "沙箱网络设置只推荐当前 Shell 工具"
+      ]
+    },
+    {
+      "file": "journey-session-trajectory.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-session-trajectory.spec.ts",
+        "查看多 Agent 轨迹、精确上下文并导出"
+      ]
+    },
+    {
+      "file": "journey-ssh-remote-runner.spec.ts",
+      "project": "mocked",
+      "title": [
+        "journey-ssh-remote-runner.spec.ts",
+        "F1 远程 Runner 机器目录与 Project/Session 允许名单"
+      ]
+    },
+    {
+      "file": "literature-review.spec.ts",
+      "project": "mocked",
+      "title": [
+        "literature-review.spec.ts",
+        "Wave0+1 Linux Web literature review E2E",
+        "Connector 未启用时的失败反馈"
+      ]
+    },
+    {
+      "file": "literature-review.spec.ts",
+      "project": "real",
+      "title": [
+        "literature-review.spec.ts",
+        "Wave0+1 Linux Web literature review E2E",
+        "Linux Web工作台、模型配置与简单文献调研主路径"
+      ]
+    },
+    {
+      "file": "timeouts-runtime-status.spec.ts",
+      "project": "mocked",
+      "title": [
+        "timeouts-runtime-status.spec.ts",
+        "用户可配置无限超时、查看运行状态并在会话中追溯超时原因"
+      ]
+    },
+    {
+      "file": "issue-67-34-inline-cards.spec.ts",
+      "project": "real",
+      "title": [
+        "issue-67-34-inline-cards.spec.ts",
+        "plan and subagent cards anchor to their run, collapse by default, and survive reload"
+      ]
+    },
+    {
+      "file": "issue-67-34-inline-cards.spec.ts",
+      "project": "real",
+      "title": [
+        "issue-67-34-inline-cards.spec.ts",
+        "markdown previews anchor to the run that wrote them instead of pinning to the bottom"
+      ]
+    },
+    {
+      "file": "journey-real-request.spec.ts",
+      "project": "real",
+      "title": [
+        "journey-real-request.spec.ts",
+        "J5 真实请求生成统计结果并交付 Markdown"
+      ]
+    },
+    {
+      "file": "agent-run-componentization.spec.ts",
+      "project": "legacy",
+      "title": [
+        "agent-run-componentization.spec.ts",
+        "AgentRun/RequestExecution 组件化用户场景 E2E",
+        "S1 主对话正常一轮:发送→进行中反馈→流式完成→可复用"
+      ]
+    },
+    {
+      "file": "agent-run-componentization.spec.ts",
+      "project": "legacy",
+      "title": [
+        "agent-run-componentization.spec.ts",
+        "AgentRun/RequestExecution 组件化用户场景 E2E",
+        "S2 权限卡出现在主对话最外层,批准 Once 后运行继续完成"
+      ]
+    },
+    {
+      "file": "agent-run-componentization.spec.ts",
+      "project": "legacy",
+      "title": [
+        "agent-run-componentization.spec.ts",
+        "AgentRun/RequestExecution 组件化用户场景 E2E",
+        "S2b subagent 首个受控工具的权限卡也出现在主对话最外层"
+      ]
+    },
+    {
+      "file": "agent-run-componentization.spec.ts",
+      "project": "legacy",
+      "title": [
+        "agent-run-componentization.spec.ts",
+        "AgentRun/RequestExecution 组件化用户场景 E2E",
+        "S3 检视缺口①:同轮并发两个 run_shell,同键 once 权限的用户可见行为"
+      ]
+    },
+    {
+      "file": "agent-run-componentization.spec.ts",
+      "project": "legacy",
+      "title": [
+        "agent-run-componentization.spec.ts",
+        "AgentRun/RequestExecution 组件化用户场景 E2E",
+        "S4 检视缺口②:中断主对话连接后 subagent 级联取消,重进会话状态可读"
+      ]
+    },
+    {
+      "file": "agent-run-componentization.spec.ts",
+      "project": "legacy",
+      "title": [
+        "agent-run-componentization.spec.ts",
+        "AgentRun/RequestExecution 组件化用户场景 E2E",
+        "S5 检视缺口④:subagent 超过 maxTurns 被截断,卡片终态与原因可读"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "a configured token resolves for both the API fixtures and the browser"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "surrounding whitespace in the configured token is ignored"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "a missing token is reported as configuration, naming the variable and where to find the value"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "no retired product default is ever used as a credential"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "the seeded token gets the suite through the front door of both surfaces"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "E2E_BASE_URL alone points every surface at the same service"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "the legacy variable alone moves the browser too, instead of splitting the run"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "a conflict resolves to the authoritative variable rather than to two targets"
+      ]
+    },
+    {
+      "file": "e2e-auth.spec.ts",
+      "project": "legacy",
+      "title": [
+        "e2e-auth.spec.ts",
+        "padding, trailing slashes and blanks resolve to one normalized address"
+      ]
+    },
+    {
+      "file": "gateway-token-recovery.spec.ts",
+      "project": "legacy",
+      "title": [
+        "gateway-token-recovery.spec.ts",
+        "a cold start with no token opens Connection settings without burying its footer"
+      ]
+    },
+    {
+      "file": "gateway-token-recovery.spec.ts",
+      "project": "legacy",
+      "title": [
+        "gateway-token-recovery.spec.ts",
+        "a wrong token then the right one recovers without clearing notifications"
+      ]
+    },
+    {
+      "file": "gateway-token-recovery.spec.ts",
+      "project": "legacy",
+      "title": [
+        "gateway-token-recovery.spec.ts",
+        "the recovery dialog stays operable on a narrow viewport"
+      ]
+    },
+    {
+      "file": "issue-143-proxy-settings.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-143-proxy-settings.spec.ts",
+        "proxy settings put defaults and registry first and expose one WebSearch policy"
+      ]
+    },
+    {
+      "file": "issue-143-proxy-settings.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-143-proxy-settings.spec.ts",
+        "proxy settings remain usable at a narrow viewport"
+      ]
+    },
+    {
+      "file": "issue-143-proxy-settings.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-143-proxy-settings.spec.ts",
+        "custom URL remains complete after refresh and is prefilled for editing"
+      ]
+    },
+    {
+      "file": "issue-37-composer-height.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-37-composer-height.spec.ts",
+        "会话 Composer 高度 E2E",
+        "S1 桌面空闲会话:消息区明显大于输入区"
+      ]
+    },
+    {
+      "file": "issue-37-composer-height.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-37-composer-height.spec.ts",
+        "会话 Composer 高度 E2E",
+        "S2 长草稿触顶:textarea 受上限,消息区仍可读"
+      ]
+    },
+    {
+      "file": "issue-37-composer-height.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-37-composer-height.spec.ts",
+        "会话 Composer 高度 E2E",
+        "S3 引用 chip 机制不变量:占比不随 chip 数量明显下降"
+      ]
+    },
+    {
+      "file": "issue-37-composer-height.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-37-composer-height.spec.ts",
+        "会话 Composer 高度 E2E",
+        "S4 发送可达:多 chip 触顶时发送按钮在 composer 框内可点"
+      ]
+    },
+    {
+      "file": "issue-37-composer-height.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-37-composer-height.spec.ts",
+        "会话 Composer 高度 E2E",
+        "S5 真实 isRunning:composer-compact 紧凑且可继续输入"
+      ]
+    },
+    {
+      "file": "issue-37-composer-height.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-37-composer-height.spec.ts",
+        "会话 Composer 高度 E2E",
+        "S6 三档视口量测:空态 / 触顶 / 触顶+2chip / 触顶+6chip 均 ≥55%"
+      ]
+    },
+    {
+      "file": "issue-37-composer-height.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-37-composer-height.spec.ts",
+        "会话 Composer 高度 E2E",
+        "S8 现场条件:工作区打开 + 矮视口,发送在卡片内且不叠专家/审批"
+      ]
+    },
+    {
+      "file": "issue-37-composer-height.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-37-composer-height.spec.ts",
+        "会话 Composer 高度 E2E",
+        "S7 窄屏 sanity:500/600 宽发送与模型选择可达"
+      ]
+    },
+    {
+      "file": "issue-44-background-timeline.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-44-background-timeline.spec.ts",
+        "后台会话的执行流不被吞掉",
+        "S0 前置：创建项目与两个会话"
+      ]
+    },
+    {
+      "file": "issue-44-background-timeline.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-44-background-timeline.spec.ts",
+        "后台会话的执行流不被吞掉",
+        "S5 A 运行中切到 B 并发起新任务，切回 A 仍能看到 A 的执行流"
+      ]
+    },
+    {
+      "file": "issue-44-session-stop.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-44-session-stop.spec.ts",
+        "Session Stop 与 Run 会话隔离",
+        "S0 前置：用户创建项目与两个会话并选择模型"
+      ]
+    },
+    {
+      "file": "issue-44-session-stop.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-44-session-stop.spec.ts",
+        "Session Stop 与 Run 会话隔离",
+        "S1 运行中可见可点 Stop，停止后无需刷新可再 Run"
+      ]
+    },
+    {
+      "file": "issue-44-session-stop.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-44-session-stop.spec.ts",
+        "Session Stop 与 Run 会话隔离",
+        "S2 会话 A 卡住时，会话 B（含新建会话）可 Run"
+      ]
+    },
+    {
+      "file": "issue-44-session-stop.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-44-session-stop.spec.ts",
+        "Session Stop 与 Run 会话隔离",
+        "S3 重复 Stop / 无 active run 时不炸"
+      ]
+    },
+    {
+      "file": "issue-44-session-stop.spec.ts",
+      "project": "legacy",
+      "title": [
+        "issue-44-session-stop.spec.ts",
+        "Session Stop 与 Run 会话隔离",
+        "S4 观感与可理解性（桌面 + 移动视口）"
+      ]
+    },
+    {
+      "file": "session-run-api-queue-stop.spec.ts",
+      "project": "legacy",
+      "title": [
+        "session-run-api-queue-stop.spec.ts",
+        "runs API queues a follow-up while preserving current cancel and replay sequence"
+      ]
+    },
+    {
+      "file": "session-run-queue-stop.spec.ts",
+      "project": "legacy",
+      "title": [
+        "session-run-queue-stop.spec.ts",
+        "running Session keeps Stop visible while the next prompt can be queued"
+      ]
+    },
+    {
+      "file": "subagent-rename-and-align.spec.ts",
+      "project": "legacy",
+      "title": [
+        "subagent-rename-and-align.spec.ts",
+        "Subagent rename and align user scenario E2E",
+        "用户可见 subagent 卡片：术语、观测、折叠展开与布局"
+      ]
+    },
+    {
+      "file": "subagent-rename-and-align.spec.ts",
+      "project": "legacy",
+      "title": [
+        "subagent-rename-and-align.spec.ts",
+        "Subagent rename and align user scenario E2E",
+        "subagent 超时路径：失败状态与可读提示"
+      ]
+    },
+    {
+      "file": "timeouts-runtime-status-user.spec.ts",
+      "project": "legacy",
+      "title": [
+        "timeouts-runtime-status-user.spec.ts",
+        "用户视角：默认超时策略与 Runtime Status 可读性"
+      ]
+    },
+    {
+      "file": "timeouts-runtime-status-user.spec.ts",
+      "project": "legacy",
+      "title": [
+        "timeouts-runtime-status-user.spec.ts",
+        "Kernel Teardown 场景 — BLOCKED"
+      ]
+    }
+  ],
+  "retiredBrowserDeclarations": [
+    {
+      "source": "test/timeouts-runtime-status-user.spec.ts",
+      "title": "Kernel Teardown 场景 — BLOCKED",
+      "reason": "Unconditional skip without assertions for retired persistent runtime support; public Runner rejects persistent requests.",
+      "replacement": "test/st/api/detached-runner-journey.mjs"
+    },
+    {
+      "source": "test/literature-review.spec.ts",
+      "title": "Connector 未启用时的失败反馈",
+      "reason": "The manual paper-search form was removed; this fixme cannot exercise the current product.",
+      "replacement": null,
+      "coverageGap": "Disabled-connector feedback through the current Agent/MCP flow still needs a replacement scenario."
+    }
+  ],
+  "browserFileRenames": {
+    "issue-143-proxy-settings.spec.ts": "proxy-settings-persistence.spec.ts",
+    "issue-37-composer-height.spec.ts": "session-composer-layout.spec.ts",
+    "issue-44-background-timeline.spec.ts": "background-session-timeline.spec.ts",
+    "issue-44-session-stop.spec.ts": "session-stop-isolation.spec.ts",
+    "issue-67-34-inline-cards.spec.ts": "run-inline-card-anchoring.spec.ts",
+    "issue-77-wake-notice.spec.ts": "background-execution-notice.spec.ts",
+    "issue-85-foreground-exec-inbox.spec.ts": "execution-result-delivery.spec.ts"
+  },
+  "upstreamIntegration": {
+    "revision": "967056812ba848f5594d3a93fc41efde35b90fd1",
+    "browserFrameworkIdentities": [
+      {
+        "file": "e2e-network-guard.spec.ts",
+        "project": "mocked",
+        "title": [
+          "e2e-network-guard.spec.ts",
+          "mocked browser traffic cannot leave localhost"
+        ]
+      },
+      {
+        "file": "issue-77-wake-notice.spec.ts",
+        "project": "mocked",
+        "title": [
+          "issue-77-wake-notice.spec.ts",
+          "后台执行完成后显示运行时提示，而不是伪装成用户消息"
+        ]
+      },
+      {
+        "file": "issue-85-foreground-exec-inbox.spec.ts",
+        "project": "mocked",
+        "title": [
+          "issue-85-foreground-exec-inbox.spec.ts",
+          "全部前台执行的会话空闲后不会被已交付的结果再次唤醒"
+        ]
+      },
+      {
+        "file": "issue-85-foreground-exec-inbox.spec.ts",
+        "project": "mocked",
+        "title": [
+          "issue-85-foreground-exec-inbox.spec.ts",
+          "后台执行仍会唤醒一次，运行时提示是可读摘要并能跳到执行记录"
+        ]
+      },
+      {
+        "file": "issue-85-foreground-exec-inbox.spec.ts",
+        "project": "mocked",
+        "title": [
+          "issue-85-foreground-exec-inbox.spec.ts",
+          "已完成的助手仍会被它没看过的后台结果唤醒，且不改道给主 Agent"
+        ]
+      },
+      {
+        "file": "journey-artifact-archive.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-artifact-archive.spec.ts",
+          "J10 多份交付物可以打包成一个压缩包带走"
+        ]
+      },
+      {
+        "file": "journey-compact-process.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-compact-process.spec.ts",
+          "完成的过程去框，运行卡片和文件操作保留"
+        ]
+      },
+      {
+        "file": "journey-compact-process.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-compact-process.spec.ts",
+          "Skill 入口按自己的任务与草稿状态去框"
+        ]
+      },
+      {
+        "file": "journey-custom-mcp.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-custom-mcp.spec.ts",
+          "Custom MCP and Inspector user journey"
+        ]
+      },
+      {
+        "file": "journey-custom-mcp.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-custom-mcp.spec.ts",
+          "Agent uses a selected custom MCP server"
+        ]
+      },
+      {
+        "file": "journey-delegate-subtask.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-delegate-subtask.spec.ts",
+          "J4 委派子任务后可核对过程与两份交付物"
+        ]
+      },
+      {
+        "file": "journey-deliver-result.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-deliver-result.spec.ts",
+          "J2 交付的报告可预览下载并保留版本"
+        ]
+      },
+      {
+        "file": "journey-execution-management.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-execution-management.spec.ts",
+          "执行日志、取消与一次性提醒可管理"
+        ]
+      },
+      {
+        "file": "journey-first-run.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-first-run.spec.ts",
+          "J1 首次进入即可完成并恢复两轮分析"
+        ]
+      },
+      {
+        "file": "journey-idea-tree-fixture.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-idea-tree-fixture.spec.ts",
+          "Idea Tree autonomous research can pause, resume and iterate"
+        ]
+      },
+      {
+        "file": "journey-json-artifact-preview.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-json-artifact-preview.spec.ts",
+          "J8 打开超长字段 JSON 产物时预览完整可读且契约不变"
+        ]
+      },
+      {
+        "file": "journey-local-token-onboarding.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-local-token-onboarding.spec.ts",
+          "en",
+          "首次连接可理解且错误令牌可恢复 en"
+        ]
+      },
+      {
+        "file": "journey-local-token-onboarding.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-local-token-onboarding.spec.ts",
+          "en",
+          "启动链接自动登录并持久保存 en"
+        ]
+      },
+      {
+        "file": "journey-local-token-onboarding.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-local-token-onboarding.spec.ts",
+          "en",
+          "会话内令牌失效后只显示连接引导 en"
+        ]
+      },
+      {
+        "file": "journey-local-token-onboarding.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-local-token-onboarding.spec.ts",
+          "zh-CN",
+          "首次连接可理解且错误令牌可恢复 zh-CN"
+        ]
+      },
+      {
+        "file": "journey-local-token-onboarding.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-local-token-onboarding.spec.ts",
+          "zh-CN",
+          "启动链接自动登录并持久保存 zh-CN"
+        ]
+      },
+      {
+        "file": "journey-local-token-onboarding.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-local-token-onboarding.spec.ts",
+          "zh-CN",
+          "会话内令牌失效后只显示连接引导 zh-CN"
+        ]
+      },
+      {
+        "file": "journey-mcp-oauth.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-mcp-oauth.spec.ts",
+          "Authorize MCP, inspect tools and recover from denied consent"
+        ]
+      },
+      {
+        "file": "journey-mcp-secret-edit.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-mcp-secret-edit.spec.ts",
+          "Preserve MCP env secrets while editing keys"
+        ]
+      },
+      {
+        "file": "journey-mcp-secret-edit.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-mcp-secret-edit.spec.ts",
+          "Preserve MCP headers secrets while editing keys"
+        ]
+      },
+      {
+        "file": "journey-model-connect-wizard.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-model-connect-wizard.spec.ts",
+          "模型连接成功、失败与配置保护全流程"
+        ]
+      },
+      {
+        "file": "journey-model-draft-safety.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-model-draft-safety.spec.ts",
+          "T1 服务商草稿不会静默丢失"
+        ]
+      },
+      {
+        "file": "journey-model-settings.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-model-settings.spec.ts",
+          "J6 模型设置分组紧凑、可扫读且窄屏可用"
+        ]
+      },
+      {
+        "file": "journey-npu-cards.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-npu-cards.spec.ts",
+          "J7 Runner NPU 卡片：可选/不可用/本地与远端一致且窄屏可用"
+        ]
+      },
+      {
+        "file": "journey-plan-workspace.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-plan-workspace.spec.ts",
+          "Workspace projects main and Subagent Plans independently"
+        ]
+      },
+      {
+        "file": "journey-plugin-composition.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-plugin-composition.spec.ts",
+          "项目组合、会话覆盖与审批后的候选应用"
+        ]
+      },
+      {
+        "file": "journey-prepare-environment.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-prepare-environment.spec.ts",
+          "J3 准备命名环境后让 Agent 使用并留下溯源"
+        ]
+      },
+      {
+        "file": "journey-provider-model-catalog.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-provider-model-catalog.spec.ts",
+          "J7 Provider 模型目录、失败降级与对话思考选择"
+        ]
+      },
+      {
+        "file": "journey-response-identity.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-response-identity.spec.ts",
+          "调整审批后继续阅读完整响应，刷新和工具间隔保持一致"
+        ]
+      },
+      {
+        "file": "journey-reviewer-auto-audit.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-reviewer-auto-audit.spec.ts",
+          "研究员交付报告后可看到独立完成的自动审核"
+        ]
+      },
+      {
+        "file": "journey-reviewer-localization.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-reviewer-localization.spec.ts",
+          "中文界面保留 Reviewer Specialist 名称并本地化审核控制项"
+        ]
+      },
+      {
+        "file": "journey-reviewer-result-matrix.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-reviewer-result-matrix.spec.ts",
+          "研究员可区分 Quick 与 Deep 审核结果矩阵"
+        ]
+      },
+      {
+        "file": "journey-runner-locations.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-runner-locations.spec.ts",
+          "R1 设置树按 Runner 集中管理机器、工作区和科学环境"
+        ]
+      },
+      {
+        "file": "journey-sandbox-network-settings.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-sandbox-network-settings.spec.ts",
+          "沙箱网络设置只推荐当前 Shell 工具"
+        ]
+      },
+      {
+        "file": "journey-session-trajectory.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-session-trajectory.spec.ts",
+          "查看多 Agent 轨迹、精确上下文并导出"
+        ]
+      },
+      {
+        "file": "journey-skill-folder-import.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-skill-folder-import.spec.ts",
+          "J11 本地 Skill 文件夹可以直接导入"
+        ]
+      },
+      {
+        "file": "journey-ssh-remote-runner.spec.ts",
+        "project": "mocked",
+        "title": [
+          "journey-ssh-remote-runner.spec.ts",
+          "F1 远程 Runner 机器目录与 Project/Session 允许名单"
+        ]
+      },
+      {
+        "file": "literature-review.spec.ts",
+        "project": "mocked",
+        "title": [
+          "literature-review.spec.ts",
+          "Wave0+1 Linux Web literature review E2E",
+          "Connector 未启用时的失败反馈"
+        ]
+      },
+      {
+        "file": "literature-review.spec.ts",
+        "project": "real",
+        "title": [
+          "literature-review.spec.ts",
+          "Wave0+1 Linux Web literature review E2E",
+          "Linux Web工作台、模型配置与简单文献调研主路径"
+        ]
+      },
+      {
+        "file": "timeouts-runtime-status.spec.ts",
+        "project": "mocked",
+        "title": [
+          "timeouts-runtime-status.spec.ts",
+          "用户可配置无限超时、查看运行状态并在会话中追溯超时原因"
+        ]
+      },
+      {
+        "file": "issue-67-34-inline-cards.spec.ts",
+        "project": "real",
+        "title": [
+          "issue-67-34-inline-cards.spec.ts",
+          "plan and subagent cards anchor to their run, collapse by default, and survive reload"
+        ]
+      },
+      {
+        "file": "issue-67-34-inline-cards.spec.ts",
+        "project": "real",
+        "title": [
+          "issue-67-34-inline-cards.spec.ts",
+          "markdown previews anchor to the run that wrote them instead of pinning to the bottom"
+        ]
+      },
+      {
+        "file": "journey-real-request.spec.ts",
+        "project": "real",
+        "title": [
+          "journey-real-request.spec.ts",
+          "J5 真实请求生成统计结果并交付 Markdown"
+        ]
+      },
+      {
+        "file": "agent-run-componentization.spec.ts",
+        "project": "legacy",
+        "title": [
+          "agent-run-componentization.spec.ts",
+          "AgentRun/RequestExecution 组件化用户场景 E2E",
+          "S1 主对话正常一轮:发送→进行中反馈→流式完成→可复用"
+        ]
+      },
+      {
+        "file": "agent-run-componentization.spec.ts",
+        "project": "legacy",
+        "title": [
+          "agent-run-componentization.spec.ts",
+          "AgentRun/RequestExecution 组件化用户场景 E2E",
+          "S2 权限卡出现在主对话最外层,批准 Once 后运行继续完成"
+        ]
+      },
+      {
+        "file": "agent-run-componentization.spec.ts",
+        "project": "legacy",
+        "title": [
+          "agent-run-componentization.spec.ts",
+          "AgentRun/RequestExecution 组件化用户场景 E2E",
+          "S2b subagent 首个受控工具的权限卡也出现在主对话最外层"
+        ]
+      },
+      {
+        "file": "agent-run-componentization.spec.ts",
+        "project": "legacy",
+        "title": [
+          "agent-run-componentization.spec.ts",
+          "AgentRun/RequestExecution 组件化用户场景 E2E",
+          "S3 检视缺口①:同轮并发两个 run_shell,同键 once 权限的用户可见行为"
+        ]
+      },
+      {
+        "file": "agent-run-componentization.spec.ts",
+        "project": "legacy",
+        "title": [
+          "agent-run-componentization.spec.ts",
+          "AgentRun/RequestExecution 组件化用户场景 E2E",
+          "S4 检视缺口②:中断主对话连接后 subagent 级联取消,重进会话状态可读"
+        ]
+      },
+      {
+        "file": "agent-run-componentization.spec.ts",
+        "project": "legacy",
+        "title": [
+          "agent-run-componentization.spec.ts",
+          "AgentRun/RequestExecution 组件化用户场景 E2E",
+          "S5 检视缺口④:subagent 超过 maxTurns 被截断,卡片终态与原因可读"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "a configured token resolves for both the API fixtures and the browser"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "surrounding whitespace in the configured token is ignored"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "a missing token is reported as configuration, naming the variable and where to find the value"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "no retired product default is ever used as a credential"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "the seeded token gets the suite through the front door of both surfaces"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "E2E_BASE_URL alone points every surface at the same service"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "the legacy variable alone moves the browser too, instead of splitting the run"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "a conflict resolves to the authoritative variable rather than to two targets"
+        ]
+      },
+      {
+        "file": "e2e-auth.spec.ts",
+        "project": "legacy",
+        "title": [
+          "e2e-auth.spec.ts",
+          "padding, trailing slashes and blanks resolve to one normalized address"
+        ]
+      },
+      {
+        "file": "gateway-token-recovery.spec.ts",
+        "project": "legacy",
+        "title": [
+          "gateway-token-recovery.spec.ts",
+          "a cold start with no token opens Connection settings without burying its footer"
+        ]
+      },
+      {
+        "file": "gateway-token-recovery.spec.ts",
+        "project": "legacy",
+        "title": [
+          "gateway-token-recovery.spec.ts",
+          "a wrong token then the right one recovers without clearing notifications"
+        ]
+      },
+      {
+        "file": "gateway-token-recovery.spec.ts",
+        "project": "legacy",
+        "title": [
+          "gateway-token-recovery.spec.ts",
+          "the recovery dialog stays operable on a narrow viewport"
+        ]
+      },
+      {
+        "file": "issue-143-proxy-settings.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-143-proxy-settings.spec.ts",
+          "proxy settings put defaults and registry first and expose one WebSearch policy"
+        ]
+      },
+      {
+        "file": "issue-143-proxy-settings.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-143-proxy-settings.spec.ts",
+          "proxy settings remain usable at a narrow viewport"
+        ]
+      },
+      {
+        "file": "issue-143-proxy-settings.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-143-proxy-settings.spec.ts",
+          "custom URL remains complete after refresh and is prefilled for editing"
+        ]
+      },
+      {
+        "file": "issue-37-composer-height.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-37-composer-height.spec.ts",
+          "会话 Composer 高度 E2E",
+          "S1 桌面空闲会话:消息区明显大于输入区"
+        ]
+      },
+      {
+        "file": "issue-37-composer-height.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-37-composer-height.spec.ts",
+          "会话 Composer 高度 E2E",
+          "S2 长草稿触顶:textarea 受上限,消息区仍可读"
+        ]
+      },
+      {
+        "file": "issue-37-composer-height.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-37-composer-height.spec.ts",
+          "会话 Composer 高度 E2E",
+          "S3 引用 chip 机制不变量:占比不随 chip 数量明显下降"
+        ]
+      },
+      {
+        "file": "issue-37-composer-height.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-37-composer-height.spec.ts",
+          "会话 Composer 高度 E2E",
+          "S4 发送可达:多 chip 触顶时发送按钮在 composer 框内可点"
+        ]
+      },
+      {
+        "file": "issue-37-composer-height.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-37-composer-height.spec.ts",
+          "会话 Composer 高度 E2E",
+          "S5 真实 isRunning:composer-compact 紧凑且可继续输入"
+        ]
+      },
+      {
+        "file": "issue-37-composer-height.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-37-composer-height.spec.ts",
+          "会话 Composer 高度 E2E",
+          "S6 三档视口量测:空态 / 触顶 / 触顶+2chip / 触顶+6chip 均 ≥55%"
+        ]
+      },
+      {
+        "file": "issue-37-composer-height.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-37-composer-height.spec.ts",
+          "会话 Composer 高度 E2E",
+          "S8 现场条件:工作区打开 + 矮视口,发送在卡片内且不叠专家/审批"
+        ]
+      },
+      {
+        "file": "issue-37-composer-height.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-37-composer-height.spec.ts",
+          "会话 Composer 高度 E2E",
+          "S7 窄屏 sanity:500/600 宽发送与模型选择可达"
+        ]
+      },
+      {
+        "file": "issue-44-background-timeline.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-44-background-timeline.spec.ts",
+          "后台会话的执行流不被吞掉",
+          "S0 前置：创建项目与两个会话"
+        ]
+      },
+      {
+        "file": "issue-44-background-timeline.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-44-background-timeline.spec.ts",
+          "后台会话的执行流不被吞掉",
+          "S5 A 运行中切到 B 并发起新任务，切回 A 仍能看到 A 的执行流"
+        ]
+      },
+      {
+        "file": "issue-44-session-stop.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-44-session-stop.spec.ts",
+          "Session Stop 与 Run 会话隔离",
+          "S0 前置：用户创建项目与两个会话并选择模型"
+        ]
+      },
+      {
+        "file": "issue-44-session-stop.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-44-session-stop.spec.ts",
+          "Session Stop 与 Run 会话隔离",
+          "S1 运行中可见可点 Stop，停止后无需刷新可再 Run"
+        ]
+      },
+      {
+        "file": "issue-44-session-stop.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-44-session-stop.spec.ts",
+          "Session Stop 与 Run 会话隔离",
+          "S2 会话 A 卡住时，会话 B（含新建会话）可 Run"
+        ]
+      },
+      {
+        "file": "issue-44-session-stop.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-44-session-stop.spec.ts",
+          "Session Stop 与 Run 会话隔离",
+          "S3 重复 Stop / 无 active run 时不炸"
+        ]
+      },
+      {
+        "file": "issue-44-session-stop.spec.ts",
+        "project": "legacy",
+        "title": [
+          "issue-44-session-stop.spec.ts",
+          "Session Stop 与 Run 会话隔离",
+          "S4 观感与可理解性（桌面 + 移动视口）"
+        ]
+      },
+      {
+        "file": "session-run-api-queue-stop.spec.ts",
+        "project": "legacy",
+        "title": [
+          "session-run-api-queue-stop.spec.ts",
+          "runs API queues a follow-up while preserving current cancel and replay sequence"
+        ]
+      },
+      {
+        "file": "session-run-queue-stop.spec.ts",
+        "project": "legacy",
+        "title": [
+          "session-run-queue-stop.spec.ts",
+          "running Session keeps Stop visible while the next prompt can be queued"
+        ]
+      },
+      {
+        "file": "subagent-rename-and-align.spec.ts",
+        "project": "legacy",
+        "title": [
+          "subagent-rename-and-align.spec.ts",
+          "Subagent rename and align user scenario E2E",
+          "用户可见 subagent 卡片：术语、观测、折叠展开与布局"
+        ]
+      },
+      {
+        "file": "subagent-rename-and-align.spec.ts",
+        "project": "legacy",
+        "title": [
+          "subagent-rename-and-align.spec.ts",
+          "Subagent rename and align user scenario E2E",
+          "subagent 超时路径：失败状态与可读提示"
+        ]
+      },
+      {
+        "file": "timeouts-runtime-status-user.spec.ts",
+        "project": "legacy",
+        "title": [
+          "timeouts-runtime-status-user.spec.ts",
+          "用户视角：默认超时策略与 Runtime Status 可读性"
+        ]
+      },
+      {
+        "file": "timeouts-runtime-status-user.spec.ts",
+        "project": "legacy",
+        "title": [
+          "timeouts-runtime-status-user.spec.ts",
+          "Kernel Teardown 场景 — BLOCKED"
+        ]
+      }
+    ],
+    "browserDeclarations": {
+      "test/e2e-network-guard.spec.ts": [
+        [
+          "\"",
+          "mocked browser traffic cannot leave localhost"
+        ]
+      ],
+      "test/issue-77-wake-notice.spec.ts": [
+        [
+          "\"",
+          "后台执行完成后显示运行时提示，而不是伪装成用户消息"
+        ]
+      ],
+      "test/issue-85-foreground-exec-inbox.spec.ts": [
+        [
+          "\"",
+          "全部前台执行的会话空闲后不会被已交付的结果再次唤醒"
+        ],
+        [
+          "\"",
+          "后台执行仍会唤醒一次，运行时提示是可读摘要并能跳到执行记录"
+        ],
+        [
+          "\"",
+          "已完成的助手仍会被它没看过的后台结果唤醒，且不改道给主 Agent"
+        ]
+      ],
+      "test/journey-artifact-archive.spec.ts": [
+        [
+          "\"",
+          "J10 多份交付物可以打包成一个压缩包带走"
+        ]
+      ],
+      "test/journey-compact-process.spec.ts": [
+        [
+          "\"",
+          "完成的过程去框，运行卡片和文件操作保留"
+        ],
+        [
+          "\"",
+          "Skill 入口按自己的任务与草稿状态去框"
+        ]
+      ],
+      "test/journey-custom-mcp.spec.ts": [
+        [
+          "\"",
+          "Custom MCP and Inspector user journey"
+        ],
+        [
+          "\"",
+          "Agent uses a selected custom MCP server"
+        ]
+      ],
+      "test/journey-delegate-subtask.spec.ts": [
+        [
+          "\"",
+          "J4 委派子任务后可核对过程与两份交付物"
+        ]
+      ],
+      "test/journey-deliver-result.spec.ts": [
+        [
+          "\"",
+          "J2 交付的报告可预览下载并保留版本"
+        ]
+      ],
+      "test/journey-execution-management.spec.ts": [
+        [
+          "\"",
+          "执行日志、取消与一次性提醒可管理"
+        ]
+      ],
+      "test/journey-first-run.spec.ts": [
+        [
+          "\"",
+          "J1 首次进入即可完成并恢复两轮分析"
+        ]
+      ],
+      "test/journey-idea-tree-fixture.spec.ts": [
+        [
+          "\"",
+          "Idea Tree autonomous research can pause, resume and iterate"
+        ]
+      ],
+      "test/journey-json-artifact-preview.spec.ts": [
+        [
+          "\"",
+          "J8 打开超长字段 JSON 产物时预览完整可读且契约不变"
+        ]
+      ],
+      "test/journey-local-token-onboarding.spec.ts": [
+        [
+          "`",
+          "首次连接可理解且错误令牌可恢复 ${locale}"
+        ],
+        [
+          "`",
+          "启动链接自动登录并持久保存 ${locale}"
+        ],
+        [
+          "`",
+          "会话内令牌失效后只显示连接引导 ${locale}"
+        ]
+      ],
+      "test/journey-mcp-oauth.spec.ts": [
+        [
+          "\"",
+          "Authorize MCP, inspect tools and recover from denied consent"
+        ]
+      ],
+      "test/journey-mcp-secret-edit.spec.ts": [
+        [
+          "`",
+          "Preserve MCP ${field} secrets while editing keys"
+        ]
+      ],
+      "test/journey-model-connect-wizard.spec.ts": [
+        [
+          "\"",
+          "模型连接成功、失败与配置保护全流程"
+        ]
+      ],
+      "test/journey-model-draft-safety.spec.ts": [
+        [
+          "\"",
+          "T1 服务商草稿不会静默丢失"
+        ]
+      ],
+      "test/journey-model-settings.spec.ts": [
+        [
+          "\"",
+          "J6 模型设置分组紧凑、可扫读且窄屏可用"
+        ]
+      ],
+      "test/journey-npu-cards.spec.ts": [
+        [
+          "\"",
+          "J7 Runner NPU 卡片：可选/不可用/本地与远端一致且窄屏可用"
+        ]
+      ],
+      "test/journey-plan-workspace.spec.ts": [
+        [
+          "\"",
+          "Workspace projects main and Subagent Plans independently"
+        ]
+      ],
+      "test/journey-plugin-composition.spec.ts": [
+        [
+          "\"",
+          "项目组合、会话覆盖与审批后的候选应用"
+        ]
+      ],
+      "test/journey-prepare-environment.spec.ts": [
+        [
+          "\"",
+          "J3 准备命名环境后让 Agent 使用并留下溯源"
+        ]
+      ],
+      "test/journey-provider-model-catalog.spec.ts": [
+        [
+          "\"",
+          "J7 Provider 模型目录、失败降级与对话思考选择"
+        ]
+      ],
+      "test/journey-response-identity.spec.ts": [
+        [
+          "\"",
+          "调整审批后继续阅读完整响应，刷新和工具间隔保持一致"
+        ]
+      ],
+      "test/journey-reviewer-auto-audit.spec.ts": [
+        [
+          "\"",
+          "研究员交付报告后可看到独立完成的自动审核"
+        ]
+      ],
+      "test/journey-reviewer-localization.spec.ts": [
+        [
+          "\"",
+          "中文界面保留 Reviewer Specialist 名称并本地化审核控制项"
+        ]
+      ],
+      "test/journey-reviewer-result-matrix.spec.ts": [
+        [
+          "\"",
+          "研究员可区分 Quick 与 Deep 审核结果矩阵"
+        ]
+      ],
+      "test/journey-runner-locations.spec.ts": [
+        [
+          "\"",
+          "R1 设置树按 Runner 集中管理机器、工作区和科学环境"
+        ]
+      ],
+      "test/journey-sandbox-network-settings.spec.ts": [
+        [
+          "\"",
+          "沙箱网络设置只推荐当前 Shell 工具"
+        ]
+      ],
+      "test/journey-session-trajectory.spec.ts": [
+        [
+          "\"",
+          "查看多 Agent 轨迹、精确上下文并导出"
+        ]
+      ],
+      "test/journey-skill-folder-import.spec.ts": [
+        [
+          "\"",
+          "J11 本地 Skill 文件夹可以直接导入"
+        ]
+      ],
+      "test/journey-ssh-remote-runner.spec.ts": [
+        [
+          "\"",
+          "F1 远程 Runner 机器目录与 Project/Session 允许名单"
+        ]
+      ],
+      "test/literature-review.spec.ts": [
+        [
+          "\"",
+          "Linux Web工作台、模型配置与简单文献调研主路径"
+        ],
+        [
+          "\"",
+          "Connector 未启用时的失败反馈"
+        ]
+      ],
+      "test/timeouts-runtime-status.spec.ts": [
+        [
+          "\"",
+          "用户可配置无限超时、查看运行状态并在会话中追溯超时原因"
+        ]
+      ],
+      "test/issue-67-34-inline-cards.spec.ts": [
+        [
+          "\"",
+          "plan and subagent cards anchor to their run, collapse by default, and survive reload"
+        ],
+        [
+          "\"",
+          "markdown previews anchor to the run that wrote them instead of pinning to the bottom"
+        ]
+      ],
+      "test/journey-real-request.spec.ts": [
+        [
+          "\"",
+          "J5 真实请求生成统计结果并交付 Markdown"
+        ],
+        [
+          "`",
+          "${tool.summary}\\n${tool.details}"
+        ]
+      ],
+      "test/agent-run-componentization.spec.ts": [
+        [
+          "\"",
+          "S1 主对话正常一轮:发送→进行中反馈→流式完成→可复用"
+        ],
+        [
+          "\"",
+          "S2 权限卡出现在主对话最外层,批准 Once 后运行继续完成"
+        ],
+        [
+          "\"",
+          "S2b subagent 首个受控工具的权限卡也出现在主对话最外层"
+        ],
+        [
+          "\"",
+          "S3 检视缺口①:同轮并发两个 run_shell,同键 once 权限的用户可见行为"
+        ],
+        [
+          "\"",
+          "S4 检视缺口②:中断主对话连接后 subagent 级联取消,重进会话状态可读"
+        ],
+        [
+          "\"",
+          "S5 检视缺口④:subagent 超过 maxTurns 被截断,卡片终态与原因可读"
+        ]
+      ],
+      "test/e2e-auth.spec.ts": [
+        [
+          "\"",
+          "a configured token resolves for both the API fixtures and the browser"
+        ],
+        [
+          "\"",
+          "surrounding whitespace in the configured token is ignored"
+        ],
+        [
+          "\"",
+          "a missing token is reported as configuration, naming the variable and where to find the value"
+        ],
+        [
+          "\"",
+          "no retired product default is ever used as a credential"
+        ],
+        [
+          "\"",
+          "the seeded token gets the suite through the front door of both surfaces"
+        ],
+        [
+          "\"",
+          "E2E_BASE_URL alone points every surface at the same service"
+        ],
+        [
+          "\"",
+          "the legacy variable alone moves the browser too, instead of splitting the run"
+        ],
+        [
+          "\"",
+          "a conflict resolves to the authoritative variable rather than to two targets"
+        ],
+        [
+          "\"",
+          "padding, trailing slashes and blanks resolve to one normalized address"
+        ]
+      ],
+      "test/gateway-token-recovery.spec.ts": [
+        [
+          "\"",
+          "a cold start with no token opens Connection settings without burying its footer"
+        ],
+        [
+          "\"",
+          "a wrong token then the right one recovers without clearing notifications"
+        ],
+        [
+          "\"",
+          "the recovery dialog stays operable on a narrow viewport"
+        ]
+      ],
+      "test/issue-143-proxy-settings.spec.ts": [
+        [
+          "\"",
+          "proxy settings put defaults and registry first and expose one WebSearch policy"
+        ],
+        [
+          "\"",
+          "proxy settings remain usable at a narrow viewport"
+        ],
+        [
+          "\"",
+          "custom URL remains complete after refresh and is prefilled for editing"
+        ]
+      ],
+      "test/issue-37-composer-height.spec.ts": [
+        [
+          "\"",
+          "S1 桌面空闲会话:消息区明显大于输入区"
+        ],
+        [
+          "\"",
+          "S2 长草稿触顶:textarea 受上限,消息区仍可读"
+        ],
+        [
+          "\"",
+          "S3 引用 chip 机制不变量:占比不随 chip 数量明显下降"
+        ],
+        [
+          "\"",
+          "S4 发送可达:多 chip 触顶时发送按钮在 composer 框内可点"
+        ],
+        [
+          "\"",
+          "S5 真实 isRunning:composer-compact 紧凑且可继续输入"
+        ],
+        [
+          "\"",
+          "S6 三档视口量测:空态 / 触顶 / 触顶+2chip / 触顶+6chip 均 ≥55%"
+        ],
+        [
+          "\"",
+          "S8 现场条件:工作区打开 + 矮视口,发送在卡片内且不叠专家/审批"
+        ],
+        [
+          "\"",
+          "S7 窄屏 sanity:500/600 宽发送与模型选择可达"
+        ]
+      ],
+      "test/issue-44-background-timeline.spec.ts": [
+        [
+          "\"",
+          "S0 前置：创建项目与两个会话"
+        ],
+        [
+          "\"",
+          "S5 A 运行中切到 B 并发起新任务，切回 A 仍能看到 A 的执行流"
+        ]
+      ],
+      "test/issue-44-session-stop.spec.ts": [
+        [
+          "\"",
+          "S0 前置：用户创建项目与两个会话并选择模型"
+        ],
+        [
+          "\"",
+          "S1 运行中可见可点 Stop，停止后无需刷新可再 Run"
+        ],
+        [
+          "\"",
+          "S2 会话 A 卡住时，会话 B（含新建会话）可 Run"
+        ],
+        [
+          "\"",
+          "S3 重复 Stop / 无 active run 时不炸"
+        ],
+        [
+          "\"",
+          "S4 观感与可理解性（桌面 + 移动视口）"
+        ]
+      ],
+      "test/session-run-api-queue-stop.spec.ts": [
+        [
+          "\"",
+          "runs API queues a follow-up while preserving current cancel and replay sequence"
+        ]
+      ],
+      "test/session-run-queue-stop.spec.ts": [
+        [
+          "\"",
+          "running Session keeps Stop visible while the next prompt can be queued"
+        ]
+      ],
+      "test/subagent-rename-and-align.spec.ts": [
+        [
+          "\"",
+          "用户可见 subagent 卡片：术语、观测、折叠展开与布局"
+        ],
+        [
+          "\"",
+          "subagent 超时路径：失败状态与可读提示"
+        ]
+      ],
+      "test/timeouts-runtime-status-user.spec.ts": [
+        [
+          "\"",
+          "用户视角：默认超时策略与 Runtime Status 可读性"
+        ],
+        [
+          "\"",
+          "Kernel Teardown 场景 — BLOCKED"
+        ]
+      ]
+    },
+    "contractCases": {
+      "test/contract/cases/files-usage.json": [
+        "files-trajectory-usage-reads"
+      ],
+      "test/contract/cases/idea-evolve-memory.json": [
+        "idea-evolve-memory-reads"
+      ],
+      "test/contract/cases/l2-runs.json": [
+        "l2-text-only",
+        "l2-tool-call",
+        "l2-approval-allowed",
+        "l2-approval-denied",
+        "l2-cancel",
+        "l2-provider-unauthorized",
+        "l2-subagent",
+        "l2-resume-after-disconnect",
+        "l2-post-messages",
+        "l2-two-turns",
+        "l2-parallel-tools",
+        "l2-slow-tool",
+        "l2-anthropic-tool-call",
+        "l2-responses-tool-call"
+      ],
+      "test/contract/cases/mcp.json": [
+        "custom-mcp-lifecycle"
+      ],
+      "test/contract/cases/permissions.json": [
+        "permission-requests-and-grants",
+        "permission-grant-survives-epoch-rotation"
+      ],
+      "test/contract/cases/runners.json": [
+        "runners-environments-reads"
+      ],
+      "test/contract/cases/sessions-projects.json": [
+        "projects-and-sessions-lifecycle",
+        "unknown-ids",
+        "models-and-providers-reads"
+      ],
+      "test/contract/cases/settings-models.json": [
+        "global-settings-round-trips",
+        "health-and-runtime-status",
+        "proxy-servers-and-specialists-crud",
+        "providers-and-models-crud"
+      ]
+    }
+  },
+  "layoutMigration": {
+    "fromRevision": "eccb780714939d4e8d7c5ddacd603b2d7aa94076",
+    "files": {
+      "test/contract/README.md": "test/st/contract/README.md",
+      "test/contract/accepted-differences.json": "test/st/contract/accepted-differences.json",
+      "test/contract/baselines/legacy-linux.json": "test/st/contract/baselines/legacy-linux.json",
+      "test/contract/cases/contract-scenarios.suite.yaml": "test/st/contract/cases/contract-scenarios.suite.yaml",
+      "test/contract/cases/custom-mcp-lifecycle.case.yaml": "test/st/contract/cases/custom-mcp-lifecycle.case.yaml",
+      "test/contract/cases/files-trajectory-usage-reads.case.yaml": "test/st/contract/cases/files-trajectory-usage-reads.case.yaml",
+      "test/contract/cases/files-usage.json": "test/st/contract/cases/files-usage.json",
+      "test/contract/cases/global-settings-round-trips.case.yaml": "test/st/contract/cases/global-settings-round-trips.case.yaml",
+      "test/contract/cases/health-and-runtime-status.case.yaml": "test/st/contract/cases/health-and-runtime-status.case.yaml",
+      "test/contract/cases/idea-evolve-memory-reads.case.yaml": "test/st/contract/cases/idea-evolve-memory-reads.case.yaml",
+      "test/contract/cases/idea-evolve-memory.json": "test/st/contract/cases/idea-evolve-memory.json",
+      "test/contract/cases/l2-anthropic-tool-call.case.yaml": "test/st/contract/cases/l2-anthropic-tool-call.case.yaml",
+      "test/contract/cases/l2-approval-allowed.case.yaml": "test/st/contract/cases/l2-approval-allowed.case.yaml",
+      "test/contract/cases/l2-approval-denied.case.yaml": "test/st/contract/cases/l2-approval-denied.case.yaml",
+      "test/contract/cases/l2-cancel.case.yaml": "test/st/contract/cases/l2-cancel.case.yaml",
+      "test/contract/cases/l2-parallel-tools.case.yaml": "test/st/contract/cases/l2-parallel-tools.case.yaml",
+      "test/contract/cases/l2-post-messages.case.yaml": "test/st/contract/cases/l2-post-messages.case.yaml",
+      "test/contract/cases/l2-provider-unauthorized.case.yaml": "test/st/contract/cases/l2-provider-unauthorized.case.yaml",
+      "test/contract/cases/l2-responses-tool-call.case.yaml": "test/st/contract/cases/l2-responses-tool-call.case.yaml",
+      "test/contract/cases/l2-resume-after-disconnect.case.yaml": "test/st/contract/cases/l2-resume-after-disconnect.case.yaml",
+      "test/contract/cases/l2-runs.json": "test/st/contract/cases/l2-runs.json",
+      "test/contract/cases/l2-slow-tool.case.yaml": "test/st/contract/cases/l2-slow-tool.case.yaml",
+      "test/contract/cases/l2-subagent.case.yaml": "test/st/contract/cases/l2-subagent.case.yaml",
+      "test/contract/cases/l2-text-only.case.yaml": "test/st/contract/cases/l2-text-only.case.yaml",
+      "test/contract/cases/l2-tool-call.case.yaml": "test/st/contract/cases/l2-tool-call.case.yaml",
+      "test/contract/cases/l2-two-turns.case.yaml": "test/st/contract/cases/l2-two-turns.case.yaml",
+      "test/contract/cases/mcp.json": "test/st/contract/cases/mcp.json",
+      "test/contract/cases/models-and-providers-reads.case.yaml": "test/st/contract/cases/models-and-providers-reads.case.yaml",
+      "test/contract/cases/permission-grant-survives-epoch-rotation.case.yaml": "test/st/contract/cases/permission-grant-survives-epoch-rotation.case.yaml",
+      "test/contract/cases/permission-requests-and-grants.case.yaml": "test/st/contract/cases/permission-requests-and-grants.case.yaml",
+      "test/contract/cases/permissions.json": "test/st/contract/cases/permissions.json",
+      "test/contract/cases/projects-and-sessions-lifecycle.case.yaml": "test/st/contract/cases/projects-and-sessions-lifecycle.case.yaml",
+      "test/contract/cases/providers-and-models-crud.case.yaml": "test/st/contract/cases/providers-and-models-crud.case.yaml",
+      "test/contract/cases/proxy-servers-and-specialists-crud.case.yaml": "test/st/contract/cases/proxy-servers-and-specialists-crud.case.yaml",
+      "test/contract/cases/runners-environments-reads.case.yaml": "test/st/contract/cases/runners-environments-reads.case.yaml",
+      "test/contract/cases/runners.json": "test/st/contract/cases/runners.json",
+      "test/contract/cases/sessions-projects.json": "test/st/contract/cases/sessions-projects.json",
+      "test/contract/cases/settings-models.json": "test/st/contract/cases/settings-models.json",
+      "test/contract/cases/unknown-ids.case.yaml": "test/st/contract/cases/unknown-ids.case.yaml",
+      "test/contract/jw-only/live.mjs": "test/st/contract/jw-only/live.mjs",
+      "test/contract/lib.mjs": "test/support/contract/lib.mjs",
+      "test/contract/lib.test.mjs": "test/support/contract/lib.test.mjs",
+      "test/contract/normalize.mjs": "test/support/contract/normalize.mjs",
+      "test/contract/normalize.test.mjs": "test/support/contract/normalize.test.mjs",
+      "test/contract/routes.json": "test/st/contract/routes.json",
+      "test/contract/run.mjs": "test/support/contract/run.mjs",
+      "test/contract/stub-model.mjs": "test/support/contract/stub-model.mjs",
+      "test/contract/test-contract.suite.yaml": "test/support/contract/test-contract.suite.yaml",
+      "test/contract/validation.mjs": "test/support/contract/validation.mjs",
+      "test/contract/validation.test.mjs": "test/support/contract/validation.test.mjs",
+      "test/e2e/api/api.suite.yaml": "test/st/api/api.suite.yaml",
+      "test/e2e/api/child-workspace-journey.mjs": "test/st/api/child-workspace-journey.mjs",
+      "test/e2e/api/child-workspace.case.yaml": "test/st/api/child-workspace.case.yaml",
+      "test/e2e/api/detached-runner-journey.mjs": "test/st/api/detached-runner-journey.mjs",
+      "test/e2e/api/detached-runner.case.yaml": "test/st/api/detached-runner.case.yaml",
+      "test/e2e/api/npu-broker-journey.mjs": "test/st/api/npu-broker-journey.mjs",
+      "test/e2e/api/npu-broker.case.yaml": "test/st/api/npu-broker.case.yaml",
+      "test/e2e/api/plugin-settings-journey.mjs": "test/st/api/plugin-settings-journey.mjs",
+      "test/e2e/api/plugin-settings.case.yaml": "test/st/api/plugin-settings.case.yaml",
+      "test/e2e/api/remote-execution-wake-journey.mjs": "test/st/api/remote-execution-wake-journey.mjs",
+      "test/e2e/api/remote-execution-wake.case.yaml": "test/st/api/remote-execution-wake.case.yaml",
+      "test/e2e/api/runner-location-journey.mjs": "test/st/api/runner-location-journey.mjs",
+      "test/e2e/api/runner-location.case.yaml": "test/st/api/runner-location.case.yaml",
+      "test/e2e/api/sandbox-disconnect-journey.mjs": "test/st/api/sandbox-disconnect-journey.mjs",
+      "test/e2e/api/sandbox-disconnect.case.yaml": "test/st/api/sandbox-disconnect.case.yaml",
+      "test/e2e/browser/agent-run-componentization.case.yaml": "test/e2e/agent-run-componentization.case.yaml",
+      "test/e2e/browser/agent-run-componentization.spec.ts": "test/e2e/agent-run-componentization.spec.ts",
+      "test/e2e/browser/background-execution-notice.case.yaml": "test/e2e/background-execution-notice.case.yaml",
+      "test/e2e/browser/background-execution-notice.spec.ts": "test/e2e/background-execution-notice.spec.ts",
+      "test/e2e/browser/background-session-timeline.case.yaml": "test/e2e/background-session-timeline.case.yaml",
+      "test/e2e/browser/background-session-timeline.spec.ts": "test/e2e/background-session-timeline.spec.ts",
+      "test/e2e/browser/browser.suite.yaml": "test/e2e/browser.suite.yaml",
+      "test/e2e/browser/e2e-auth.case.yaml": "test/e2e/e2e-auth.case.yaml",
+      "test/e2e/browser/e2e-auth.spec.ts": "test/e2e/e2e-auth.spec.ts",
+      "test/e2e/browser/e2e-auth.ts": "test/e2e/e2e-auth.ts",
+      "test/e2e/browser/e2e-network-guard.case.yaml": "test/e2e/e2e-network-guard.case.yaml",
+      "test/e2e/browser/e2e-network-guard.spec.ts": "test/e2e/e2e-network-guard.spec.ts",
+      "test/e2e/browser/execution-result-delivery.case.yaml": "test/e2e/execution-result-delivery.case.yaml",
+      "test/e2e/browser/execution-result-delivery.spec.ts": "test/e2e/execution-result-delivery.spec.ts",
+      "test/e2e/browser/gateway-token-recovery.case.yaml": "test/e2e/gateway-token-recovery.case.yaml",
+      "test/e2e/browser/gateway-token-recovery.spec.ts": "test/e2e/gateway-token-recovery.spec.ts",
+      "test/e2e/browser/global-setup.ts": "test/e2e/global-setup.ts",
+      "test/e2e/browser/helpers/e2e.ts": "test/e2e/helpers/e2e.ts",
+      "test/e2e/browser/helpers/idea-research-model.ts": "test/e2e/helpers/idea-research-model.ts",
+      "test/e2e/browser/helpers/idea-tree-model.ts": "test/e2e/helpers/idea-tree-model.ts",
+      "test/e2e/browser/helpers/journey-report.ts": "test/e2e/helpers/journey-report.ts",
+      "test/e2e/browser/helpers/journeys.ts": "test/e2e/helpers/journeys.ts",
+      "test/e2e/browser/journey-artifact-archive.case.yaml": "test/e2e/journey-artifact-archive.case.yaml",
+      "test/e2e/browser/journey-artifact-archive.spec.ts": "test/e2e/journey-artifact-archive.spec.ts",
+      "test/e2e/browser/journey-compact-process.case.yaml": "test/e2e/journey-compact-process.case.yaml",
+      "test/e2e/browser/journey-compact-process.spec.ts": "test/e2e/journey-compact-process.spec.ts",
+      "test/e2e/browser/journey-custom-mcp.case.yaml": "test/e2e/journey-custom-mcp.case.yaml",
+      "test/e2e/browser/journey-custom-mcp.spec.ts": "test/e2e/journey-custom-mcp.spec.ts",
+      "test/e2e/browser/journey-delegate-subtask.case.yaml": "test/e2e/journey-delegate-subtask.case.yaml",
+      "test/e2e/browser/journey-delegate-subtask.spec.ts": "test/e2e/journey-delegate-subtask.spec.ts",
+      "test/e2e/browser/journey-deliver-result.case.yaml": "test/e2e/journey-deliver-result.case.yaml",
+      "test/e2e/browser/journey-deliver-result.spec.ts": "test/e2e/journey-deliver-result.spec.ts",
+      "test/e2e/browser/journey-execution-management.case.yaml": "test/e2e/journey-execution-management.case.yaml",
+      "test/e2e/browser/journey-execution-management.spec.ts": "test/e2e/journey-execution-management.spec.ts",
+      "test/e2e/browser/journey-first-run.case.yaml": "test/e2e/journey-first-run.case.yaml",
+      "test/e2e/browser/journey-first-run.spec.ts": "test/e2e/journey-first-run.spec.ts",
+      "test/e2e/browser/journey-idea-tree-fixture.case.yaml": "test/e2e/journey-idea-tree-fixture.case.yaml",
+      "test/e2e/browser/journey-idea-tree-fixture.spec.ts": "test/e2e/journey-idea-tree-fixture.spec.ts",
+      "test/e2e/browser/journey-json-artifact-preview.case.yaml": "test/e2e/journey-json-artifact-preview.case.yaml",
+      "test/e2e/browser/journey-json-artifact-preview.spec.ts": "test/e2e/journey-json-artifact-preview.spec.ts",
+      "test/e2e/browser/journey-local-token-onboarding.case.yaml": "test/e2e/journey-local-token-onboarding.case.yaml",
+      "test/e2e/browser/journey-local-token-onboarding.spec.ts": "test/e2e/journey-local-token-onboarding.spec.ts",
+      "test/e2e/browser/journey-mcp-oauth.case.yaml": "test/e2e/journey-mcp-oauth.case.yaml",
+      "test/e2e/browser/journey-mcp-oauth.spec.ts": "test/e2e/journey-mcp-oauth.spec.ts",
+      "test/e2e/browser/journey-mcp-secret-edit.case.yaml": "test/e2e/journey-mcp-secret-edit.case.yaml",
+      "test/e2e/browser/journey-mcp-secret-edit.spec.ts": "test/e2e/journey-mcp-secret-edit.spec.ts",
+      "test/e2e/browser/journey-model-connect-wizard.case.yaml": "test/e2e/journey-model-connect-wizard.case.yaml",
+      "test/e2e/browser/journey-model-connect-wizard.spec.ts": "test/e2e/journey-model-connect-wizard.spec.ts",
+      "test/e2e/browser/journey-model-draft-safety.case.yaml": "test/e2e/journey-model-draft-safety.case.yaml",
+      "test/e2e/browser/journey-model-draft-safety.spec.ts": "test/e2e/journey-model-draft-safety.spec.ts",
+      "test/e2e/browser/journey-model-settings.case.yaml": "test/e2e/journey-model-settings.case.yaml",
+      "test/e2e/browser/journey-model-settings.spec.ts": "test/e2e/journey-model-settings.spec.ts",
+      "test/e2e/browser/journey-npu-cards.case.yaml": "test/e2e/journey-npu-cards.case.yaml",
+      "test/e2e/browser/journey-npu-cards.spec.ts": "test/e2e/journey-npu-cards.spec.ts",
+      "test/e2e/browser/journey-plan-workspace.case.yaml": "test/e2e/journey-plan-workspace.case.yaml",
+      "test/e2e/browser/journey-plan-workspace.spec.ts": "test/e2e/journey-plan-workspace.spec.ts",
+      "test/e2e/browser/journey-plugin-composition.case.yaml": "test/e2e/journey-plugin-composition.case.yaml",
+      "test/e2e/browser/journey-plugin-composition.spec.ts": "test/e2e/journey-plugin-composition.spec.ts",
+      "test/e2e/browser/journey-prepare-environment.case.yaml": "test/e2e/journey-prepare-environment.case.yaml",
+      "test/e2e/browser/journey-prepare-environment.spec.ts": "test/e2e/journey-prepare-environment.spec.ts",
+      "test/e2e/browser/journey-provider-model-catalog.case.yaml": "test/e2e/journey-provider-model-catalog.case.yaml",
+      "test/e2e/browser/journey-provider-model-catalog.spec.ts": "test/e2e/journey-provider-model-catalog.spec.ts",
+      "test/e2e/browser/journey-real-request.case.yaml": "test/e2e/journey-real-request.case.yaml",
+      "test/e2e/browser/journey-real-request.spec.ts": "test/e2e/journey-real-request.spec.ts",
+      "test/e2e/browser/journey-response-identity.case.yaml": "test/e2e/journey-response-identity.case.yaml",
+      "test/e2e/browser/journey-response-identity.spec.ts": "test/e2e/journey-response-identity.spec.ts",
+      "test/e2e/browser/journey-reviewer-auto-audit.case.yaml": "test/e2e/journey-reviewer-auto-audit.case.yaml",
+      "test/e2e/browser/journey-reviewer-auto-audit.spec.ts": "test/e2e/journey-reviewer-auto-audit.spec.ts",
+      "test/e2e/browser/journey-reviewer-localization.case.yaml": "test/e2e/journey-reviewer-localization.case.yaml",
+      "test/e2e/browser/journey-reviewer-localization.spec.ts": "test/e2e/journey-reviewer-localization.spec.ts",
+      "test/e2e/browser/journey-reviewer-result-matrix.case.yaml": "test/e2e/journey-reviewer-result-matrix.case.yaml",
+      "test/e2e/browser/journey-reviewer-result-matrix.spec.ts": "test/e2e/journey-reviewer-result-matrix.spec.ts",
+      "test/e2e/browser/journey-runner-locations.case.yaml": "test/e2e/journey-runner-locations.case.yaml",
+      "test/e2e/browser/journey-runner-locations.spec.ts": "test/e2e/journey-runner-locations.spec.ts",
+      "test/e2e/browser/journey-sandbox-network-settings.case.yaml": "test/e2e/journey-sandbox-network-settings.case.yaml",
+      "test/e2e/browser/journey-sandbox-network-settings.spec.ts": "test/e2e/journey-sandbox-network-settings.spec.ts",
+      "test/e2e/browser/journey-session-trajectory.case.yaml": "test/e2e/journey-session-trajectory.case.yaml",
+      "test/e2e/browser/journey-session-trajectory.spec.ts": "test/e2e/journey-session-trajectory.spec.ts",
+      "test/e2e/browser/journey-skill-folder-import.case.yaml": "test/e2e/journey-skill-folder-import.case.yaml",
+      "test/e2e/browser/journey-skill-folder-import.spec.ts": "test/e2e/journey-skill-folder-import.spec.ts",
+      "test/e2e/browser/journey-ssh-remote-runner.case.yaml": "test/e2e/journey-ssh-remote-runner.case.yaml",
+      "test/e2e/browser/journey-ssh-remote-runner.spec.ts": "test/e2e/journey-ssh-remote-runner.spec.ts",
+      "test/e2e/browser/literature-review.case.yaml": "test/e2e/literature-review.case.yaml",
+      "test/e2e/browser/literature-review.spec.ts": "test/e2e/literature-review.spec.ts",
+      "test/e2e/browser/proxy-settings-persistence.case.yaml": "test/e2e/proxy-settings-persistence.case.yaml",
+      "test/e2e/browser/proxy-settings-persistence.spec.ts": "test/e2e/proxy-settings-persistence.spec.ts",
+      "test/e2e/browser/run-inline-card-anchoring.case.yaml": "test/e2e/run-inline-card-anchoring.case.yaml",
+      "test/e2e/browser/run-inline-card-anchoring.spec.ts": "test/e2e/run-inline-card-anchoring.spec.ts",
+      "test/e2e/browser/session-composer-layout.case.yaml": "test/e2e/session-composer-layout.case.yaml",
+      "test/e2e/browser/session-composer-layout.spec.ts": "test/e2e/session-composer-layout.spec.ts",
+      "test/e2e/browser/session-run-api-queue-stop.case.yaml": "test/e2e/session-run-api-queue-stop.case.yaml",
+      "test/e2e/browser/session-run-api-queue-stop.spec.ts": "test/e2e/session-run-api-queue-stop.spec.ts",
+      "test/e2e/browser/session-run-queue-stop.case.yaml": "test/e2e/session-run-queue-stop.case.yaml",
+      "test/e2e/browser/session-run-queue-stop.spec.ts": "test/e2e/session-run-queue-stop.spec.ts",
+      "test/e2e/browser/session-stop-isolation.case.yaml": "test/e2e/session-stop-isolation.case.yaml",
+      "test/e2e/browser/session-stop-isolation.spec.ts": "test/e2e/session-stop-isolation.spec.ts",
+      "test/e2e/browser/subagent-rename-and-align.case.yaml": "test/e2e/subagent-rename-and-align.case.yaml",
+      "test/e2e/browser/subagent-rename-and-align.spec.ts": "test/e2e/subagent-rename-and-align.spec.ts",
+      "test/e2e/browser/timeouts-runtime-status-user.case.yaml": "test/e2e/timeouts-runtime-status-user.case.yaml",
+      "test/e2e/browser/timeouts-runtime-status-user.spec.ts": "test/e2e/timeouts-runtime-status-user.spec.ts",
+      "test/e2e/browser/timeouts-runtime-status.case.yaml": "test/e2e/timeouts-runtime-status.case.yaml",
+      "test/e2e/browser/timeouts-runtime-status.spec.ts": "test/e2e/timeouts-runtime-status.spec.ts",
+      "test/harness/cli.mjs": "test/support/cli.mjs",
+      "test/harness/cli.test.mjs": "test/support/cli.test.mjs",
+      "test/harness/discovery.mjs": "test/support/discovery.mjs",
+      "test/harness/discovery.test.mjs": "test/support/discovery.test.mjs",
+      "test/harness/manifests.mjs": "test/support/manifests.mjs",
+      "test/harness/manifests.test.mjs": "test/support/manifests.test.mjs",
+      "test/harness/migration.json": "test/support/migration.json",
+      "test/harness/node-tests.mjs": "test/support/node-tests.mjs",
+      "test/harness/runner.mjs": "test/support/runner.mjs",
+      "test/harness/runner.test.mjs": "test/support/runner.test.mjs",
+      "test/harness/selection.mjs": "test/support/selection.mjs",
+      "test/harness/selection.test.mjs": "test/support/selection.test.mjs",
+      "test/harness/test-harness.suite.yaml": "test/support/test-harness.suite.yaml"
+    },
+    "caseIds": {
+      "e2e.child-workspace": "st.api.child-workspace",
+      "e2e.detached-runner": "st.api.detached-runner",
+      "e2e.npu-broker": "st.api.npu-broker",
+      "e2e.plugin-settings": "st.api.plugin-settings",
+      "e2e.remote-execution-wake": "st.api.remote-execution-wake",
+      "e2e.runner-location": "st.api.runner-location",
+      "e2e.sandbox-disconnect": "st.api.sandbox-disconnect",
+      "e2e.contract.l2-anthropic-tool-call": "st.contract.l2-anthropic-tool-call",
+      "e2e.contract.l2-approval-allowed": "st.contract.l2-approval-allowed",
+      "e2e.contract.l2-approval-denied": "st.contract.l2-approval-denied",
+      "e2e.contract.l2-cancel": "st.contract.l2-cancel",
+      "e2e.contract.l2-parallel-tools": "st.contract.l2-parallel-tools",
+      "e2e.contract.l2-post-messages": "st.contract.l2-post-messages",
+      "e2e.contract.l2-provider-unauthorized": "st.contract.l2-provider-unauthorized",
+      "e2e.contract.l2-responses-tool-call": "st.contract.l2-responses-tool-call",
+      "e2e.contract.l2-resume-after-disconnect": "st.contract.l2-resume-after-disconnect",
+      "e2e.contract.l2-slow-tool": "st.contract.l2-slow-tool",
+      "e2e.contract.l2-subagent": "st.contract.l2-subagent",
+      "e2e.contract.l2-text-only": "st.contract.l2-text-only",
+      "e2e.contract.l2-tool-call": "st.contract.l2-tool-call",
+      "e2e.contract.l2-two-turns": "st.contract.l2-two-turns"
+    }
+  }
+}

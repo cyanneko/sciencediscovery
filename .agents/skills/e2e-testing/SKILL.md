@@ -100,7 +100,7 @@ that new immutable commit.
    order. Neither importing `createNativeAgent`/`createAgentRun` in-process nor
    starting only a test-constructed server substitutes for the product startup
    path. `/api/health` alone is a preflight, not this complete journey.
-3. Store reusable non-browser drivers in `test/e2e/api/`, named after the user
+3. Store reusable non-browser drivers in `test/st/api/`, named after the user
    goal. In-process smoke drivers belong in `test/st/agent-runtime/`. Register
    stable IDs and prerequisites in adjacent `*.case.yaml` configurations; use `pnpm test:list`
    and `pnpm test --case <id> --executor <name>` for shared selection and reports.
@@ -356,7 +356,7 @@ test("plan card anchors", { tag: "@real" }, async ({ page }, testInfo) => {
 
 ## Journey steps and automatic reports (mandatory)
 
-Every `test/e2e/browser/journey-*.spec.ts` **must** be written as user steps through the
+Every `test/e2e/journey-*.spec.ts` **must** be written as user steps through the
 `journey` fixture. This is a requirement, not a suggestion:
 `node test/check-e2e-meta.mjs` fails a journey spec that does not request the
 `{ journey }` fixture, does not call `journey.scenario(...)`, does not call
@@ -482,13 +482,13 @@ an untracked exception.
   `127.0.0.1`, registered through `/api/models`) or a seeded fake such as the
   hang/slow models. Never read `E2E_LLM_*` in a mocked spec, and never rely on
   a real model configured in the stack's `.env`.
-- Import `test` from `test/e2e/browser/helpers/e2e.ts`, never directly from
+- Import `test` from `test/e2e/helpers/e2e.ts`, never directly from
   `@playwright/test`. Its automatic fixture aborts non-local HTTP(S),
   policy-closes non-local WebSockets, and forwards localhost/loopback traffic
   before any `beforeEach`, navigation, or request. `check-e2e-meta.mjs`
   enforces this import for every deterministic browser case configured with `llm.mode: stub` or `none`, including fixme tests
   when later enabled.
-- Keep `test/e2e/browser/e2e-network-guard.spec.ts` passing as the request-level proof for
+- Keep `test/e2e/e2e-network-guard.spec.ts` passing as the request-level proof for
   blocked HTTPS/WebSocket and allowed local HTTP/WebSocket behavior.
 - Backend egress cannot be intercepted from the browser; it stays local
   because the only model the spec registers is its own stub. When a mocked
@@ -527,7 +527,7 @@ an untracked exception.
   cases may sit beside the journey they qualify. Name main-flow files after
   the goal (`journey-first-run.spec.ts`, `journey-deliver-result.spec.ts`),
   never after an internal tool (`shell.spec.ts`, `python.spec.ts`).
-- Use `test/e2e/browser/helpers/journeys.ts` for common user actions: model registration
+- Use `test/e2e/helpers/journeys.ts` for common user actions: model registration
   and selection, Project/Session setup, natural-language submission, Run
   terminal-state waiting, permission handling, timeline/tool-process reading,
   environment revision lookup, and opening the environment or artifact
@@ -539,8 +539,8 @@ an untracked exception.
   `@` candidates, and the opt-in physical workspace tree as separate views.
   The helpers return records, locators, and visible text; the spec still owns
   goal-specific assertions.
-- Use the `journey` fixture from `test/e2e/browser/helpers/e2e.ts` (implemented in
-  `test/e2e/browser/helpers/journey-report.ts`) to structure the test as user steps and
+- Use the `journey` fixture from `test/e2e/helpers/e2e.ts` (implemented in
+  `test/e2e/helpers/journey-report.ts`) to structure the test as user steps and
   produce its report. See [Journey steps and automatic
   reports](#journey-steps-and-automatic-reports-mandatory) for the full
   contract and a copyable skeleton.
@@ -553,7 +553,7 @@ an untracked exception.
 - Create test data with unique names (`Date.now()` suffix) and clean up in
   `finally` where practical; leftover data must stay in the run's own data
   directory.
-- Long-term browser regression specs live in `test/e2e/browser/`; throwaway diagnostic specs stay
+- Long-term browser regression specs live in `test/e2e/`; throwaway diagnostic specs stay
   in the E2E worktree and are never committed.
 
 ## Browser screenshots, evidence, artifacts
@@ -586,7 +586,7 @@ an untracked exception.
   `test/node_modules`, `test/playwright-report/`, `test/test-results/`,
   screenshots, traces, or logs — all gitignored. Committed files are the specs,
   `test/e2e.package.json` + `test/e2e.package-lock.json`,
-  `test/playwright.config.ts`, `test/e2e/browser/helpers/` (including
+  `test/playwright.config.ts`, `test/e2e/helpers/` (including
   `helpers/journey-report.ts`), `test/sync-e2e.mjs`, and
   `test/check-e2e-meta.mjs`.
 - To hand a report to a reviewer, copy `report.md`, `report.html`, and that

@@ -63,7 +63,7 @@ Requires an isolated running stack on `:4410` (or `E2E_BASE_URL`) and its
 generated access token exported as `E2E_API_TOKEN`. That port, and the data
 directory below `.e2e-data/`, are deliberately not the ones an instance you run
 for yourself uses (`:4310`, `.sciencediscovery-data`): a test run gets its own,
-so it can never drive — or be asked to empty — your own instance. Specs live in `test/e2e/browser/`; the
+so it can never drive — or be asked to empty — your own instance. Specs live in `test/e2e/`; the
 local environment is **`.e2e/`** (fully gitignored: deps, reports,
 screenshots). Committed bootstrap files under `test/` recreate it:
 
@@ -103,9 +103,9 @@ Every migrated test carries an `E2E-META` comment (purpose, steps, environment,
 mocked/real type, each external capability, credentials, cost/side effects)
 checked by `test/check-e2e-meta.mjs`. New browser E2E files are organized by complete
 user journey, not shell/Python/environment/internal modules, and reuse
-`test/e2e/browser/helpers/journeys.ts` for common user actions.
+`test/e2e/helpers/journeys.ts` for common user actions.
 
-Journey specs (`test/e2e/browser/journey-*.spec.ts`) are additionally written as numbered
+Journey specs (`test/e2e/journey-*.spec.ts`) are additionally written as numbered
 **user steps** through the `journey` fixture:
 
 ```ts
@@ -149,7 +149,7 @@ and check the Session remains usable. Health alone or a successful submission
 without the final outcome is not sufficient. UI changes still need browser
 coverage; an API journey is not a substitute for layout/interaction assertions.
 
-Keep reusable non-browser journey drivers in `test/e2e/api/`, with goal-based
+Keep reusable non-browser journey drivers in `test/st/api/`, with goal-based
 names and an exact invocation documented beside the driver. Inspect the
 chosen script before running it. In-process smokes live in
 `test/st/agent-runtime/`. Select registered journeys with `pnpm test:list` and

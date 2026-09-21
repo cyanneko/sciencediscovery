@@ -118,8 +118,8 @@ sciencediscovery/
 ### 2.8 `test/` — 集成检查与用户视角 E2E
 
 - E2E 是从用户目标到可观察结果的真实使用旅程，不限于 Web。浏览器旅程使用固定 Playwright，环境在 `.e2e/`，`pnpm ci:e2e` 仅运行 mocked 浏览器子集。
-- API/CLI/本机栈旅程通过 `start-stack.sh` 或文档中的等价产品入口启动，从公开接口验证 Run、产物、权限等用户结果；可复用驱动放 `test/e2e/api/` 并写明运行命令。这些旅程不自动归入浏览器 CI 层。
-- `test/st/agent-runtime/run_m1_smoke.sh` 与 `run_real_smoke.sh` 是现有适配器 smoke，直接在进程内构造 Agent，不因目录位置而成为 E2E。通过 `pnpm test:list` 和 `pnpm test --case <id>` 统一发现与执行。浏览器用例位于 `test/e2e/browser/`，入口及分层规则见[测试指南](../../../test/README.md)。
+- API/CLI/本机栈旅程通过 `start-stack.sh` 或文档中的等价产品入口启动，从公开接口验证 Run、产物、权限等用户结果；可复用驱动放 `test/st/api/` 并写明运行命令。这些旅程不自动归入浏览器 CI 层。
+- `test/st/agent-runtime/run_m1_smoke.sh` 与 `run_real_smoke.sh` 是现有适配器 smoke，直接在进程内构造 Agent，不因目录位置而成为 E2E。通过 `pnpm test:list` 和 `pnpm test --case <id>` 统一发现与执行。浏览器用例位于 `test/e2e/`，入口及分层规则见[测试指南](../../../test/README.md)。
 - 改动用户可观察行为时，实施者随功能新增或完善旅程，已有覆盖需指出并重跑；只有不影响任何用户产品路径的改动才可写“不适用”，不能以“纯后端无 UI”为由跳过。
 
 这些测试不并入默认 `pnpm check`；定义、启动隔离、浏览器装配及 API/栈旅程要求见 [CONTRIBUTING.md](../../../CONTRIBUTING.md#user-perspective-e2e)。

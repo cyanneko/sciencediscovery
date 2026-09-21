@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "test": "node ../../test/harness/node-tests.mjs web",
+    "test": "node ../../test/support/node-tests.mjs web",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

@@ -14,6 +14,6 @@
 // limitations under the License.
 
 // Compatibility entry point; preserve case/tag filters through the shared selector.
-import { main } from '../test/harness/cli.mjs';
+import { main } from '../test/support/cli.mjs';
 try { process.exitCode = await main(process.argv.slice(2)); }
 catch (error) { console.error(error.message); process.exitCode = 2; }

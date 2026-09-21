@@ -14,7 +14,7 @@
 // limitations under the License.
 
 // Compatibility entry point; all selection and reporting live in the shared harness.
-import { main } from '../test/harness/cli.mjs';
+import { main } from '../test/support/cli.mjs';
 const aliases = { ut: ['ut.host', 'ut.guest'], 'ut-host': ['ut.host'], 'ut-guest': ['ut.guest'], st: ['st.agent-loop-mocked'], 'st-real': ['st.agent-loop-real'], 'st-npu': ['st.npu-smoke'] };
 const ids = aliases[process.argv[2]];
 try {

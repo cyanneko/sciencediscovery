@@ -1,0 +1,25 @@
+version: 1
+id: st.api.runner-location
+source: runner-location-journey.mjs
+owner: api-runner
+layer: st
+surface: api
+runner: node
+capabilities:
+  - runner-location
+  - runner
+  - location
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+timeoutSeconds: 900
+requirements:
+  - build
+  - clean-worktree
+ci:
+  daily:
+    executors:
+      - native
+    required: true
+resultPath: runner-location

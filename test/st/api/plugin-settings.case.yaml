@@ -1,0 +1,25 @@
+version: 1
+id: st.api.plugin-settings
+source: plugin-settings-journey.mjs
+owner: api-runner
+layer: st
+surface: api
+runner: node
+capabilities:
+  - plugin-settings
+  - plugin
+  - settings
+llm:
+  mode: none
+supportedExecutors:
+  - native
+timeoutSeconds: 900
+requirements:
+  - build
+  - clean-worktree
+ci:
+  daily:
+    executors:
+      - native
+    required: true
+resultPath: plugin-settings
