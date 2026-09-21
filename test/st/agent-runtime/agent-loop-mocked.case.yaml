@@ -1,0 +1,41 @@
+version: 1
+id: st.agent-loop-mocked
+source: agent_loop_smoke.ts
+owner: product-journeys
+description: Node-native agent loop through a deterministic local model stub
+layer: st
+surface: process
+runner: layer
+capabilities:
+  - agent-loop-mocked
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+timeoutSeconds: 3600
+requirements: []
+ci:
+  daily:
+    executors:
+      - native
+    required: true
+  pr:
+    executors:
+      - native
+    required: true
+command:
+  - node
+  - .ci/layer-worker.mjs
+  - st
+resultPath: st
+compatibility:
+  command:
+    - pnpm
+    - ci:st
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:supported
+  - network:local
+  - npu:none
+  - sandbox:none

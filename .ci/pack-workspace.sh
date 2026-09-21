@@ -35,8 +35,8 @@ Usage: .ci/pack-workspace.sh --output <path ending in .tar.gz>
 
   --dependencies  full      append the whole installed tree, including the
                             external packages under node_modules (default)
-                  workspace append only the workspace's own links and build
-                            output. Enough for a layer whose packages have no
+                  workspace append workspace links, build output and the YAML
+                            catalog dependency. Enough for a layer whose packages have no
                             external runtime dependency, and about a tenth the
                             entries, which is what a guest actually pays for.
   --include       An additional working-tree path to append, relative to the
@@ -78,7 +78,15 @@ fi
 # through the store, so a layer whose packages have no external runtime
 # dependency needs none of that tree.
 includes=()
-if [[ "$dependencies" == full ]]; then includes+=(node_modules); fi
+if [[ "$dependencies" == full ]]; then
+  includes+=(node_modules)
+elif [[ -e node_modules/yaml/package.json ]]; then
+  # The catalog loader needs YAML even in the install-free guest payload.
+  # Include the root link and its real pnpm target, not the full dependency tree.
+  yaml_package="$(node -p 'require.resolve("yaml/package.json")')"
+  yaml_directory="${yaml_package%/package.json}"
+  includes+=(node_modules/yaml "${yaml_directory#"$repo_root"/}")
+fi
 for project in config apps/* packages/* services/*; do
   if [[ -d "$project/node_modules" ]]; then includes+=("$project/node_modules"); fi
   if [[ -d "$project/dist" ]]; then includes+=("$project/dist"); fi

@@ -15,7 +15,7 @@
 
 // Validates the E2E-META contract for the Playwright specs in this directory:
 // every top-level test() must be immediately preceded by an E2E-META comment
-// block whose fields are complete and whose Type (mocked | real) agrees with
+// block whose narrative fields are complete. The adjacent case YAML group agrees with
 // the @mocked / @real tag on the test. Files in LEGACY predate the contract,
 // stay quarantined from the safe default project, and produce a migration
 // warning until they carry their first block.
@@ -23,34 +23,22 @@
 // Run from anywhere: node test/check-e2e-meta.mjs
 
 import { readdirSync, readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadManifests } from "./harness/manifests.mjs";
 
-const specDir = dirname(fileURLToPath(import.meta.url));
+const specDir = join(dirname(fileURLToPath(import.meta.url)), "e2e/browser");
 
 // Pending migration to the E2E-META contract. Remove entries as they migrate;
 // never add new spec files here.
-const LEGACY = new Set([
-  "agent-run-componentization.spec.ts",
-  "artifact-dashboard.spec.ts",
-  "debug-main-path.spec.ts",
-  "e2e-auth.spec.ts",
-  "gateway-token-recovery.spec.ts",
-  "issue-143-proxy-settings.spec.ts",
-  "issue-37-composer-height.spec.ts",
-  "issue-44-background-timeline.spec.ts",
-  "issue-44-session-stop.spec.ts",
-  "session-run-api-queue-stop.spec.ts",
-  "session-run-queue-stop.spec.ts",
-  "subagent-rename-and-align.spec.ts",
-  "timeouts-runtime-status-user.spec.ts",
-]);
+const browserCases = loadManifests().cases.filter(c => c.runner === 'playwright' && c.source);
+const casesByFile = new Map(browserCases.map(c => [c.source.slice('test/e2e/browser/'.length), c]));
+const LEGACY = new Set(browserCases.filter(c => c.quarantine).map(c => c.source.slice('test/e2e/browser/'.length)));
 
 const REQUIRED_FIELDS = [
   "Purpose",
   "Steps",
   "Environment",
-  "Type",
   "LLM",
   "WebSearch",
   "PaperSources",
@@ -76,10 +64,15 @@ function lineOf(text, index) {
  * primary evidence is what this replaces, so it is rejected here rather than
  * discovered when a report turns out to be empty.
  */
-function checkJourneyFile(name, text, tests) {
-  if (!/^journey-.*\.spec\.ts$/.test(name)) return;
+function importsFixture(name, text) {
+  const imports = [...text.matchAll(/import\s*\{[^}]*\btest\b[^}]*\}\s*from\s*["']([^"']+)["']/g)];
+  return imports.some(([, source]) => resolve(specDir, dirname(name), source) === join(specDir, "helpers/e2e.ts"));
+}
 
-  if (!/import\s*\{[^}]*\btest\b[^}]*\}\s*from\s*["']\.\/helpers\/e2e\.ts["']/.test(text)) {
+function checkJourneyFile(name, text, tests) {
+  if (!/^journey-.*\.spec\.ts$/.test(basename(name))) return;
+
+  if (!importsFixture(name, text)) {
     errors.push(`${name}: journey specs must import test from ./helpers/e2e.ts to get the journey fixture`);
   }
   if (!text.includes("journey.step(")) {
@@ -108,8 +101,12 @@ function checkFile(name) {
   const text = readFileSync(join(specDir, name), "utf8");
   const tests = [...text.matchAll(/^\s*test(?:\.(?:only|skip|fixme|fail))?\s*\(/gm)];
   const hasMeta = text.includes("E2E-META");
-  const hasMocked = /^\s*\*\s*Type:\s*mocked\s*$/m.test(text);
-  const usesE2EFixture = /import\s*\{[^}]*\btest\b[^}]*\}\s*from\s*["']\.\/helpers\/e2e\.ts["']/.test(text);
+  const configuration = casesByFile.get(name);
+  if (!configuration) { errors.push(`${name}: missing adjacent case configuration`); return; }
+  const hasMocked = configuration.group === 'mocked';
+  const usesE2EFixture = importsFixture(name, text);
+
+  if (hasMeta && LEGACY.has(name)) errors.push(`${name}: stale legacy quarantine entry; remove it after migration`);
 
   if (!hasMeta) {
     if (LEGACY.has(name)) {
@@ -159,9 +156,9 @@ function checkFile(name) {
       errors.push(`${name}:${line}: E2E-META Steps must contain a numbered first step`);
     }
 
-    const type = block.match(/^\s*\*\s*Type:\s*(\S+)/m)?.[1];
+    const type = configuration.group;
     if (type !== "mocked" && type !== "real") {
-      errors.push(`${name}:${line}: E2E-META Type must be "mocked" or "real" (got "${type ?? ""}")`);
+      errors.push(`${name}:${line}: Case configuration group must be "mocked" or "real" (got "${type ?? ""}")`);
       continue;
     }
 
@@ -192,16 +189,20 @@ function checkFile(name) {
     const declaration = text.slice(match.index, match.index + TAG_WINDOW);
     const tags = [...declaration.matchAll(/tag\s*:\s*["']@(mocked|real)["']/g)].map((tag) => tag[1]);
     if (!tags.includes(type)) {
-      errors.push(`${name}:${line}: Type: ${type} but the test lacks a { tag: "@${type}" } option`);
+      errors.push(`${name}:${line}: Configured group ${type} but the test lacks a { tag: "@${type}" } option`);
     }
     const otherType = type === "mocked" ? "real" : "mocked";
     if (tags.includes(otherType)) {
-      errors.push(`${name}:${line}: Type: ${type} but the test is tagged @${otherType}`);
+      errors.push(`${name}:${line}: Configured group ${type} but the test is tagged @${otherType}`);
     }
   }
 }
 
-const specs = readdirSync(specDir).filter((name) => name.endsWith(".spec.ts")).sort();
+for (const name of LEGACY) {
+  try { readFileSync(join(specDir, name)); } catch { errors.push(`Stale legacy entry: ${name}`); }
+}
+
+const specs = readdirSync(specDir, { recursive: true }).filter((name) => name.endsWith(".spec.ts")).sort();
 specs.forEach(checkFile);
 
 for (const warning of warnings) console.warn(`WARN  ${warning}`);

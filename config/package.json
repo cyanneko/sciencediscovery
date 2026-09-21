@@ -10,7 +10,7 @@
   "types": "./src/index.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "node --test",
+    "test": "node ../test/harness/node-tests.mjs source",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   }
 }

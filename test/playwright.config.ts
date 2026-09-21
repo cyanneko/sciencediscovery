@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 import { defineConfig, devices } from "@playwright/test";
 
-import { apiBaseUrl, browserStorageState } from "../test/e2e-auth.js";
+import { apiBaseUrl, browserStorageState } from "../test/e2e/browser/e2e-auth.js";
 
 /** Local e2e environment root (this directory). Specs live in ../test. */
 const envRoot = dirname(fileURLToPath(import.meta.url));
@@ -43,8 +43,9 @@ const baseURL = apiBaseUrl();
 export default defineConfig({
   // Fails the run immediately when E2E_API_TOKEN is missing, instead of letting
   // every scenario rediscover it as a 401. Skipped for `--list`.
-  globalSetup: resolve(repoRoot, "test/global-setup.ts"),
-  testDir: resolve(repoRoot, "test"),
+  globalSetup: resolve(repoRoot, "test/e2e/browser/global-setup.ts"),
+  testDir: resolve(repoRoot, "test/e2e/browser"),
+  testMatch: "**/*.spec.ts",
   outputDir: resolve(envRoot, "test-results"),
   fullyParallel: false,
   forbidOnly: !!process.env.CI,

@@ -1,0 +1,12 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.smoke
+files:
+  - agent_loop_smoke.ts
+  - agent_loop_real_smoke.ts
+  - run_m1_smoke.sh
+  - run_real_smoke.sh
+owner: agent-runtime
+runner: tsx
+layer: st
+entryPoint: st.agent-loop-mocked/st.agent-loop-real

@@ -1,0 +1,25 @@
+version: 1
+id: e2e.npu-broker
+source: npu-broker-journey.mjs
+owner: api-runner
+layer: e2e
+surface: api
+runner: node
+capabilities:
+  - npu-broker
+  - npu
+  - broker
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+timeoutSeconds: 900
+requirements:
+  - build
+  - clean-worktree
+ci:
+  daily:
+    executors:
+      - native
+    required: true
+resultPath: npu-broker

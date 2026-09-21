@@ -1,0 +1,9 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.apps.web
+directory: .
+owner: apps/web
+runner: tsx
+layer: ut
+discovery: web
+entryPoint: ut.host

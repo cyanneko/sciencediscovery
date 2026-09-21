@@ -1,0 +1,23 @@
+version: 1
+id: st.adapter-live
+source: test_gateway_live.py
+owner: services/adapter
+layer: st
+surface: api
+runner: pytest
+capabilities:
+  - adapter
+  - permission
+llm:
+  mode: stub
+supportedExecutors:
+  - jiuwenswarm
+timeoutSeconds: 180
+requirements: []
+gates:
+  allowEnv: CI_ALLOW_ADAPTER_LIVE
+  requiredEnv:
+    - JIUWENSWARM_GATEWAY_URL
+    - JIUWENSWARM_LIVE_SCENARIO
+ci: {}
+resultPath: adapter-live

@@ -1,0 +1,39 @@
+version: 1
+id: e2e.browser.run-inline-card-anchoring
+source: run-inline-card-anchoring.spec.ts
+owner: product-journeys
+description: Opt-in Playwright real-user smoke against a live model
+layer: e2e
+surface: browser
+runner: playwright
+capabilities:
+  - run-inline-card-anchoring
+  - session
+  - model
+  - permission
+  - mcp
+  - runner
+  - artifact
+llm:
+  mode: real
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 3600
+requirements:
+  - clean-worktree
+gates:
+  allowEnv: CI_ALLOW_REAL
+  requiredEnv:
+    - E2E_LLM_BASE_URL
+    - E2E_LLM_MODEL
+    - E2E_LLM_TOKEN
+ci: {}
+resultPath: browser-run-inline-card-anchoring-real
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:conditional
+  - network:external
+  - npu:none
+  - sandbox:bubblewrap

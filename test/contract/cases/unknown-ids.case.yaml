@@ -1,0 +1,35 @@
+version: 1
+id: st.contract.unknown-ids
+source: sessions-projects.json
+owner: api-adapter
+description: What a client sees for ids that do not exist.
+layer: st
+surface: api
+runner: contract
+capabilities:
+  - contract
+llm:
+  mode: none
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 180
+requirements:
+  - contract-target
+gates:
+  allowEnv: CI_ALLOW_CONTRACT
+  requiredEnv:
+    - E2E_BASE_URL
+    - E2E_API_TOKEN
+    - E2E_CONTRACT_BASELINE
+    - E2E_TARGET_EXECUTOR
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: false
+    reason: CI does not yet provision isolated contract targets and select reviewed
+      platform-specific baselines; keep missing coverage visible.
+scenarioId: unknown-ids
+resultPath: contract-unknown-ids

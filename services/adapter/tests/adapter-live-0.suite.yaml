@@ -1,0 +1,9 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.adapter.live.0
+files:
+  - test_gateway_live.py
+owner: services/adapter
+runner: pytest
+layer: st
+entryPoint: st.adapter-live

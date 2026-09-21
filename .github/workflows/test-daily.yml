@@ -1,0 +1,15 @@
+name: Daily test policy
+on:
+  schedule:
+    - cron: '17 0 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: daily-tests-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  daily:
+    uses: ./.github/workflows/test-policy.yml
+    with:
+      profile: daily

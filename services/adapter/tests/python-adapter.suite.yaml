@@ -1,0 +1,11 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.python.adapter
+directory: .
+owner: services/adapter
+runner: pytest
+layer: ut
+entryPoint: ut.host
+exclude:
+  - test_gateway_live.py
+  - test_real_llm.py

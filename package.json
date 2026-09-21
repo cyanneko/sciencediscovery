@@ -9,19 +9,19 @@
   },
   "scripts": {
     "api": "pnpm --filter @sciencediscovery/api start",
-    "architecture:check": "node --test scripts/*.test.mjs && node scripts/check-architecture.mjs",
+    "architecture:check": "node test/harness/node-tests.mjs suite suite.scripts && node scripts/check-architecture.mjs",
     "binary:smoke": "node scripts/binary-release/smoke-binary.mjs",
-    "binary:test": "node --test scripts/binary-release/*.test.mjs",
+    "binary:test": "node test/harness/node-tests.mjs suite suite.scripts.binary-release",
     "build": "pnpm --recursive build",
     "catalog:fetch": "node scripts/fetch-model-catalog.mjs --output resources/model-catalog/models-dev.json",
     "check": "pnpm architecture:check && pnpm typecheck && pnpm ci:selftest && pnpm paper:test && pnpm gateway:test && pnpm test",
-    "ci:e2e": "bash .ci/run-e2e.sh",
-    "ci:e2e:legacy": "bash .ci/run-e2e.sh legacy",
-    "ci:e2e:real": "bash .ci/run-e2e.sh real",
+    "ci:e2e": "node test/harness/cli.mjs run --case e2e.mocked",
+    "ci:e2e:legacy": "node test/harness/cli.mjs run --case e2e.legacy",
+    "ci:e2e:real": "node test/harness/cli.mjs run --case e2e.real",
     "ci:catalog:check": "node .ci/test-selector.mjs check",
     "ci:list": "node .ci/test-selector.mjs list",
     "ci:run": "node .ci/test-selector.mjs run",
-    "ci:selftest": "node --test .ci/*.test.mjs",
+    "ci:selftest": "node test/harness/node-tests.mjs suite suite.ci",
     "ci:st": "node .ci/run-layer.mjs st",
     "ci:st:npu": "node .ci/run-layer.mjs st-npu",
     "ci:st:real": "node .ci/run-layer.mjs st-real",
@@ -43,8 +43,16 @@
     "server": "bash scripts/run-local.sh --no-build",
     "start": "bash scripts/run-local.sh",
     "smoke": "pnpm build && pnpm --filter @sciencediscovery/api test",
-    "test": "pnpm build && pnpm binary:test && pnpm --recursive test",
-    "typecheck": "pnpm --recursive typecheck"
+    "test": "node test/harness/cli.mjs run",
+    "typecheck": "pnpm --recursive typecheck",
+    "test:legacy": "pnpm build && pnpm binary:test && pnpm --recursive test",
+    "test:list": "node test/harness/cli.mjs list",
+    "test:check": "node test/harness/cli.mjs check",
+    "test:doctor": "node test/harness/cli.mjs doctor",
+    "test:tooling": "node test/harness/node-tests.mjs suite suite.test.harness suite.test.contract",
+    "adapter:test": "uv run --project services/adapter --extra test pytest services/adapter/tests --ignore=services/adapter/tests/test_gateway_live.py --ignore=services/adapter/tests/test_real_llm.py",
+    "test:pr": "node test/harness/cli.mjs run --profile pr",
+    "test:daily": "node test/harness/cli.mjs run --profile daily"
   },
   "devDependencies": {
     "@babel/parser": "7.28.5",
@@ -52,6 +60,7 @@
     "markdown-it": "^15.0.2",
     "markdownlint-cli2": "^0.23.3",
     "tsx": "4.23.1",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "yaml": "2.9.0"
   }
 }

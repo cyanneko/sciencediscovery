@@ -100,14 +100,12 @@ that new immutable commit.
    order. Neither importing `createNativeAgent`/`createAgentRun` in-process nor
    starting only a test-constructed server substitutes for the product startup
    path. `/api/health` alone is a preflight, not this complete journey.
-3. Store reusable non-browser drivers in `test/api/`, named after the user goal,
-   with their exact root-level invocation and required environment documented.
-   The existing `run_m1_smoke.sh` and `run_real_smoke.sh` directly instantiate
-   the adapter: they remain smoke/integration checks, not E2E by location or
-   name. There is currently no generic non-browser E2E command; inspect the
-   committed driver or add the missing journey. Do not invent a `pnpm` entry
-   point or claim `ci:e2e` ran it. Integrate future drivers into the existing
-   test catalog when requested, without silently changing CI layer behavior.
+3. Store reusable non-browser drivers in `test/e2e/api/`, named after the user
+   goal. In-process smoke drivers belong in `test/st/agent-runtime/`. Register
+   stable IDs and prerequisites in adjacent `*.case.yaml` configurations; use `pnpm test:list`
+   and `pnpm test --case <id> --executor <name>` for shared selection and reports.
+   `pnpm ci:e2e` remains the mocked browser subset. See
+   [the testing guide](../../../test/README.md) for profiles, gates and ownership.
 4. Declare the same purpose, steps, environment, external capabilities,
    credentials, mocked/real choice and cost/side effects as E2E-META. Playwright
    tags, fixtures and `check-e2e-meta.mjs` apply to browser specs; a non-browser
@@ -227,7 +225,7 @@ tags within one clause mean OR; `--exclude` removes matches. Keep `e2e.mocked`,
 their requirements change. Never reclassify an unaudited dependency as safe:
 use an `unreviewed` tag or keep the case unsupported until evidence exists.
 
-The catalog chooses a CI-capability group; Playwright still discovers and
+Adjacent `.case.yaml` configurations declare model mode, supported executors and PR/daily policy (see `test/README.md`). The catalog loads those configurations; Playwright still discovers and
 filters the individual specs in that group. Use the pinned `.e2e` commands
 below for file/title-level discovery.
 
@@ -296,7 +294,6 @@ migrated; new files must comply). Template:
  *   1. <main step>
  *   2. <main step>
  * Environment: <stack, base URL, services, ports, data/fixture preconditions>
- * Type: mocked | real
  * LLM: <none | local stub | provider/model/endpoint and nondeterminism>
  * WebSearch: <none | engine/endpoint and expected queries>
  * PaperSources: <none | PubMed/arXiv/etc. and expected queries/downloads>
@@ -318,7 +315,6 @@ Mocked example:
  *   2. Start a run and wait for the idle timeout.
  *   3. Assert the timeout reason in the session view.
  * Environment: Running stack at E2E_BASE_URL; isolated data; no models.
- * Type: mocked
  * LLM: local silent HTTP stub only; no live model.
  * WebSearch: none
  * PaperSources: none
@@ -340,7 +336,6 @@ Real example:
  *   1. Register the real model via env config; create project/session.
  *   2. Run a planning prompt; assert the card position.
  * Environment: Isolated stack at E2E_BASE_URL; E2E_SCREENSHOTS for output.
- * Type: real
  * LLM: real chat completions via E2E_LLM_BASE_URL; output varies.
  * WebSearch: none
  * PaperSources: none
@@ -361,7 +356,7 @@ test("plan card anchors", { tag: "@real" }, async ({ page }, testInfo) => {
 
 ## Journey steps and automatic reports (mandatory)
 
-Every `test/journey-*.spec.ts` **must** be written as user steps through the
+Every `test/e2e/browser/journey-*.spec.ts` **must** be written as user steps through the
 `journey` fixture. This is a requirement, not a suggestion:
 `node test/check-e2e-meta.mjs` fails a journey spec that does not request the
 `{ journey }` fixture, does not call `journey.scenario(...)`, does not call
@@ -487,13 +482,13 @@ an untracked exception.
   `127.0.0.1`, registered through `/api/models`) or a seeded fake such as the
   hang/slow models. Never read `E2E_LLM_*` in a mocked spec, and never rely on
   a real model configured in the stack's `.env`.
-- Import `test` from `test/helpers/e2e.ts`, never directly from
+- Import `test` from `test/e2e/browser/helpers/e2e.ts`, never directly from
   `@playwright/test`. Its automatic fixture aborts non-local HTTP(S),
   policy-closes non-local WebSockets, and forwards localhost/loopback traffic
   before any `beforeEach`, navigation, or request. `check-e2e-meta.mjs`
-  enforces this import for every `Type: mocked` file, including fixme tests
+  enforces this import for every deterministic browser case configured with `llm.mode: stub` or `none`, including fixme tests
   when later enabled.
-- Keep `test/e2e-network-guard.spec.ts` passing as the request-level proof for
+- Keep `test/e2e/browser/e2e-network-guard.spec.ts` passing as the request-level proof for
   blocked HTTPS/WebSocket and allowed local HTTP/WebSocket behavior.
 - Backend egress cannot be intercepted from the browser; it stays local
   because the only model the spec registers is its own stub. When a mocked
@@ -532,7 +527,7 @@ an untracked exception.
   cases may sit beside the journey they qualify. Name main-flow files after
   the goal (`journey-first-run.spec.ts`, `journey-deliver-result.spec.ts`),
   never after an internal tool (`shell.spec.ts`, `python.spec.ts`).
-- Use `test/helpers/journeys.ts` for common user actions: model registration
+- Use `test/e2e/browser/helpers/journeys.ts` for common user actions: model registration
   and selection, Project/Session setup, natural-language submission, Run
   terminal-state waiting, permission handling, timeline/tool-process reading,
   environment revision lookup, and opening the environment or artifact
@@ -544,8 +539,8 @@ an untracked exception.
   `@` candidates, and the opt-in physical workspace tree as separate views.
   The helpers return records, locators, and visible text; the spec still owns
   goal-specific assertions.
-- Use the `journey` fixture from `test/helpers/e2e.ts` (implemented in
-  `test/helpers/journey-report.ts`) to structure the test as user steps and
+- Use the `journey` fixture from `test/e2e/browser/helpers/e2e.ts` (implemented in
+  `test/e2e/browser/helpers/journey-report.ts`) to structure the test as user steps and
   produce its report. See [Journey steps and automatic
   reports](#journey-steps-and-automatic-reports-mandatory) for the full
   contract and a copyable skeleton.
@@ -558,7 +553,7 @@ an untracked exception.
 - Create test data with unique names (`Date.now()` suffix) and clean up in
   `finally` where practical; leftover data must stay in the run's own data
   directory.
-- Long-term regression specs live in `test/`; throwaway diagnostic specs stay
+- Long-term browser regression specs live in `test/e2e/browser/`; throwaway diagnostic specs stay
   in the E2E worktree and are never committed.
 
 ## Browser screenshots, evidence, artifacts
@@ -591,7 +586,7 @@ an untracked exception.
   `test/node_modules`, `test/playwright-report/`, `test/test-results/`,
   screenshots, traces, or logs — all gitignored. Committed files are the specs,
   `test/e2e.package.json` + `test/e2e.package-lock.json`,
-  `test/playwright.config.ts`, `test/helpers/` (including
+  `test/playwright.config.ts`, `test/e2e/browser/helpers/` (including
   `helpers/journey-report.ts`), `test/sync-e2e.mjs`, and
   `test/check-e2e-meta.mjs`.
 - To hand a report to a reviewer, copy `report.md`, `report.html`, and that

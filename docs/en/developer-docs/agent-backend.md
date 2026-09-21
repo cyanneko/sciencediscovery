@@ -362,8 +362,8 @@ The following are **no longer the current architecture** and are listed only for
 ## 12. Verification entry points
 
 ```bash
-./test/api/run_m1_smoke.sh        # hermetic: scripted SSE model endpoint + real Node tools, full native loop
-./test/api/run_real_smoke.sh      # live model + real tools
+./test/st/agent-runtime/run_m1_smoke.sh        # hermetic: scripted SSE model endpoint + real Node tools, full native loop
+./test/st/agent-runtime/run_real_smoke.sh      # live model + real tools
 ```
 
 Unit tests (`services/api`, `pnpm test` runs `node --test dist/**`):

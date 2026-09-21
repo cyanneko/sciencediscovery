@@ -1,0 +1,30 @@
+version: 1
+id: e2e.mocked
+owner: product-journeys
+description: Deterministic Playwright journeys against an isolated local stack
+layer: e2e
+surface: browser
+runner: playwright
+capabilities:
+  - mocked
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 3600
+requirements:
+  - clean-worktree
+ci: {}
+resultPath: e2e
+compatibility:
+  command:
+    - pnpm
+    - ci:e2e
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:conditional
+  - network:local
+  - npu:none
+  - sandbox:bubblewrap

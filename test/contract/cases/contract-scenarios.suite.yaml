@@ -1,0 +1,15 @@
+version: 1
+id: suite.contract.scenarios
+files:
+  - files-usage.json
+  - idea-evolve-memory.json
+  - l2-runs.json
+  - mcp.json
+  - permissions.json
+  - runners.json
+  - sessions-projects.json
+  - settings-models.json
+owner: api-adapter
+runner: contract
+layer: st/e2e
+entryPoint: st.contract.<id>/e2e.contract.<id>

@@ -1,0 +1,25 @@
+version: 1
+id: e2e.child-workspace
+source: child-workspace-journey.mjs
+owner: api-runner
+layer: e2e
+surface: api
+runner: node
+capabilities:
+  - child-workspace
+  - child
+  - workspace
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+timeoutSeconds: 900
+requirements:
+  - build
+  - clean-worktree
+ci:
+  daily:
+    executors:
+      - native
+    required: true
+resultPath: child-workspace

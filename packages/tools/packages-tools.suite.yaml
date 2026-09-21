@@ -1,0 +1,9 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.packages.tools
+directory: .
+owner: packages/tools
+runner: node:test
+layer: ut
+discovery: compiled-node
+entryPoint: ut.host

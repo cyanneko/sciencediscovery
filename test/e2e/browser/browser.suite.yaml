@@ -1,0 +1,8 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.browser
+directory: .
+owner: product-journeys
+runner: playwright
+layer: e2e
+entryPoint: e2e.mocked/e2e.real/e2e.legacy

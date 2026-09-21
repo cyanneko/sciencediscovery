@@ -1,0 +1,9 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.config
+directory: .
+owner: config
+runner: node:test
+layer: ut
+discovery: source-node
+entryPoint: ut.host

@@ -1,0 +1,41 @@
+version: 1
+id: ut.host
+owner: workspace
+description: "The UT tier that needs no execution sandbox: static checks, Node
+  package tests outside the sandbox packages, and the Python suites"
+layer: ut
+surface: process
+runner: layer
+capabilities:
+  - host
+llm:
+  mode: none
+supportedExecutors: []
+timeoutSeconds: 3600
+requirements: []
+ci:
+  daily:
+    executors:
+      - independent
+    required: true
+  pr:
+    executors:
+      - independent
+    required: true
+command:
+  - node
+  - .ci/layer-worker.mjs
+  - ut-host
+resultPath: ut-host
+compatibility:
+  command:
+    - pnpm
+    - ci:ut:host
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:supported
+  - network:none
+  - npu:none
+  - sandbox:none
+  - ut:host

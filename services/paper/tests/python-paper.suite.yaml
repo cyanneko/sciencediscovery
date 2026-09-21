@@ -1,0 +1,8 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.python.paper
+directory: .
+owner: services/paper
+runner: unittest
+layer: ut
+entryPoint: ut.host

@@ -1,0 +1,25 @@
+version: 1
+id: e2e.detached-runner
+source: detached-runner-journey.mjs
+owner: api-runner
+layer: e2e
+surface: api
+runner: node
+capabilities:
+  - detached-runner
+  - detached
+  - runner
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+timeoutSeconds: 900
+requirements:
+  - build
+  - clean-worktree
+ci:
+  daily:
+    executors:
+      - native
+    required: true
+resultPath: detached-runner

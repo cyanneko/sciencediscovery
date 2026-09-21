@@ -111,6 +111,8 @@ const hostPackageFilters = utGuestPackages.flatMap(({ name }) => ["--filter", `!
 
 /** Every UT workload, each carrying exactly one tier. */
 export const utWorkloads = [
+  { command: ["pnpm", "test:tooling"], id: "test-tooling", tier: "host" },
+  { command: ["pnpm", "adapter:test"], id: "adapter", tier: "host" },
   { command: ["pnpm", "architecture:check"], id: "architecture", tier: "host" },
   { command: ["pnpm", "docs:check"], id: "documentation", tier: "host" },
   { command: ["pnpm", "typecheck"], id: "typecheck", tier: "host" },
@@ -142,113 +144,23 @@ const workloadSteps = (tier) =>
  * only.
  */
 export const layers = {
-  st: [installStep, buildStep, ["bash", ["test/api/run_m1_smoke.sh"]]],
+  st: [installStep, buildStep, ["bash", ["test/st/agent-runtime/run_m1_smoke.sh"]]],
   "st-npu": [
     [process.env.SCIENCE_AGENT_NPU_PYTHON?.trim() || "python3", ["services/runner/workloads/npu-smoke-test.py"]],
   ],
-  "st-real": [installStep, buildStep, ["bash", ["test/api/run_real_smoke.sh"]]],
+  "st-real": [installStep, buildStep, ["bash", ["test/st/agent-runtime/run_real_smoke.sh"]]],
   ut: [installStep, gatewaySyncStep, paperSyncStep, buildStep, ...workloadSteps("host"), ...workloadSteps("guest")],
   "ut-guest": [...workloadSteps("guest")],
   "ut-host": [installStep, gatewaySyncStep, paperSyncStep, buildStep, ...workloadSteps("host")],
 };
 
-export const testCases = [
-  {
-    id: "ut.host",
-    description: "The UT tier that needs no execution sandbox: static checks, Node package tests outside the sandbox packages, and the Python suites",
-    command: ["pnpm", "ci:ut:host"],
-    resultPath: "ut-host",
-    tags: [
-      "arch:amd64", "arch:arm64", "container:supported", "layer:ut",
-      "llm:none", "network:none", "npu:none", "sandbox:none", "ut:host",
-    ],
-  },
-  {
-    id: "ut.guest",
-    description: "The UT tier that needs a real bubblewrap sandbox; its host installs and builds the workspace and the guest runs only the tests",
-    command: ["pnpm", "ci:ut:guest"],
-    resultPath: "ut-guest",
-    tags: [
-      "arch:amd64", "arch:arm64", "container:conditional", "layer:ut",
-      "llm:none", "network:none", "npu:none", "sandbox:bubblewrap", "ut:guest",
-    ],
-  },
-  {
-    id: "st.agent-loop-mocked",
-    description: "Node-native agent loop through a deterministic local model stub",
-    command: ["pnpm", "ci:st"],
-    resultPath: "st",
-    tags: [
-      "arch:amd64", "arch:arm64", "container:supported", "layer:st",
-      "llm:stub", "network:local", "npu:none", "sandbox:none",
-    ],
-  },
-  {
-    id: "st.agent-loop-real",
-    description: "Node-native agent loop against an explicitly authorized live model",
-    command: ["pnpm", "ci:st:real"],
-    gates: {
-      allowEnv: "CI_ALLOW_REAL",
-      requiredEnv: [
-        "SCIENCE_AGENT_LLM_BASE_URL",
-        "SCIENCE_AGENT_LLM_MODEL",
-        "SCIENCE_AGENT_LLM_API_TOKEN",
-      ],
-    },
-    resultPath: "st-real",
-    tags: [
-      "arch:amd64", "arch:arm64", "container:conditional", "layer:st",
-      "llm:real", "network:external", "npu:none", "sandbox:none",
-    ],
-  },
-  {
-    id: "e2e.mocked",
-    description: "Deterministic Playwright journeys against an isolated local stack",
-    command: ["pnpm", "ci:e2e"],
-    resultPath: "e2e",
-    tags: [
-      "arch:amd64", "arch:arm64", "container:conditional", "layer:e2e",
-      "llm:stub", "network:local", "npu:none", "sandbox:bubblewrap",
-    ],
-  },
-  {
-    id: "e2e.real",
-    description: "Opt-in Playwright real-user smoke against a live model",
-    command: ["pnpm", "ci:e2e:real"],
-    gates: {
-      allowEnv: "CI_ALLOW_REAL",
-      requiredEnv: ["E2E_LLM_BASE_URL", "E2E_LLM_MODEL", "E2E_LLM_TOKEN"],
-    },
-    resultPath: "e2e-real",
-    tags: [
-      "arch:amd64", "arch:arm64", "container:conditional", "layer:e2e",
-      "llm:real", "network:external", "npu:none", "sandbox:bubblewrap",
-    ],
-  },
-  {
-    id: "e2e.legacy",
-    description: "Explicitly quarantined Playwright specs pending dependency audit",
-    command: ["pnpm", "ci:e2e:legacy"],
-    gates: { allowEnv: "CI_ALLOW_LEGACY", requiredEnv: [] },
-    resultPath: "e2e-legacy",
-    tags: [
-      "arch:amd64", "arch:arm64", "container:conditional", "layer:e2e",
-      "llm:unreviewed", "network:unreviewed", "npu:unreviewed", "sandbox:unreviewed",
-    ],
-  },
-  {
-    id: "st.npu-smoke",
-    description: "Ascend MindSpore runner workload smoke on dedicated NPU hardware",
-    command: ["pnpm", "ci:st:npu"],
-    gates: {
-      allowEnv: "CI_ALLOW_NPU",
-      requiredEnv: ["SCIENCE_AGENT_NPU_PYTHON"],
-    },
-    limitation: "The generic image has no Ascend device, driver, MindSpore runtime, or model assets",
-    resultPath: "st-npu",
-    tags: [
-      "arch:amd64", "arch:arm64", "container:unsupported", "layer:st", "llm:none",
-      "network:none", "npu:required", "sandbox:host",
-    ],
-  },
-];
+// Runtime metadata and ownership are loaded from adjacent YAML files.
+// This module retains CI tier composition and compatibility exports only.
+import { loadManifests } from '../test/harness/manifests.mjs';
+const configuration = loadManifests();
+export const assetSuites = configuration.suites;
+export function executionCases() { return structuredClone(configuration.cases); }
+export const testCases = configuration.cases.filter(c => c.compatibility).map(c => ({
+  ...c, command: c.compatibility.command,
+}));
+export const assetExclusions = [{ file: 'services/evolve/src/sciencediscovery_evolve/test_gate_domain.py', reason: 'Product domain implementation for the test gate; not a pytest module.' }];

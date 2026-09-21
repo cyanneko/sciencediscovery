@@ -22,6 +22,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { selectContractCases, requireAssertions } from "./validation.mjs";
 import { compareRecordings, coverage, loadCases, runAll } from "./lib.mjs";
 
 const acceptedFile = join(dirname(fileURLToPath(import.meta.url)), "accepted-differences.json");
@@ -42,6 +43,13 @@ if (args.includes("--coverage")) {
   process.exit(report.unknown.length ? 1 : 0);
 }
 
+const only = all("--case");
+const selected = selectContractCases(cases, only);
+const baselinePath = option("--compare") ?? (args.includes("--compare-env") ? process.env.E2E_CONTRACT_BASELINE : undefined);
+const baseline = baselinePath ? JSON.parse(readFileSync(baselinePath, "utf8")) : undefined;
+if (baseline) requireAssertions(selected, baseline);
+if (!baseline && !option("--record")) throw new Error("Choose --record or a complete --compare baseline; an unasserted replay is not a test");
+
 const base = option("--base") ?? process.env.E2E_BASE_URL;
 const token = option("--token") ?? process.env.E2E_API_TOKEN;
 if (!base || !token) { console.error("Need --base/--token or E2E_BASE_URL/E2E_API_TOKEN."); process.exit(2); }
@@ -58,13 +66,10 @@ if (!args.includes("--allow-existing")) {
     process.exit(2);
   }
 }
-const only = all("--case");
-const selected = only.length ? cases.filter((testCase) => only.includes(testCase.id)) : cases;
 const recording = await runAll(selected, { base, token });
 const errors = Object.entries(recording).flatMap(([id, steps]) => steps.filter((step) => step.error).map((step) => `${id} / ${step.name}: ${step.error}`));
 if (option("--record")) { writeFileSync(option("--record"), JSON.stringify(recording, null, 1) + "\n"); console.log(`recorded ${selected.length} cases to ${option("--record")}`); }
-if (option("--compare")) {
-  const baseline = JSON.parse(readFileSync(option("--compare"), "utf8"));
+if (baseline) {
   const wanted = Object.fromEntries(Object.entries(baseline).filter(([id]) => selected.some((testCase) => testCase.id === id)));
   const report = { accepted: [] };
   const problems = compareRecordings(wanted, recording, args.includes("--strict") ? [] : loadAccepted(), report);

@@ -18,7 +18,7 @@ test dependencies are supplied only by the checkout mounted at `/src`.
 | CI layer | Repository commands used | Scope |
 |---|---|---|
 | UT | `pnpm check`, then `pnpm memory-graph:test` | TypeScript type checks/builds and package tests, binary script tests, paper/gateway Python tests, and memory-graph pytest |
-| ST | `test/api/run_m1_smoke.sh` after `pnpm build` | Hermetic Node-native agent loop through a local scripted OpenAI-compatible endpoint and a real workspace tool round trip |
+| ST | `test/st/agent-runtime/run_m1_smoke.sh` after `pnpm build` | Hermetic Node-native agent loop through a local scripted OpenAI-compatible endpoint and a real workspace tool round trip |
 | E2E | `.e2e` `npm run test:mocked` | Tagged `@mocked` Playwright journeys against an isolated API/Runner/Gateway stack |
 
 The repository has no test layer literally named `ST`. This mapping uses the
@@ -339,19 +339,13 @@ selection/
   summary.json                    # selection, tags, result paths and outcomes
 ```
 
-`run-layer.mjs` stops at the first failing UT/ST command and records every
-attempted command, exit code, and duration. It gives each run a unique
-`SCIENCE_AGENT_DATA_DIR` below `CI_RUNTIME_DIR` (default
-`/ci-cache/sciencediscovery-tests`) and removes it afterward, so tests cannot
-leave generated logs or bootstrap tokens in the source mount. The E2E entry propagates
-Playwright's exit code after copying reports, including failure evidence.
-
-The default mocked suite passes today: 8 passed and 2 skipped against an
-isolated local stack. Both skips are preconditions, not coverage — J3 is
-BLOCKED because the generic command keeps `SCIENTIFIC_ENVS=0`, and the
-connector case is skipped for the same class of reason. Playwright exits 0 on
-a skip, so a job that only reads the exit code reports a blocked journey as a
-pass; read the counts and the not-passed titles as well.
+`run-layer.mjs` delegates selection and reporting to the shared harness.
+See [the testing guide](../test/README.md) for the default/local/full/pr/daily profiles,
+gates and evidence layout. Independent workloads continue after failures;
+failed prerequisites stop dependent work. The worker gives each invocation a
+unique data directory and removes it afterward. Browser skips and missing
+result evidence cannot silently become a fully passing suite. Historical
+pass counts are not a statement about the current branch.
 
 The earlier note here claimed J4 must stay red because only the main
 artifact reached the Project catalog. That is no longer the failure: J4 was
@@ -368,7 +362,7 @@ container cannot safely or reliably provide.
 
 | Test or capability | Missing generic-container capability | Recommended execution |
 |---|---|---|
-| `test/api/run_real_smoke.sh` | Live model endpoint, credential, outbound network, billable/rate-limited calls | Separate secret-bearing job with `CI_ALLOW_REAL=1` and `SCIENCE_AGENT_LLM_BASE_URL`, `SCIENCE_AGENT_LLM_MODEL`, `SCIENCE_AGENT_LLM_API_TOKEN`; select `st.agent-loop-real` |
+| `test/st/agent-runtime/run_real_smoke.sh` | Live model endpoint, credential, outbound network, billable/rate-limited calls | Separate secret-bearing job with `CI_ALLOW_REAL=1` and `SCIENCE_AGENT_LLM_BASE_URL`, `SCIENCE_AGENT_LLM_MODEL`, `SCIENCE_AGENT_LLM_API_TOKEN`; select `st.agent-loop-real` |
 | `npm --prefix .e2e run test:real` and `journey-real-request.spec.ts` | Live OpenAI-compatible endpoint and `E2E_LLM_*`; the real project is deliberately absent by default | Dedicated job with `CI_ALLOW_REAL=1` and the three `E2E_LLM_*` variables; select `e2e.real`, never add it to `pnpm ci:e2e` |
 | Real NPU workloads such as `services/runner/workloads/npu-smoke-test.py` | Vendor device nodes, drivers, runtime libraries, model/data assets, and usually a native aarch64/NPU host | Hardware-specific runner with explicit device mounts and its own acceptance record |
 | Full bubblewrap execution when the host denies unprivileged user namespaces | Docker flags cannot override a host kernel/AppArmor policy that rejects user namespace creation | Run on a Linux worker with user namespaces enabled; record UT/E2E as BLOCKED if the bwrap preflight fails |
@@ -384,6 +378,17 @@ On a dedicated amd64 or arm64 NPU environment, set `CI_ALLOW_NPU=1` and point
 `SCIENCE_AGENT_NPU_PYTHON` at the MindSpore-enabled interpreter before running
 that selection. The generic image has neither dependency and remains blocked.
 
-The hermetic `test/api/run_m1_smoke.sh` is supported and is the ST entry. A
+The hermetic `test/st/agent-runtime/run_m1_smoke.sh` is supported and is the ST entry. A
 missing historical/example command such as `test/gateway/run_m0_smoke.sh` is
 not classified as unsupported; it simply is not part of this revision.
+
+### Configuration-driven scheduling
+
+Run `pnpm install --frozen-lockfile` before catalog commands. Case metadata now
+lives in adjacent `.case.yaml` files and module discovery in `.suite.yaml` files;
+`.ci/test-catalog.mjs` loads them. See [configuration and policy](../test/README.md)
+for fields, model modes, supported executors and required/observational semantics.
+`pnpm test:pr` and `pnpm test:daily` use those policies, including their executor
+matrix. GitHub provisions JiuwenSwarm through `test-policy.yml`; daily scheduling
+is in `test-daily.yml`. CodeArts compatibility commands retain their prior scope.
+The workspace-only guest payload includes the YAML loader dependency explicitly.

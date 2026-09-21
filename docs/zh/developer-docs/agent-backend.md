@@ -362,8 +362,8 @@ web provider 的执行改由 `services/api/src/web-providers/native/` 承担：`
 ## 12. 验证入口
 
 ```bash
-./test/api/run_m1_smoke.sh        # 封闭：脚本化 SSE 模型端点 + 真实 Node 工具，验证原生 loop 全链路
-./test/api/run_real_smoke.sh      # 真实模型 + 真实工具
+./test/st/agent-runtime/run_m1_smoke.sh        # 封闭：脚本化 SSE 模型端点 + 真实 Node 工具，验证原生 loop 全链路
+./test/st/agent-runtime/run_real_smoke.sh      # 真实模型 + 真实工具
 ```
 
 单元测试（`services/api`，`pnpm test` 走 `node --test dist/**`）：

@@ -1,0 +1,41 @@
+version: 1
+id: ut.guest
+owner: workspace
+description: The UT tier that needs a real bubblewrap sandbox; its host installs
+  and builds the workspace and the guest runs only the tests
+layer: ut
+surface: process
+runner: layer
+capabilities:
+  - guest
+llm:
+  mode: none
+supportedExecutors: []
+timeoutSeconds: 3600
+requirements: []
+ci:
+  daily:
+    executors:
+      - independent
+    required: true
+  pr:
+    executors:
+      - independent
+    required: true
+command:
+  - node
+  - .ci/layer-worker.mjs
+  - ut-guest
+resultPath: ut-guest
+compatibility:
+  command:
+    - pnpm
+    - ci:ut:guest
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:conditional
+  - network:none
+  - npu:none
+  - sandbox:bubblewrap
+  - ut:guest

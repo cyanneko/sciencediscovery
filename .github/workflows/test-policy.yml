@@ -1,0 +1,80 @@
+name: Configured test policy
+on:
+  workflow_call:
+    inputs:
+      profile:
+        type: string
+        required: true
+      surface:
+        type: string
+        default: ''
+permissions:
+  contents: read
+jobs:
+  scenarios:
+    name: ${{ inputs.profile }} configured scenarios
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      CI_RESULTS_DIR: ${{ github.workspace }}/.ci-results
+      CI_RUNTIME_DIR: ${{ runner.temp }}/test-runtime
+      CI_E2E_PREPARED: '1'
+      E2E_COMMIT_SHA: ${{ github.sha }}
+      JIUWENSWARM_ROOT: ${{ runner.temp }}/jiuwenswarm
+      JIUWENSWARM_INSTANCE: ci-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+          cache: pnpm
+      - uses: astral-sh/setup-uv@v6
+      - name: Install and validate configuration
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm test:check
+      - name: Record selected scope
+        env:
+          TEST_PROFILE: ${{ inputs.profile }}
+          TEST_SURFACE: ${{ inputs.surface }}
+        run: |
+          args=(--profile "$TEST_PROFILE")
+          if [[ -n "$TEST_SURFACE" ]]; then args+=(--surface "$TEST_SURFACE"); fi
+          mkdir -p .ci-results
+          node test/harness/cli.mjs list "${args[@]}" --json > .ci-results/selection.json
+      - name: Provision the sandbox
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends bubblewrap
+          sudo sysctl --write kernel.apparmor_restrict_unprivileged_userns=0 || true
+          bwrap --ro-bind / / --dev /dev true
+      - name: Build and prepare pinned browser dependencies
+        run: |
+          pnpm build
+          CI_E2E_PREPARED=0 CI_E2E_PREPARE_ONLY=1 pnpm ci:e2e
+      - name: Start isolated JiuwenSwarm
+        run: |
+          bash scripts/jiuwenswarm.sh setup
+          bash scripts/jiuwenswarm.sh start
+          eval "$(bash scripts/jiuwenswarm.sh env)"
+          echo "JIUWENSWARM_GATEWAY_URL=$JIUWENSWARM_GATEWAY_URL" >> "$GITHUB_ENV"
+          echo "JIUWENSWARM_MGMT_URL=$JIUWENSWARM_MGMT_URL" >> "$GITHUB_ENV"
+      - name: Run the declared policy
+        env:
+          TEST_PROFILE: ${{ inputs.profile }}
+          TEST_SURFACE: ${{ inputs.surface }}
+        run: |
+          args=(--profile "$TEST_PROFILE")
+          if [[ -n "$TEST_SURFACE" ]]; then args+=(--surface "$TEST_SURFACE"); fi
+          node test/harness/cli.mjs run "${args[@]}"
+      - name: Stop the owned JiuwenSwarm instance
+        if: always()
+        run: bash scripts/jiuwenswarm.sh stop || true
+      - name: Upload selection and outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-policy-${{ inputs.profile }}
+          path: .ci-results
+          if-no-files-found: warn

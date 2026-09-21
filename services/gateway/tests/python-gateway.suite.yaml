@@ -1,0 +1,8 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.python.gateway
+directory: .
+owner: services/gateway
+runner: unittest
+layer: ut
+entryPoint: ut.host

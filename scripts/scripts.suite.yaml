@@ -1,0 +1,10 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.scripts
+directory: .
+owner: test-infrastructure
+runner: node:test
+layer: ut
+entryPoint: ut.host
+excludeDirectories:
+  - binary-release

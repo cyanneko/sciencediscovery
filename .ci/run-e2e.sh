@@ -259,5 +259,7 @@ fi
 
 node test/check-e2e-meta.mjs 2>&1 | tee -a "$test_log" || exit $?
 test_started=1
-npm --prefix .e2e run "test:$group" 2>&1 | tee -a "$test_log"
+spec_args=()
+if [[ -n "${CI_E2E_SPEC:-}" ]]; then spec_args+=("$CI_E2E_SPEC"); fi
+npm --prefix .e2e run "test:$group" -- "${spec_args[@]}" 2>&1 | tee -a "$test_log"
 exit ${PIPESTATUS[0]}

@@ -1,0 +1,33 @@
+version: 1
+id: e2e.browser.session-run-queue-stop
+source: session-run-queue-stop.spec.ts
+owner: product-journeys
+description: Explicitly quarantined Playwright specs pending dependency audit
+layer: e2e
+surface: browser
+runner: playwright
+capabilities:
+  - session-run-queue-stop
+llm:
+  mode: unreviewed
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 3600
+requirements:
+  - clean-worktree
+gates:
+  allowEnv: CI_ALLOW_LEGACY
+  requiredEnv: []
+ci: {}
+quarantine:
+  reason: Legacy browser assertions and external dependencies await review;
+    explicitly opted in only.
+resultPath: browser-session-run-queue-stop-legacy
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:conditional
+  - network:unreviewed
+  - npu:unreviewed
+  - sandbox:unreviewed

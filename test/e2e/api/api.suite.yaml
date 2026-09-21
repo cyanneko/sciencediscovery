@@ -1,0 +1,15 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.api
+files:
+  - child-workspace-journey.mjs
+  - detached-runner-journey.mjs
+  - npu-broker-journey.mjs
+  - plugin-settings-journey.mjs
+  - remote-execution-wake-journey.mjs
+  - runner-location-journey.mjs
+  - sandbox-disconnect-journey.mjs
+owner: api-runner
+runner: node
+layer: e2e
+entryPoint: e2e.<journey-name>

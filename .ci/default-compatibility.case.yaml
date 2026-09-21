@@ -1,0 +1,18 @@
+version: 1
+id: default.compatibility
+owner: workspace
+layer: ut
+surface: process
+runner: pnpm
+capabilities:
+  - compatibility
+llm:
+  mode: none
+supportedExecutors: []
+timeoutSeconds: 3600
+requirements: []
+ci: {}
+command:
+  - pnpm
+  - test:legacy
+resultPath: default

@@ -1,5 +1,7 @@
 # Contributing to ScienceDiscovery
 
+For test entry points, coverage, directory ownership and gates, see the [repository testing guide](test/README.md).
+
 Thanks for your interest in contributing. This document covers the development setup, the test commands, and the end-to-end environment. For what the project is and how to run it, start with the [README](README.md).
 
 ## Prerequisites
@@ -33,8 +35,8 @@ repository root. These scripts instantiate `createNativeAgent` in-process and
 do not test the product startup and public client path, so they are not E2E:
 
 ```bash
-./test/api/run_m1_smoke.sh       # Node adapter (hermetic)
-./test/api/run_real_smoke.sh     # native adapter → live model → tool callbacks
+./test/st/agent-runtime/run_m1_smoke.sh       # Node adapter (hermetic)
+./test/st/agent-runtime/run_real_smoke.sh     # native adapter → live model → tool callbacks
 ```
 
 ## User-perspective E2E
@@ -61,7 +63,7 @@ Requires an isolated running stack on `:4410` (or `E2E_BASE_URL`) and its
 generated access token exported as `E2E_API_TOKEN`. That port, and the data
 directory below `.e2e-data/`, are deliberately not the ones an instance you run
 for yourself uses (`:4310`, `.sciencediscovery-data`): a test run gets its own,
-so it can never drive — or be asked to empty — your own instance. Specs live in `test/`; the
+so it can never drive — or be asked to empty — your own instance. Specs live in `test/e2e/browser/`; the
 local environment is **`.e2e/`** (fully gitignored: deps, reports,
 screenshots). Committed bootstrap files under `test/` recreate it:
 
@@ -101,9 +103,9 @@ Every migrated test carries an `E2E-META` comment (purpose, steps, environment,
 mocked/real type, each external capability, credentials, cost/side effects)
 checked by `test/check-e2e-meta.mjs`. New browser E2E files are organized by complete
 user journey, not shell/Python/environment/internal modules, and reuse
-`test/helpers/journeys.ts` for common user actions.
+`test/e2e/browser/helpers/journeys.ts` for common user actions.
 
-Journey specs (`test/journey-*.spec.ts`) are additionally written as numbered
+Journey specs (`test/e2e/browser/journey-*.spec.ts`) are additionally written as numbered
 **user steps** through the `journey` fixture:
 
 ```ts
@@ -147,12 +149,12 @@ and check the Session remains usable. Health alone or a successful submission
 without the final outcome is not sufficient. UI changes still need browser
 coverage; an API journey is not a substitute for layout/interaction assertions.
 
-Keep reusable non-browser journey drivers in `test/api/`, with goal-based
+Keep reusable non-browser journey drivers in `test/e2e/api/`, with goal-based
 names and an exact invocation documented beside the driver. Inspect the
-chosen script before running it: this directory also contains the in-process
-smokes above, and there is no universal non-browser E2E runner today. Add the
-missing journey when needed rather than renaming a smoke or claiming the
-browser CI command covers it.
+chosen script before running it. In-process smokes live in
+`test/st/agent-runtime/`. Select registered journeys with `pnpm test:list` and
+`pnpm test --case <id> --executor <name>`; see the [testing guide](test/README.md).
+Add missing journeys without claiming the browser CI command covers them.
 
 Default to a journey-owned local stub model registered through the API;
 real models/services require explicit opt-in and declared credentials/costs.

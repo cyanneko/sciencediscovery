@@ -1,0 +1,38 @@
+version: 1
+id: st.contract.permission-grant-survives-epoch-rotation
+source: permissions.json
+owner: api-adapter
+description: A session-scoped grant lets a request through without asking, and
+  keeps doing so after the session's permission epoch is rotated. (Issue 90
+  expected the grant to stop applying; the legacy API does not do that. The
+  epoch is about the sandbox, the grant is about the session.)
+layer: st
+surface: api
+runner: contract
+capabilities:
+  - contract
+llm:
+  mode: none
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 180
+requirements:
+  - contract-target
+gates:
+  allowEnv: CI_ALLOW_CONTRACT
+  requiredEnv:
+    - E2E_BASE_URL
+    - E2E_API_TOKEN
+    - E2E_CONTRACT_BASELINE
+    - E2E_TARGET_EXECUTOR
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: false
+    reason: CI does not yet provision isolated contract targets and select reviewed
+      platform-specific baselines; keep missing coverage visible.
+scenarioId: permission-grant-survives-epoch-rotation
+resultPath: contract-permission-grant-survives-epoch-rotation

@@ -1,0 +1,37 @@
+version: 1
+id: e2e.browser.journey-response-identity
+source: journey-response-identity.spec.ts
+owner: product-journeys
+description: Deterministic Playwright journeys against an isolated local stack
+layer: e2e
+surface: browser
+runner: playwright
+capabilities:
+  - journey-response-identity
+  - session
+  - runner
+  - model
+  - mcp
+  - sandbox
+llm:
+  mode: stub
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 3600
+requirements:
+  - clean-worktree
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: true
+resultPath: browser-journey-response-identity-mocked
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:conditional
+  - network:local
+  - npu:none
+  - sandbox:bubblewrap

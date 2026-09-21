@@ -1,0 +1,26 @@
+version: 1
+id: st.adapter-real
+source: test_real_llm.py
+owner: services/adapter
+layer: st
+surface: api
+runner: pytest
+capabilities:
+  - adapter
+  - permission
+llm:
+  mode: real
+supportedExecutors:
+  - jiuwenswarm
+timeoutSeconds: 180
+requirements: []
+gates:
+  allowEnv: CI_ALLOW_REAL
+  requiredEnv:
+    - JIUWENSWARM_GATEWAY_URL
+    - REAL_LLM_BASE_URL
+    - REAL_LLM_MODEL
+    - REAL_LLM_KEY
+    - JIUWENSWARM_MGMT_URL
+ci: {}
+resultPath: adapter-real

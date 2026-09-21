@@ -120,6 +120,7 @@ run_ut_host() {
   export CI_RESULTS_DIR="$results_dir"
   export CI_RUNTIME_DIR="$HOME/ci-runtime-ut-host"
   echo "dependency mirrors: npm=$(npm config get registry), pypi=${UV_DEFAULT_INDEX:-unset}"
+  pnpm install --frozen-lockfile || return $?
   pnpm ci:ut:host
 }
 
@@ -128,6 +129,7 @@ run_st() {
   export CI_RESULTS_DIR="$results_dir"
   export CI_RUNTIME_DIR="$HOME/ci-runtime-st"
   echo "dependency mirrors: npm=$(npm config get registry), pypi=${UV_DEFAULT_INDEX:-unset}"
+  pnpm install --frozen-lockfile || return $?
   pnpm ci:st
 }
 
@@ -154,6 +156,7 @@ run_e2e() {
   pnpm build || return $?
   # The same ci:e2e entry point, stopped after installation: this host owns
   # every download and compile, the guest owns the stack and the journeys.
+  pnpm install --frozen-lockfile || return $?
   CI_RESULTS_DIR="$results_dir/prepare" \
   CI_RUNTIME_DIR="$HOME/ci-runtime-e2e" \
   CI_E2E_PREPARE_ONLY=1 \

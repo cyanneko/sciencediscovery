@@ -1,0 +1,9 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.packages.mcp-sources
+directory: .
+owner: packages/mcp-sources
+runner: node:test
+layer: ut
+discovery: compiled-node
+entryPoint: ut.host

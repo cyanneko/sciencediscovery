@@ -1,0 +1,8 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.python.memory-graph
+directory: .
+owner: services/memory-graph
+runner: pytest
+layer: ut
+entryPoint: ut.host

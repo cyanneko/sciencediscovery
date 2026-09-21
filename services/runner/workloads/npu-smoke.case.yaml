@@ -1,0 +1,36 @@
+version: 1
+id: st.npu-smoke
+source: npu-smoke-test.py
+owner: product-journeys
+description: Ascend MindSpore runner workload smoke on dedicated NPU hardware
+layer: st
+surface: process
+runner: layer
+capabilities:
+  - npu-smoke
+llm:
+  mode: none
+supportedExecutors: []
+timeoutSeconds: 3600
+requirements: []
+gates:
+  allowEnv: CI_ALLOW_NPU
+  requiredEnv:
+    - SCIENCE_AGENT_NPU_PYTHON
+ci: {}
+command:
+  - node
+  - .ci/layer-worker.mjs
+  - st-npu
+resultPath: st-npu
+compatibility:
+  command:
+    - pnpm
+    - ci:st:npu
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:unsupported
+  - network:none
+  - npu:required
+  - sandbox:host

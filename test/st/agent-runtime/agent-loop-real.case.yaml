@@ -1,0 +1,39 @@
+version: 1
+id: st.agent-loop-real
+source: agent_loop_real_smoke.ts
+owner: product-journeys
+description: Node-native agent loop against an explicitly authorized live model
+layer: st
+surface: process
+runner: layer
+capabilities:
+  - agent-loop-real
+llm:
+  mode: real
+supportedExecutors:
+  - native
+timeoutSeconds: 3600
+requirements: []
+gates:
+  allowEnv: CI_ALLOW_REAL
+  requiredEnv:
+    - SCIENCE_AGENT_LLM_BASE_URL
+    - SCIENCE_AGENT_LLM_MODEL
+    - SCIENCE_AGENT_LLM_API_TOKEN
+ci: {}
+command:
+  - node
+  - .ci/layer-worker.mjs
+  - st-real
+resultPath: st-real
+compatibility:
+  command:
+    - pnpm
+    - ci:st:real
+tags:
+  - arch:amd64
+  - arch:arm64
+  - container:conditional
+  - network:external
+  - npu:none
+  - sandbox:none

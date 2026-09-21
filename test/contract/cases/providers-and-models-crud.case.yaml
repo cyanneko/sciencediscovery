@@ -1,0 +1,37 @@
+version: 1
+id: st.contract.providers-and-models-crud
+source: settings-models.json
+owner: api-adapter
+description: Providers, their model discovery, and model profiles. The first
+  model registered becomes the global default, so the settings are restored
+  before it is deleted.
+layer: st
+surface: api
+runner: contract
+capabilities:
+  - contract
+llm:
+  mode: none
+supportedExecutors:
+  - native
+  - jiuwenswarm
+timeoutSeconds: 180
+requirements:
+  - contract-target
+gates:
+  allowEnv: CI_ALLOW_CONTRACT
+  requiredEnv:
+    - E2E_BASE_URL
+    - E2E_API_TOKEN
+    - E2E_CONTRACT_BASELINE
+    - E2E_TARGET_EXECUTOR
+ci:
+  daily:
+    executors:
+      - native
+      - jiuwenswarm
+    required: false
+    reason: CI does not yet provision isolated contract targets and select reviewed
+      platform-specific baselines; keep missing coverage visible.
+scenarioId: providers-and-models-crud
+resultPath: contract-providers-and-models-crud

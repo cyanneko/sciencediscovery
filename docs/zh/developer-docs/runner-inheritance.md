@@ -50,4 +50,4 @@ Session 设置只保留执行选择与继承，不再放远端工作区清理控
 
 - services/api/src/store.test.ts：独立选机、默认值变化、清空与恢复继承、未知/不可用机器校验及重载。
 - services/api/src/remote-runner.test.ts：Project 默认为空时主/子 Agent 工作区操作仍按 Session 选择授权。
-- test/journey-ssh-remote-runner.spec.ts：Session 独立选机、底部保存、全局按 Runner 管理环境及工作区。
+- test/e2e/browser/journey-ssh-remote-runner.spec.ts：Session 独立选机、底部保存、全局按 Runner 管理环境及工作区。

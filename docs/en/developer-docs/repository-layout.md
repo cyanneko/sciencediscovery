@@ -101,11 +101,12 @@ environment in `.e2e/`; `pnpm ci:e2e` runs only their mocked subset.
 Public API, CLI and local-stack journeys start the product with
 `start-stack.sh` or a documented equivalent and verify user-facing Run,
 artifact, permission or other outcomes. Reusable non-browser drivers belong
-in `test/api/` with exact invocation instructions; they are not automatically
+in `test/e2e/api/` with exact invocation instructions; they are not automatically
 part of browser CI. The existing `run_m1_smoke.sh` and `run_real_smoke.sh`
 instantiate the adapter in-process and remain integration smokes, not E2E.
-There is no universal non-browser journey runner today; inspect or add the
-specific driver rather than assuming the directory supplies one.
+Use `pnpm test:list` and `pnpm test --case <id>` for shared discovery and
+execution. Browser specs live in `test/e2e/browser/`, in-process ST in
+`test/st/agent-runtime/`; see the [testing guide](../../../test/README.md).
 
 Implementers add or improve journeys with user-observable behavior changes,
 or identify and rerun existing coverage. Only changes with no affected user

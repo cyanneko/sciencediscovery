@@ -1,0 +1,9 @@
+# Suite-level ownership and recursive discovery. Paths are relative to this file.
+version: 1
+id: suite.npu
+files:
+  - npu-smoke-test.py
+owner: runner
+runner: python
+layer: st
+entryPoint: st.npu-smoke
